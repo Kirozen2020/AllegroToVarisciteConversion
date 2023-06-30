@@ -44,7 +44,7 @@
             this.btnOpenPlace.Name = "btnOpenPlace";
             this.btnOpenPlace.Size = new System.Drawing.Size(176, 23);
             this.btnOpenPlace.TabIndex = 0;
-            this.btnOpenPlace.Text = "Open Placement Report File";
+            this.btnOpenPlace.Text = "Open Coordinates Report File";
             this.btnOpenPlace.UseVisualStyleBackColor = true;
             this.btnOpenPlace.Click += new System.EventHandler(this.btnOpenPlace_Click);
             // 
@@ -54,7 +54,7 @@
             this.btnOpenCoords.Name = "btnOpenCoords";
             this.btnOpenCoords.Size = new System.Drawing.Size(176, 23);
             this.btnOpenCoords.TabIndex = 1;
-            this.btnOpenCoords.Text = "Open Coordinates Report File";
+            this.btnOpenCoords.Text = "Open Placement Report File";
             this.btnOpenCoords.UseVisualStyleBackColor = true;
             this.btnOpenCoords.Click += new System.EventHandler(this.btnOpenCoords_Click);
             // 
