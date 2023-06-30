@@ -1,0 +1,11 @@
+C:\Users\rozen\OneDrive\Рабочий стол\Work\AllegroToVarisciteConversion\AllegroToVarisciteConversion\bin\Debug\AllegroToVarisciteConversion.exe.config
+C:\Users\rozen\OneDrive\Рабочий стол\Work\AllegroToVarisciteConversion\AllegroToVarisciteConversion\bin\Debug\AllegroToVarisciteConversion.exe
+C:\Users\rozen\OneDrive\Рабочий стол\Work\AllegroToVarisciteConversion\AllegroToVarisciteConversion\bin\Debug\AllegroToVarisciteConversion.pdb
+C:\Users\rozen\OneDrive\Рабочий стол\Work\AllegroToVarisciteConversion\AllegroToVarisciteConversion\obj\Debug\AllegroToVarisciteConversion.csproj.AssemblyReference.cache
+C:\Users\rozen\OneDrive\Рабочий стол\Work\AllegroToVarisciteConversion\AllegroToVarisciteConversion\obj\Debug\AllegroToVarisciteConversion.csproj.SuggestedBindingRedirects.cache
+C:\Users\rozen\OneDrive\Рабочий стол\Work\AllegroToVarisciteConversion\AllegroToVarisciteConversion\obj\Debug\AllegroToVarisciteConversion.Form1.resources
+C:\Users\rozen\OneDrive\Рабочий стол\Work\AllegroToVarisciteConversion\AllegroToVarisciteConversion\obj\Debug\AllegroToVarisciteConversion.Properties.Resources.resources
+C:\Users\rozen\OneDrive\Рабочий стол\Work\AllegroToVarisciteConversion\AllegroToVarisciteConversion\obj\Debug\AllegroToVarisciteConversion.csproj.GenerateResource.cache
+C:\Users\rozen\OneDrive\Рабочий стол\Work\AllegroToVarisciteConversion\AllegroToVarisciteConversion\obj\Debug\AllegroToVarisciteConversion.csproj.CoreCompileInputs.cache
+C:\Users\rozen\OneDrive\Рабочий стол\Work\AllegroToVarisciteConversion\AllegroToVarisciteConversion\obj\Debug\AllegroToVarisciteConversion.exe
+C:\Users\rozen\OneDrive\Рабочий стол\Work\AllegroToVarisciteConversion\AllegroToVarisciteConversion\obj\Debug\AllegroToVarisciteConversion.pdb
