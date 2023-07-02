@@ -55,7 +55,6 @@ namespace AllegroToVarisciteConversion
                     for (int i = 0; i < line.Length; i++)
                     {
                         line[i] = RemoveWhiteSpaces(line[i]);
-                        //Console.Write(i+": " + line[i]+"  ");
                     }
                     tabel.Add(line);
                 }
@@ -105,9 +104,7 @@ namespace AllegroToVarisciteConversion
                         var t4 = string.Concat(line[7].Where(Char.IsDigit));
                         t4 = t4.Substring(0, t4.Length - 2);
 
-                        //Console.WriteLine($"({t1},{t2}) ({t3},{t4})");
                         temp.AddValue(int.Parse(t1), int.Parse(t2));
-                        //temp.AddValue(int.Parse(t3), int.Parse(t4));
 
                     }
                 }
@@ -126,32 +123,6 @@ namespace AllegroToVarisciteConversion
             }
             return false;
         }
-        /*
-        public static List<string> ConverToList(string[] arr)
-        {
-            List<string> strings = new List<string>();
-            for (int i = 0; i < arr.Length; i++)
-            {
-                strings.Add(arr[i]);
-            }
-
-            strings.RemoveAll(string.IsNullOrEmpty);
-            
-
-            return strings;
-        }*/
-        /*
-        public static bool EndOfItem(string[] line)
-        {
-            for (int i = 0; i < line.Length; i++)
-            {
-                if (line[i].Equals("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }*/
 
         public static bool HasCoords(string[] line)
         {
@@ -171,25 +142,12 @@ namespace AllegroToVarisciteConversion
             }
             return false;
         }
-        /*
-        private bool IsNameInList(string name, List<MyDictionary> coords)
-        {
-            for (int i = 0; i < coords.Count; i++)
-            {
-                if (coords[i].Key.Equals(name))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }*/
 
         private void btnSave_Click(object sender, EventArgs e)
         {
             SaveFile();
 
             MessageBox.Show("File Saved");
-            //MessageBox.Show(this.full_patch_Place);
 
             DialogResult d = MessageBox.Show("Close Program?", "Alert!", MessageBoxButtons.YesNo);
             if (d == DialogResult.Yes)
@@ -250,9 +208,6 @@ namespace AllegroToVarisciteConversion
             }
 
             File.AppendAllText(GetOutputPatch(), csv.ToString());
-            //File.AppendAllText(@"C:\Users\rozen\OneDrive\Рабочий стол\Work\output.csv", csv.ToString());
-
-            
         }
     }
 }
