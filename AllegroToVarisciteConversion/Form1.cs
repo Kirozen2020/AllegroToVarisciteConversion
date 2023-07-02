@@ -166,7 +166,7 @@ namespace AllegroToVarisciteConversion
                     MyDictionary x = coords[i];
                     for (int j = 0; j < x.Value.Count; j++)
                     {
-                        line += x.Value[j].ToString();
+                        line += x.Value[j].GetString();
                     }
                 }
             }

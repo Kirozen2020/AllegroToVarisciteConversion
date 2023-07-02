@@ -17,9 +17,10 @@ namespace AllegroToVarisciteConversion
             this.Y = (int)y;
         }
 
-        public override string ToString()
+        public string GetString()
         {
             return $"[{this.X};{this.Y}]";
         }
+
     }
 }
