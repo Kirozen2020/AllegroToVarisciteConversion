@@ -14,35 +14,53 @@ namespace AllegroToVarisciteConversion
 {
     public partial class Form1 : Form
     {
+
         public Form1()
         {
             InitializeComponent();
         }
-
+        /// <summary>
+        /// containing full patch to the placement report file
+        /// </summary>
         public string full_patch_Place;
+        /// <summary>
+        /// containing full patch to the placement coordinates file
+        /// </summary>
         public string full_patch_Coords;
+        /// <summary>
+        /// containing all data from placement report file in list format
+        /// </summary>
         private List<MyDictionary> coords;
+        /// <summary>
+        /// containing all data from placement coordinates file in list format
+        /// </summary>
         private List<string[]> table;
-
+        /// <summary>
+        /// Open Placement Report file and getting his full patch
+        /// </summary>
         private void btnOpenPlace_Click(object sender, EventArgs e)
         {
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 this.full_patch_Place = openFileDialog1.FileName;
             }
-            this.table = InitTabel();
+            this.coords = InitElementCoords();
         }
-
+        /// <summary>
+        /// Open Placement Coordinates file and getting his full patch
+        /// </summary>
         private void btnOpenCoords_Click(object sender, EventArgs e)
         {
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 this.full_patch_Coords = openFileDialog1.FileName;
             }
-
-            this.coords = InitElementCoords();
+            this.table = InitTabel();
         }
-        
+        /// <summary>
+        /// Reading all data from placement report file, organize in one list
+        /// </summary>
+        /// <returns> one list with </returns>
         private List<string[]> InitTabel()
         {
             List<string[]> tabel = new List<string[]>();
@@ -66,12 +84,18 @@ namespace AllegroToVarisciteConversion
             tabel.RemoveAt(1);
             return tabel;
         }
-
+        /// <summary>
+        /// Removing all space character from string
+        /// </summary>
+        /// <returns> string witout the space character </returns>
         public static string RemoveWhiteSpaces(string line)
         {
             return new string(line.ToCharArray().Where(c => !Char.IsWhiteSpace(c)).ToArray());
         }
-
+        /// <summary>
+        /// Reading all data from placement coordinates file, organize in one list
+        /// </summary>
+        /// <returns> List full of data from placement coordinates file</returns>
         private List<MyDictionary> InitElementCoords()
         {
             List<MyDictionary> coords = new List<MyDictionary>();
@@ -112,6 +136,10 @@ namespace AllegroToVarisciteConversion
             coords.RemoveAt(0);
             return coords;
         }
+        /// <summary>
+        /// Function for determinate if the current line is the last line 
+        /// </summary>
+        /// <returns> true if the line is the last and false otherwise </returns>
         public static bool EndOfFile(string[] line)
         {
             for (int i = 0; i < line.Length; i++)
@@ -123,7 +151,10 @@ namespace AllegroToVarisciteConversion
             }
             return false;
         }
-
+        /// <summary>
+        /// Function for determinate if the current line contains coordinates of an element
+        /// </summary>
+        /// <returns> true if the line has coords in it and false otherwise </returns>
         public static bool HasCoords(string[] line)
         {
             for (int i = 0; i < line.Length; i++)
@@ -133,6 +164,10 @@ namespace AllegroToVarisciteConversion
             }
             return false;
         }
+        /// <summary>
+        /// Function for determinate if the current line contains element name
+        /// </summary>
+        /// <returns> true if the line has name in it and false otherwise </returns>
         public static bool HasName(string[] line)
         {
             for (int i = 0; i < line.Length; i++)
@@ -142,7 +177,9 @@ namespace AllegroToVarisciteConversion
             }
             return false;
         }
-
+        /// <summary>
+        /// Button save click event, saving all data 
+        /// </summary>
         private void btnSave_Click(object sender, EventArgs e)
         {
             SaveFile();
@@ -155,7 +192,10 @@ namespace AllegroToVarisciteConversion
                 System.Environment.Exit(1);
             }
         }
-
+        /// <summary>
+        /// Function for convorting all coords of elemt to one string
+        /// </summary>
+        /// <returns> one string that containing all the coords value </returns>
         private string GetCoords(string name)
         {
             string line = "";
@@ -172,7 +212,10 @@ namespace AllegroToVarisciteConversion
             }
             return line;
         }
-
+        /// <summary>
+        /// Function for creating full patch for output file
+        /// </summary>
+        /// <returns> string with full patch frot the output file </returns>
         private string GetOutputPatch()
         {
             string patch = null;
@@ -186,7 +229,9 @@ namespace AllegroToVarisciteConversion
 
             return (patch + "Output.csv");
         }
-
+        /// <summary>
+        /// Save the file in the computer after combining all the data
+        /// </summary>
         private void SaveFile()
         {
             StringBuilder csv = new StringBuilder();
