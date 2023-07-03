@@ -221,15 +221,26 @@ namespace AllegroToVarisciteConversion
         {
             string savePatch = null;
             SaveFileDialog save = new SaveFileDialog();
-
+            save.InitialDirectory = @"C:\";
+            save.CheckFileExists = true;
+            save.CheckPathExists = true;
+            save.Filter = "CSV File (*.csv)|*.csv|All Files (*.*)|*.*";
+            save.Title = "Save file in...";
+            save.DefaultExt = "csv";
             if(save.ShowDialog() == DialogResult.OK)
             {
                 savePatch = save.FileName;
             }
 
-            SaveFile(savePatch);
-
-            MessageBox.Show("File Saved");
+            if (this.full_patch_Coords != null && this.full_patch_Place != null)
+            {
+                SaveFile(savePatch);
+                MessageBox.Show("File Saved");
+            }
+            else
+            {
+                MessageBox.Show("you need to chose files first!", "attention", MessageBoxButtons.OK);
+            }
         }
         /// <summary>
         /// Handles the Click event of the placementReportFileToolStripMenuItem control.
@@ -238,11 +249,21 @@ namespace AllegroToVarisciteConversion
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void placementReportFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Text File (*.txt)|*.txt|All Files (*.*)|*.*";
+            openFileDialog.Title = "Open Placement Report File...";
+            openFileDialog.InitialDirectory = @"C:\";
+
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                this.full_patch_Place = openFileDialog1.FileName;
+                this.full_patch_Place = openFileDialog.FileName;
             }
-            this.coords = InitElementCoords();
+
+            if(this.full_patch_Place != null)
+            {
+                this.coords = InitElementCoords();
+            }
+            
         }
         /// <summary>
         /// Handles the Click event of the coordinatesReportFileToolStripMenuItem control.
@@ -251,11 +272,21 @@ namespace AllegroToVarisciteConversion
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void coordinatesReportFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Text File (*.txt)|*.txt|All Files (*.*)|*.*";
+            openFileDialog.Title = "Open Placement Coordinates File...";
+            openFileDialog.InitialDirectory = @"C:\";
+
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                this.full_patch_Coords = openFileDialog1.FileName;
+                this.full_patch_Coords = openFileDialog.FileName;
             }
-            this.table = InitTabel();
+
+            if(this.full_patch_Coords != null)
+            {
+                this.table = InitTabel();
+            }
+            
         }
         /// <summary>
         /// Handles the Click event of the exitToolStripMenuItem control.
