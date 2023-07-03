@@ -40,22 +40,14 @@ namespace AllegroToVarisciteConversion
         /// </summary>
         private void btnOpenPlace_Click(object sender, EventArgs e)
         {
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                this.full_patch_Place = openFileDialog1.FileName;
-            }
-            this.coords = InitElementCoords();
+            
         }
         /// <summary>
         /// Open Placement Coordinates file and getting his full patch
         /// </summary>
         private void btnOpenCoords_Click(object sender, EventArgs e)
         {
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                this.full_patch_Coords = openFileDialog1.FileName;
-            }
-            this.table = InitTabel();
+            
         }
         /// <summary>
         /// Reading all data from placement report file, organize in one list
@@ -182,15 +174,9 @@ namespace AllegroToVarisciteConversion
         /// </summary>
         private void btnSave_Click(object sender, EventArgs e)
         {
-            SaveFile();
+            
 
-            MessageBox.Show("File Saved");
-
-            DialogResult d = MessageBox.Show("Close Program?", "Alert!", MessageBoxButtons.YesNo);
-            if (d == DialogResult.Yes)
-            {
-                System.Environment.Exit(1);
-            }
+            
         }
         /// <summary>
         /// Function for convorting all coords of elemt to one string
@@ -232,7 +218,7 @@ namespace AllegroToVarisciteConversion
         /// <summary>
         /// Save the file in the computer after combining all the data
         /// </summary>
-        private void SaveFile()
+        private void SaveFile(string outputString)
         {
             StringBuilder csv = new StringBuilder();
             string line = "";
@@ -252,16 +238,48 @@ namespace AllegroToVarisciteConversion
                 csv.AppendLine(":"+line);
             }
 
-            File.AppendAllText(GetOutputPatch(), csv.ToString());
+            File.AppendAllText(outputString, csv.ToString());
         }
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            string savePatch = null;
             SaveFileDialog save = new SaveFileDialog();
 
             if(save.ShowDialog() == DialogResult.OK)
             {
-                
+                savePatch = save.FileName;
+            }
+
+            SaveFile(savePatch);
+
+            MessageBox.Show("File Saved");
+        }
+
+        private void placementReportFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                this.full_patch_Place = openFileDialog1.FileName;
+            }
+            this.coords = InitElementCoords();
+        }
+
+        private void coordinatesReportFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                this.full_patch_Coords = openFileDialog1.FileName;
+            }
+            this.table = InitTabel();
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DialogResult d = MessageBox.Show("Close Program?","Exit", MessageBoxButtons.YesNo);
+            if (d == DialogResult.Yes)
+            {
+                System.Environment.Exit(1);
             }
         }
     }

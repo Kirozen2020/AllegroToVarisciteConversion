@@ -43,6 +43,8 @@
             this.infoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.debugToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.placementReportFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.coordinatesReportFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -103,6 +105,9 @@
             // 
             // openToolStripMenuItem
             // 
+            this.openToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.placementReportFileToolStripMenuItem,
+            this.coordinatesReportFileToolStripMenuItem});
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
             this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.openToolStripMenuItem.Text = "Open";
@@ -119,6 +124,7 @@
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
             this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.exitToolStripMenuItem.Text = "Exit";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
             // optionToolStripMenuItem
             // 
@@ -135,26 +141,40 @@
             this.infoToolStripMenuItem,
             this.debugToolStripMenuItem});
             this.logLevelToolStripMenuItem.Name = "logLevelToolStripMenuItem";
-            this.logLevelToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.logLevelToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.logLevelToolStripMenuItem.Text = "Log Level";
             // 
             // errorToolStripMenuItem
             // 
             this.errorToolStripMenuItem.Name = "errorToolStripMenuItem";
-            this.errorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.errorToolStripMenuItem.Size = new System.Drawing.Size(109, 22);
             this.errorToolStripMenuItem.Text = "Error";
             // 
             // infoToolStripMenuItem
             // 
             this.infoToolStripMenuItem.Name = "infoToolStripMenuItem";
-            this.infoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.infoToolStripMenuItem.Size = new System.Drawing.Size(109, 22);
             this.infoToolStripMenuItem.Text = "Info";
             // 
             // debugToolStripMenuItem
             // 
             this.debugToolStripMenuItem.Name = "debugToolStripMenuItem";
-            this.debugToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.debugToolStripMenuItem.Size = new System.Drawing.Size(109, 22);
             this.debugToolStripMenuItem.Text = "Debug";
+            // 
+            // placementReportFileToolStripMenuItem
+            // 
+            this.placementReportFileToolStripMenuItem.Name = "placementReportFileToolStripMenuItem";
+            this.placementReportFileToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.placementReportFileToolStripMenuItem.Text = "Placement Report File";
+            this.placementReportFileToolStripMenuItem.Click += new System.EventHandler(this.placementReportFileToolStripMenuItem_Click);
+            // 
+            // coordinatesReportFileToolStripMenuItem
+            // 
+            this.coordinatesReportFileToolStripMenuItem.Name = "coordinatesReportFileToolStripMenuItem";
+            this.coordinatesReportFileToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.coordinatesReportFileToolStripMenuItem.Text = "Coordinates Report File";
+            this.coordinatesReportFileToolStripMenuItem.Click += new System.EventHandler(this.coordinatesReportFileToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -192,6 +212,8 @@
         private System.Windows.Forms.ToolStripMenuItem infoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem debugToolStripMenuItem;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private System.Windows.Forms.ToolStripMenuItem placementReportFileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem coordinatesReportFileToolStripMenuItem;
     }
 }
 
