@@ -36,20 +36,6 @@ namespace AllegroToVarisciteConversion
         /// </summary>
         private List<string[]> table;
         /// <summary>
-        /// Open Placement Report file and getting his full patch
-        /// </summary>
-        private void btnOpenPlace_Click(object sender, EventArgs e)
-        {
-            
-        }
-        /// <summary>
-        /// Open Placement Coordinates file and getting his full patch
-        /// </summary>
-        private void btnOpenCoords_Click(object sender, EventArgs e)
-        {
-            
-        }
-        /// <summary>
         /// Reading all data from placement report file, organize in one list
         /// </summary>
         /// <returns> one list with </returns>
@@ -169,15 +155,8 @@ namespace AllegroToVarisciteConversion
             }
             return false;
         }
-        /// <summary>
-        /// Button save click event, saving all data 
-        /// </summary>
-        private void btnSave_Click(object sender, EventArgs e)
-        {
-            
-
-            
-        }
+        
+        
         /// <summary>
         /// Function for convorting all coords of elemt to one string
         /// </summary>
@@ -240,7 +219,9 @@ namespace AllegroToVarisciteConversion
 
             File.AppendAllText(outputString, csv.ToString());
         }
-
+        /// <summary>
+        /// Button save click event, saving all data 
+        /// </summary>
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string savePatch = null;
@@ -255,7 +236,9 @@ namespace AllegroToVarisciteConversion
 
             MessageBox.Show("File Saved");
         }
-
+        /// <summary>
+        /// Open Placement Report file and getting his full patch
+        /// </summary>
         private void placementReportFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
@@ -264,7 +247,9 @@ namespace AllegroToVarisciteConversion
             }
             this.coords = InitElementCoords();
         }
-
+        /// <summary>
+        /// Handles the Click event of the coordinatesReportFileToolStripMenuItem control.
+        /// </summary>
         private void coordinatesReportFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
@@ -273,7 +258,9 @@ namespace AllegroToVarisciteConversion
             }
             this.table = InitTabel();
         }
-
+        /// <summary>
+        /// Handles the Click event of the exitToolStripMenuItem control.
+        /// </summary>
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             DialogResult d = MessageBox.Show("Close Program?","Exit", MessageBoxButtons.YesNo);
