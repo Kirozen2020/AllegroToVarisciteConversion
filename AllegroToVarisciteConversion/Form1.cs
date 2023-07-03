@@ -14,31 +14,33 @@ namespace AllegroToVarisciteConversion
 {
     public partial class Form1 : Form
     {
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Form1"/> class.
+        /// </summary>
         public Form1()
         {
             InitializeComponent();
         }
         /// <summary>
-        /// containing full patch to the placement report file
+        /// The full patch place
         /// </summary>
         public string full_patch_Place;
         /// <summary>
-        /// containing full patch to the placement coordinates file
+        /// The full patch coords
         /// </summary>
         public string full_patch_Coords;
         /// <summary>
-        /// containing all data from placement report file in list format
+        /// The coords
         /// </summary>
         private List<MyDictionary> coords;
         /// <summary>
-        /// containing all data from placement coordinates file in list format
+        /// The table
         /// </summary>
         private List<string[]> table;
         /// <summary>
-        /// Reading all data from placement report file, organize in one list
+        /// Initializes the tabel.
         /// </summary>
-        /// <returns> one list with </returns>
+        /// <returns></returns>
         private List<string[]> InitTabel()
         {
             List<string[]> tabel = new List<string[]>();
@@ -63,17 +65,18 @@ namespace AllegroToVarisciteConversion
             return tabel;
         }
         /// <summary>
-        /// Removing all space character from string
+        /// Removes the white spaces.
         /// </summary>
-        /// <returns> string witout the space character </returns>
+        /// <param name="line">The line.</param>
+        /// <returns></returns>
         public static string RemoveWhiteSpaces(string line)
         {
             return new string(line.ToCharArray().Where(c => !Char.IsWhiteSpace(c)).ToArray());
         }
         /// <summary>
-        /// Reading all data from placement coordinates file, organize in one list
+        /// Initializes the element coords.
         /// </summary>
-        /// <returns> List full of data from placement coordinates file</returns>
+        /// <returns></returns>
         private List<MyDictionary> InitElementCoords()
         {
             List<MyDictionary> coords = new List<MyDictionary>();
@@ -115,9 +118,10 @@ namespace AllegroToVarisciteConversion
             return coords;
         }
         /// <summary>
-        /// Function for determinate if the current line is the last line 
+        /// Ends the of file.
         /// </summary>
-        /// <returns> true if the line is the last and false otherwise </returns>
+        /// <param name="line">The line.</param>
+        /// <returns></returns>
         public static bool EndOfFile(string[] line)
         {
             for (int i = 0; i < line.Length; i++)
@@ -130,9 +134,12 @@ namespace AllegroToVarisciteConversion
             return false;
         }
         /// <summary>
-        /// Function for determinate if the current line contains coordinates of an element
+        /// Determines whether the specified line has coords.
         /// </summary>
-        /// <returns> true if the line has coords in it and false otherwise </returns>
+        /// <param name="line">The line.</param>
+        /// <returns>
+        ///   <c>true</c> if the specified line has coords; otherwise, <c>false</c>.
+        /// </returns>
         public static bool HasCoords(string[] line)
         {
             for (int i = 0; i < line.Length; i++)
@@ -143,9 +150,12 @@ namespace AllegroToVarisciteConversion
             return false;
         }
         /// <summary>
-        /// Function for determinate if the current line contains element name
+        /// Determines whether the specified line has name.
         /// </summary>
-        /// <returns> true if the line has name in it and false otherwise </returns>
+        /// <param name="line">The line.</param>
+        /// <returns>
+        ///   <c>true</c> if the specified line has name; otherwise, <c>false</c>.
+        /// </returns>
         public static bool HasName(string[] line)
         {
             for (int i = 0; i < line.Length; i++)
@@ -155,12 +165,11 @@ namespace AllegroToVarisciteConversion
             }
             return false;
         }
-        
-        
         /// <summary>
-        /// Function for convorting all coords of elemt to one string
+        /// Gets the coords.
         /// </summary>
-        /// <returns> one string that containing all the coords value </returns>
+        /// <param name="name">The name.</param>
+        /// <returns></returns>
         private string GetCoords(string name)
         {
             string line = "";
@@ -178,9 +187,9 @@ namespace AllegroToVarisciteConversion
             return line;
         }
         /// <summary>
-        /// Function for creating full patch for output file
+        /// Gets the output patch.
         /// </summary>
-        /// <returns> string with full patch frot the output file </returns>
+        /// <returns></returns>
         private string GetOutputPatch()
         {
             string patch = null;
@@ -195,8 +204,9 @@ namespace AllegroToVarisciteConversion
             return (patch + "Output.csv");
         }
         /// <summary>
-        /// Save the file in the computer after combining all the data
+        /// Saves the file.
         /// </summary>
+        /// <param name="outputString">The output string.</param>
         private void SaveFile(string outputString)
         {
             StringBuilder csv = new StringBuilder();
@@ -220,8 +230,10 @@ namespace AllegroToVarisciteConversion
             File.AppendAllText(outputString, csv.ToString());
         }
         /// <summary>
-        /// Button save click event, saving all data 
+        /// Handles the Click event of the saveAsToolStripMenuItem control.
         /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string savePatch = null;
@@ -237,8 +249,10 @@ namespace AllegroToVarisciteConversion
             MessageBox.Show("File Saved");
         }
         /// <summary>
-        /// Open Placement Report file and getting his full patch
+        /// Handles the Click event of the placementReportFileToolStripMenuItem control.
         /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void placementReportFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
@@ -250,6 +264,8 @@ namespace AllegroToVarisciteConversion
         /// <summary>
         /// Handles the Click event of the coordinatesReportFileToolStripMenuItem control.
         /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void coordinatesReportFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
@@ -261,6 +277,8 @@ namespace AllegroToVarisciteConversion
         /// <summary>
         /// Handles the Click event of the exitToolStripMenuItem control.
         /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             DialogResult d = MessageBox.Show("Close Program?","Exit", MessageBoxButtons.YesNo);
