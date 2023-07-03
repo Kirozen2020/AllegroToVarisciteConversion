@@ -254,5 +254,15 @@ namespace AllegroToVarisciteConversion
 
             File.AppendAllText(GetOutputPatch(), csv.ToString());
         }
+
+        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog save = new SaveFileDialog();
+
+            if(save.ShowDialog() == DialogResult.OK)
+            {
+                
+            }
+        }
     }
 }
