@@ -187,23 +187,6 @@ namespace AllegroToVarisciteConversion
             return line;
         }
         /// <summary>
-        /// Gets the output patch.
-        /// </summary>
-        /// <returns></returns>
-        private string GetOutputPatch()
-        {
-            string patch = null;
-
-            var x = this.full_patch_Coords.Split('/');
-
-            for (int i = 0; i < x.Length-1; i++)
-            {
-                patch += x[i] + "/";
-            }
-
-            return (patch + "Output.csv");
-        }
-        /// <summary>
         /// Saves the file.
         /// </summary>
         /// <param name="outputString">The output string.</param>
