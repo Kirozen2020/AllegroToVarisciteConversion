@@ -249,7 +249,7 @@ namespace AllegroToVarisciteConversion
                     line += this.table[i][j].ToString() + ",";
                 }
                 line += GetCoords(this.table[i][0]);
-                csv.AppendLine(line);
+                csv.AppendLine(":"+line);
             }
 
             File.AppendAllText(GetOutputPatch(), csv.ToString());
