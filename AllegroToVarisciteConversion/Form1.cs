@@ -24,11 +24,11 @@ namespace AllegroToVarisciteConversion
         /// <summary>
         /// The full patch place
         /// </summary>
-        public string full_patch_Place;
+        public string placementReportPatch;
         /// <summary>
         /// The full patch coords
         /// </summary>
-        public string full_patch_Coords;
+        public string placementCoordinatesPatch;
         /// <summary>
         /// The coords
         /// </summary>
@@ -37,6 +37,9 @@ namespace AllegroToVarisciteConversion
         /// The table
         /// </summary>
         private List<string[]> table;
+
+        
+
         /// <summary>
         /// Initializes the tabel.
         /// </summary>
@@ -45,7 +48,7 @@ namespace AllegroToVarisciteConversion
         {
             List<string[]> tabel = new List<string[]>();
             
-            using(var reader = new StreamReader(this.full_patch_Place))
+            using(var reader = new StreamReader(this.placementCoordinatesPatch))
             {
                 while (reader.EndOfStream == false)
                 {
@@ -81,9 +84,9 @@ namespace AllegroToVarisciteConversion
         {
             List<MyDictionary> coords = new List<MyDictionary>();
 
-            MyDictionary temp = null;
+            MyDictionary temp = new MyDictionary("First element -> delete");
 
-            using (var reader = new StreamReader(this.full_patch_Coords))
+            using (var reader = new StreamReader(this.placementReportPatch))
             {
                 while(reader.EndOfStream == false)
                 {
@@ -180,7 +183,8 @@ namespace AllegroToVarisciteConversion
                     MyDictionary x = coords[i];
                     for (int j = 0; j < x.Value.Count; j++)
                     {
-                        line += x.Value[j].GetString();
+                        //line += x.Value[j].GetString();
+                        line += $"[{x.Value[j].X};{x.Value[j].Y}]";
                     }
                 }
             }
@@ -222,8 +226,6 @@ namespace AllegroToVarisciteConversion
             string savePatch = null;
             SaveFileDialog save = new SaveFileDialog();
             save.InitialDirectory = @"C:\";
-            save.CheckFileExists = true;
-            save.CheckPathExists = true;
             save.Filter = "CSV File (*.csv)|*.csv|All Files (*.*)|*.*";
             save.Title = "Save file in...";
             save.DefaultExt = "csv";
@@ -232,7 +234,7 @@ namespace AllegroToVarisciteConversion
                 savePatch = save.FileName;
             }
 
-            if (this.full_patch_Coords != null && this.full_patch_Place != null)
+            if (this.placementCoordinatesPatch != null && this.placementReportPatch != null)
             {
                 SaveFile(savePatch);
                 MessageBox.Show("File Saved");
@@ -256,10 +258,10 @@ namespace AllegroToVarisciteConversion
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                this.full_patch_Place = openFileDialog.FileName;
+                this.placementReportPatch = openFileDialog.FileName;
             }
 
-            if(this.full_patch_Place != null)
+            if(this.placementReportPatch != null)
             {
                 this.coords = InitElementCoords();
             }
@@ -279,10 +281,10 @@ namespace AllegroToVarisciteConversion
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                this.full_patch_Coords = openFileDialog.FileName;
+                this.placementCoordinatesPatch = openFileDialog.FileName;
             }
 
-            if(this.full_patch_Coords != null)
+            if(this.placementCoordinatesPatch != null)
             {
                 this.table = InitTabel();
             }
