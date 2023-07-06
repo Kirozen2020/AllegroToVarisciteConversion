@@ -302,6 +302,23 @@ namespace AllegroToVarisciteConversion
             return maxX;
         }
 
+        private int FindMaxY()
+        {
+            List<MyDictionary> lst = this.coords;
+
+            int maxY = int.MinValue;
+
+            for (int i = 0; i < lst.Count; i++)
+            {
+                for (int j = 0; j < lst[i].Value.Count; j++)
+                {
+                    maxY = Math.Max(maxY, lst[i].Value[j].Y);
+                }
+            }
+
+            return maxY;
+        }
+
         private void PictureBow_Paint(object sender, PaintEventArgs e)
         {
 
