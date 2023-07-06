@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -264,9 +265,10 @@ namespace AllegroToVarisciteConversion
             {
                 this.coords = InitElementCoords();
             }
-
+            
             if(this.coords != null)
             {
+                /*
                 List<Point> points = new List<Point>()
                 {
                     new Point(50, 50),
@@ -283,7 +285,14 @@ namespace AllegroToVarisciteConversion
 
                 List<List<Point>> lst = ConvertToListOfListOfPoints();
 
-                DrawPoints(pictureBox, lst);
+                DrawPoints(pictureBox, lst);*/
+
+
+                pbSketch.Size = new Size(FindMaxX(), FindMaxY());
+
+                List<List<Point>> lst = ConvertToListOfListOfPoints();
+
+                DrawPoints(pbSketch, lst);
             }
             
         }
@@ -333,7 +342,33 @@ namespace AllegroToVarisciteConversion
                 }
 
                 // Assign the updated bitmap to the PictureBox
-                pb.Image = bmp;
+                //pb.Image = bmp;
+                if(IsBitmapFormatCompatible(bmp))
+                {
+                    pb.Invoke((MethodInvoker)(() => pb.Image = bmp));
+                }
+                else
+                {
+                    MessageBox.Show("BitMap format Error", "Alert!", MessageBoxButtons.OK);
+                }
+                
+            }
+        }
+
+        private bool IsBitmapFormatCompatible(Bitmap bitmap)
+        {
+            // Get the pixel format of the bitmap
+            PixelFormat pixelFormat = bitmap.PixelFormat;
+
+            // Check if the pixel format is compatible with PictureBox
+            switch (pixelFormat)
+            {
+                case PixelFormat.Format32bppArgb:
+                case PixelFormat.Format24bppRgb:
+                case PixelFormat.Format8bppIndexed:
+                    return true;
+                default:
+                    return false;
             }
         }
 

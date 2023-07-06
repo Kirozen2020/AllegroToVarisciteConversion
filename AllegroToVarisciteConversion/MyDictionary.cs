@@ -21,8 +21,6 @@ namespace AllegroToVarisciteConversion
         {
             Point p = new Point((int)x, (int)y);
             this.Value.Add(p);
-            //Coords c = new Coords(x, y);
-            //this.Value.Add(c);
         }
     }
 }

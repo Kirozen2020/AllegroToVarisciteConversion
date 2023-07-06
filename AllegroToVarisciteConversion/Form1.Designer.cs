@@ -41,9 +41,9 @@
             this.errorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.infoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.debugToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.pbSketch = new System.Windows.Forms.PictureBox();
             this.menuStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbSketch)).BeginInit();
             this.SuspendLayout();
             // 
             // openFileDialog1
@@ -145,28 +145,28 @@
             this.debugToolStripMenuItem.Size = new System.Drawing.Size(109, 22);
             this.debugToolStripMenuItem.Text = "Debug";
             // 
-            // pictureBox1
+            // pbSketch
             // 
-            this.pictureBox1.Location = new System.Drawing.Point(12, 27);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(3000, 3000);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox1.TabIndex = 4;
-            this.pictureBox1.TabStop = false;
+            this.pbSketch.Location = new System.Drawing.Point(12, 27);
+            this.pbSketch.Name = "pbSketch";
+            this.pbSketch.Size = new System.Drawing.Size(3000, 3000);
+            this.pbSketch.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pbSketch.TabIndex = 4;
+            this.pbSketch.TabStop = false;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(967, 631);
-            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.pbSketch);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
             this.Text = "Form1";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbSketch)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -187,7 +187,7 @@
         private System.Windows.Forms.ToolStripMenuItem debugToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem placementReportFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem coordinatesReportFileToolStripMenuItem;
-        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.PictureBox pbSketch;
     }
 }
 
