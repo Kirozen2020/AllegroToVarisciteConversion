@@ -183,7 +183,6 @@ namespace AllegroToVarisciteConversion
                     MyDictionary x = coords[i];
                     for (int j = 0; j < x.Value.Count; j++)
                     {
-                        //line += x.Value[j].GetString();
                         line += $"[{x.Value[j].X};{x.Value[j].Y}]";
                     }
                 }
@@ -265,8 +264,49 @@ namespace AllegroToVarisciteConversion
             {
                 this.coords = InitElementCoords();
             }
+
+            if(this.coords != null)
+            {
+                List<Point> points = new List<Point>()
+                {
+                    new Point(50, 50),
+                    new Point(100, 100),
+                    new Point(150, 50),
+                    new Point(100, 150),
+                };
+
+                //FigureControl figure = new FigureControl(points);
+                //figure.Location = new Point(50, 50);
+                //figure.Size = new Size(200,200);
+                //Controls.Add(figure);
+
+                PictureBox pictureBox = new PictureBox();
+            }
             
         }
+
+        private int FindMaxX()
+        {
+            List<MyDictionary> lst = this.coords;
+
+            int maxX = int.MinValue;
+
+            for (int i = 0; i < lst.Count; i++)
+            {
+                for (int j = 0; j < lst[i].Value.Count; j++)
+                {
+                    maxX = Math.Max(maxX, lst[i].Value[j].X);
+                }
+            }
+
+            return maxX;
+        }
+
+        private void PictureBow_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
         /// <summary>
         /// Handles the Click event of the coordinatesReportFileToolStripMenuItem control.
         /// </summary>
@@ -303,5 +343,6 @@ namespace AllegroToVarisciteConversion
                 System.Environment.Exit(1);
             }
         }
+
     }
 }
