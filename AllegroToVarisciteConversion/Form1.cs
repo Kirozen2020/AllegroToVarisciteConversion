@@ -281,9 +281,23 @@ namespace AllegroToVarisciteConversion
 
                 Controls.Add(pictureBox);
 
-                
+                List<List<Point>> lst = ConvertToListOfListOfPoints();
+
+                DrawPoints(pictureBox, lst);
             }
             
+        }
+
+        private List<List<Point>> ConvertToListOfListOfPoints()
+        {
+            List<List<Point>> lst = new List<List<Point>>();
+
+            for (int i = 0; i < this.coords.Count; i++)
+            {
+                lst.Add(this.coords[i].Value);
+            }
+
+            return lst;
         }
 
         private void DrawPoints(PictureBox pb, List<List<Point>> pointLists)
