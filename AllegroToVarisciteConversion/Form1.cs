@@ -280,8 +280,47 @@ namespace AllegroToVarisciteConversion
                 pictureBox.Dock = DockStyle.Fill;
 
                 Controls.Add(pictureBox);
+
+                
             }
             
+        }
+
+        private void DrawPoints(PictureBox pb, List<List<Point>> pointLists)
+        {
+            if (pb == null || pointLists == null)
+                return;
+
+            using (Bitmap bmp = new Bitmap(pb.Width, pb.Height))
+            {
+                using (Graphics g = Graphics.FromImage(bmp))
+                {
+                    // Clear the PictureBox
+                    g.Clear(Color.White);
+
+                    // Draw lines for each list of points
+                    using (Pen pen = new Pen(Color.Black, 2))
+                    {
+                        foreach (List<Point> points in pointLists)
+                        {
+                            // Draw lines connecting the points
+                            if (points.Count > 1)
+                            {
+                                for (int i = 0; i < points.Count - 1; i++)
+                                {
+                                    g.DrawLine(pen, points[i], points[i + 1]);
+                                }
+
+                                // Connect the last point with the first point to complete the figure
+                                g.DrawLine(pen, points[points.Count - 1], points[0]);
+                            }
+                        }
+                    }
+                }
+
+                // Assign the updated bitmap to the PictureBox
+                pb.Image = bmp;
+            }
         }
 
         private int FindMaxX()
