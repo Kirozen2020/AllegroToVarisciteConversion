@@ -275,12 +275,11 @@ namespace AllegroToVarisciteConversion
                     new Point(100, 150),
                 };
 
-                //FigureControl figure = new FigureControl(points);
-                //figure.Location = new Point(50, 50);
-                //figure.Size = new Size(200,200);
-                //Controls.Add(figure);
 
                 PictureBox pictureBox = new PictureBox();
+                pictureBox.Dock = DockStyle.Fill;
+
+                Controls.Add(pictureBox);
             }
             
         }
@@ -317,11 +316,6 @@ namespace AllegroToVarisciteConversion
             }
 
             return maxY;
-        }
-
-        private void PictureBow_Paint(object sender, PaintEventArgs e)
-        {
-
         }
 
         /// <summary>
