@@ -216,34 +216,7 @@ namespace AllegroToVarisciteConversion
 
             File.AppendAllText(outputString, csv.ToString());
         }
-        /// <summary>
-        /// Handles the Click event of the saveAsToolStripMenuItem control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            string savePatch = null;
-            SaveFileDialog save = new SaveFileDialog();
-            save.InitialDirectory = @"C:\";
-            save.Filter = "CSV File (*.csv)|*.csv|All Files (*.*)|*.*";
-            save.Title = "Save file in...";
-            save.DefaultExt = "csv";
-            if(save.ShowDialog() == DialogResult.OK)
-            {
-                savePatch = save.FileName;
-            }
-
-            if (this.placementCoordinatesPatch != null && this.placementReportPatch != null)
-            {
-                SaveFile(savePatch);
-                MessageBox.Show("File Saved");
-            }
-            else
-            {
-                MessageBox.Show("you need to chose files first!", "attention", MessageBoxButtons.OK);
-            }
-        }
+        
         /// <summary>
         /// Handles the Click event of the placementReportFileToolStripMenuItem control.
         /// </summary>
@@ -443,5 +416,33 @@ namespace AllegroToVarisciteConversion
             }
         }
 
+        private void saveOutputFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string savePatch = null;
+            SaveFileDialog save = new SaveFileDialog();
+            save.InitialDirectory = @"C:\";
+            save.Filter = "CSV File (*.csv)|*.csv|All Files (*.*)|*.*";
+            save.Title = "Save file in...";
+            save.DefaultExt = "csv";
+            if (save.ShowDialog() == DialogResult.OK)
+            {
+                savePatch = save.FileName;
+            }
+
+            if (this.placementCoordinatesPatch != null && this.placementReportPatch != null)
+            {
+                SaveFile(savePatch);
+                MessageBox.Show("File Saved");
+            }
+            else
+            {
+                MessageBox.Show("you need to chose files first!", "attention", MessageBoxButtons.OK);
+            }
+        }
+
+        private void saveCircuitDrawingToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
