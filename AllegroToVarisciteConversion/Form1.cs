@@ -324,7 +324,7 @@ namespace AllegroToVarisciteConversion
                 }
                 else
                 {
-                    MessageBox.Show("BitMap format Error", "Alert!", MessageBoxButtons.OK);
+                    MessageBox.Show("BitMap format error", "Alert!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 
             }
@@ -411,7 +411,7 @@ namespace AllegroToVarisciteConversion
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            DialogResult d = MessageBox.Show("Close Program?","Exit", MessageBoxButtons.YesNo);
+            DialogResult d = MessageBox.Show("Close Program?","Exit", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (d == DialogResult.Yes)
             {
                 System.Environment.Exit(1);
@@ -434,11 +434,11 @@ namespace AllegroToVarisciteConversion
             if (this.placementCoordinatesPatch != null && this.placementReportPatch != null)
             {
                 SaveFile(savePatch);
-                MessageBox.Show("File Saved");
+                MessageBox.Show("File Saved", "Congratulations", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else
             {
-                MessageBox.Show("you need to chose files first!", "attention", MessageBoxButtons.OK);
+                MessageBox.Show("You need to chose files first!", "Attention", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
@@ -461,7 +461,7 @@ namespace AllegroToVarisciteConversion
             }
             else
             {
-                MessageBox.Show("You need to open a Placement Report file first!", "attention", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("You need to open a Placement Report file first!", "Attention", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
     }

@@ -35,6 +35,8 @@
             this.placementReportFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.coordinatesReportFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveOutputFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveCircuitDrawingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.logLevelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -42,8 +44,6 @@
             this.infoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.debugToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pbSketch = new System.Windows.Forms.PictureBox();
-            this.saveOutputFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveCircuitDrawingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbSketch)).BeginInit();
             this.SuspendLayout();
@@ -60,7 +60,7 @@
             this.optionToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(967, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(891, 24);
             this.menuStrip1.TabIndex = 3;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -80,7 +80,7 @@
             this.placementReportFileToolStripMenuItem,
             this.coordinatesReportFileToolStripMenuItem});
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
             this.openToolStripMenuItem.Text = "Open";
             // 
             // placementReportFileToolStripMenuItem
@@ -103,13 +103,27 @@
             this.saveOutputFileToolStripMenuItem,
             this.saveCircuitDrawingToolStripMenuItem});
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
             this.saveAsToolStripMenuItem.Text = "Save As";
+            // 
+            // saveOutputFileToolStripMenuItem
+            // 
+            this.saveOutputFileToolStripMenuItem.Name = "saveOutputFileToolStripMenuItem";
+            this.saveOutputFileToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.saveOutputFileToolStripMenuItem.Text = "Save Output File";
+            this.saveOutputFileToolStripMenuItem.Click += new System.EventHandler(this.saveOutputFileToolStripMenuItem_Click);
+            // 
+            // saveCircuitDrawingToolStripMenuItem
+            // 
+            this.saveCircuitDrawingToolStripMenuItem.Name = "saveCircuitDrawingToolStripMenuItem";
+            this.saveCircuitDrawingToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.saveCircuitDrawingToolStripMenuItem.Text = "Save Circuit Drawing";
+            this.saveCircuitDrawingToolStripMenuItem.Click += new System.EventHandler(this.saveCircuitDrawingToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -151,32 +165,18 @@
             // 
             // pbSketch
             // 
-            this.pbSketch.Location = new System.Drawing.Point(12, 27);
+            this.pbSketch.Location = new System.Drawing.Point(12, 40);
             this.pbSketch.Name = "pbSketch";
-            this.pbSketch.Size = new System.Drawing.Size(3000, 3000);
+            this.pbSketch.Size = new System.Drawing.Size(867, 431);
             this.pbSketch.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pbSketch.TabIndex = 4;
             this.pbSketch.TabStop = false;
-            // 
-            // saveOutputFileToolStripMenuItem
-            // 
-            this.saveOutputFileToolStripMenuItem.Name = "saveOutputFileToolStripMenuItem";
-            this.saveOutputFileToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
-            this.saveOutputFileToolStripMenuItem.Text = "Save Output File";
-            this.saveOutputFileToolStripMenuItem.Click += new System.EventHandler(this.saveOutputFileToolStripMenuItem_Click);
-            // 
-            // saveCircuitDrawingToolStripMenuItem
-            // 
-            this.saveCircuitDrawingToolStripMenuItem.Name = "saveCircuitDrawingToolStripMenuItem";
-            this.saveCircuitDrawingToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
-            this.saveCircuitDrawingToolStripMenuItem.Text = "Save Circuit Drawing";
-            this.saveCircuitDrawingToolStripMenuItem.Click += new System.EventHandler(this.saveCircuitDrawingToolStripMenuItem_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(967, 631);
+            this.ClientSize = new System.Drawing.Size(891, 483);
             this.Controls.Add(this.pbSketch);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
