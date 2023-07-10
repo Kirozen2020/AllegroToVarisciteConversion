@@ -424,7 +424,7 @@ namespace AllegroToVarisciteConversion
             SaveFileDialog save = new SaveFileDialog();
             save.InitialDirectory = @"C:\";
             save.Filter = "CSV File (*.csv)|*.csv|All Files (*.*)|*.*";
-            save.Title = "Save file in...";
+            save.Title = "Save output file in...";
             save.DefaultExt = "csv";
             if (save.ShowDialog() == DialogResult.OK)
             {
@@ -444,7 +444,25 @@ namespace AllegroToVarisciteConversion
 
         private void saveCircuitDrawingToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            string savePatch = null;
+            SaveFileDialog save = new SaveFileDialog();
+            save.InitialDirectory = @"C:\";
+            save.Filter = "PNG Image (*.png)|*.png|All Files (*.*)|*.*";
+            save.Title = "Save circuit drawing in...";
+            save.DefaultExt = "png";
+            if (save.ShowDialog() == DialogResult.OK)
+            {
+                savePatch = save.FileName;
+            }
 
+            if(this.placementReportPatch != null)
+            {
+                this.motherBoardImage.Save(savePatch, ImageFormat.Png);
+            }
+            else
+            {
+                MessageBox.Show("You need to open a Placement Report file first!", "attention", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
     }
 }

@@ -9,3 +9,4 @@ C:\Users\rozen\OneDrive\Рабочий стол\Work\AllegroToVarisciteConversio
 C:\Users\rozen\OneDrive\Рабочий стол\Work\AllegroToVarisciteConversion\AllegroToVarisciteConversion\obj\Debug\AllegroToVarisciteConversion.csproj.CoreCompileInputs.cache
 C:\Users\rozen\OneDrive\Рабочий стол\Work\AllegroToVarisciteConversion\AllegroToVarisciteConversion\obj\Debug\AllegroToVarisciteConversion.exe
 C:\Users\rozen\OneDrive\Рабочий стол\Work\AllegroToVarisciteConversion\AllegroToVarisciteConversion\obj\Debug\AllegroToVarisciteConversion.pdb
+C:\Users\rozen\OneDrive\Рабочий стол\Work\AllegroToVarisciteConversion\AllegroToVarisciteConversion\obj\Debug\AllegroToVarisciteConversion.CustomMessageBox.resources
