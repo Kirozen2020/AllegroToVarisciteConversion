@@ -39,7 +39,7 @@ namespace AllegroToVarisciteConversion
         /// </summary>
         private List<string[]> table;
 
-        
+        private Bitmap motherBoardImage;
 
         /// <summary>
         /// Initializes the tabel.
@@ -316,6 +316,8 @@ namespace AllegroToVarisciteConversion
 
                 // Assign the updated bitmap to the PictureBox
                 //pb.Image = bmp;
+                this.motherBoardImage = bmp;
+                bmp.Save(@"C:\Users\rozen\Downloads\image.png", ImageFormat.Png);
                 if(IsBitmapFormatCompatible(bmp))
                 {
                     pb.Invoke((MethodInvoker)(() => pb.Image = bmp));
