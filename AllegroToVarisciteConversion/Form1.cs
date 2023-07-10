@@ -31,6 +31,10 @@ namespace AllegroToVarisciteConversion
         /// </summary>
         public string placementCoordinatesPatch;
         /// <summary>
+        /// The scheme drawing patch
+        /// </summary>
+        public string schemeDrawingPatch;
+        /// <summary>
         /// The coords
         /// </summary>
         private List<MyDictionary> coords;
@@ -320,7 +324,7 @@ namespace AllegroToVarisciteConversion
                 bmp.Save(@"C:\Users\rozen\Downloads\image.png", ImageFormat.Png);
                 if(IsBitmapFormatCompatible(bmp))
                 {
-                    pb.Invoke((MethodInvoker)(() => pb.Image = bmp));
+                    //pb.Invoke((MethodInvoker)(() => pb.Image = bmp));
                 }
                 else
                 {
@@ -417,7 +421,11 @@ namespace AllegroToVarisciteConversion
                 System.Environment.Exit(1);
             }
         }
-
+        /// <summary>
+        /// Handles the Click event of the saveOutputFileToolStripMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void saveOutputFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string savePatch = null;
@@ -441,27 +449,50 @@ namespace AllegroToVarisciteConversion
                 MessageBox.Show("You need to chose files first!", "Attention", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
-
+        /// <summary>
+        /// Handles the Click event of the saveCircuitDrawingToolStripMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void saveCircuitDrawingToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string savePatch = null;
             SaveFileDialog save = new SaveFileDialog();
             save.InitialDirectory = @"C:\";
             save.Filter = "PNG Image (*.png)|*.png|All Files (*.*)|*.*";
-            save.Title = "Save circuit drawing in...";
+            save.Title = "Save scheme drawing in...";
             save.DefaultExt = "png";
             if (save.ShowDialog() == DialogResult.OK)
             {
-                savePatch = save.FileName;
+                this.schemeDrawingPatch = save.FileName;
             }
 
             if(this.placementReportPatch != null)
             {
-                this.motherBoardImage.Save(savePatch, ImageFormat.Png);
+                this.motherBoardImage.Save(this.schemeDrawingPatch, ImageFormat.Png);
             }
             else
             {
                 MessageBox.Show("You need to open a Placement Report file first!", "Attention", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+        /// <summary>
+        /// Handles the Click event of the schemeDrawingToolStripMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void schemeDrawingToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if(this.placementReportPatch != null && this.schemeDrawingPatch != null)
+            {
+                pbSketch.Image = Image.FromFile(this.schemeDrawingPatch);
+            }
+            else if(this.placementReportPatch == null)
+            {
+                MessageBox.Show("You need to open a Placement Report file first!", "Attention", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            else if(this.schemeDrawingPatch == null)
+            {
+                MessageBox.Show("You nedd to save the schema on your pc first!", "Attention", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
     }
