@@ -578,5 +578,25 @@ namespace AllegroToVarisciteConversion
             }
             return num;
         }
+
+        private void MoveAllElements()
+        {
+            if (this.coords != null)
+            {
+                List<MyDictionary> lst = this.coords;
+                for (int i = 0; i < lst.Count; i++)
+                {
+                    List<Point> coordinations = lst[i].Value;
+                    for (int j = 0; j < coordinations.Count; j++)
+                    {
+                        int y = (coordinations[i].Y-GetMinYCoordination()+10);
+                        int x = coordinations[i].X;
+
+                        coordinations[i] = new Point(x, y);
+                    }
+                }
+            }
+
+        }
     }
 }
