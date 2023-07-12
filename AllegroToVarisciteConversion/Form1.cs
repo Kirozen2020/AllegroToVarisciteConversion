@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace AllegroToVarisciteConversion
@@ -42,7 +39,9 @@ namespace AllegroToVarisciteConversion
         /// The table
         /// </summary>
         private List<string[]> table;
-
+        /// <summary>
+        /// The mother board image
+        /// </summary>
         private Bitmap motherBoardImage;
 
         /// <summary>
@@ -245,39 +244,22 @@ namespace AllegroToVarisciteConversion
             
             if(this.coords != null)
             {
-                /*
-                List<Point> points = new List<Point>()
-                {
-                    new Point(50, 50),
-                    new Point(100, 100),
-                    new Point(150, 50),
-                    new Point(100, 150),
-                };
-
-
-                PictureBox pictureBox = new PictureBox();
-                pictureBox.Dock = DockStyle.Fill;
-
-                Controls.Add(pictureBox);
-
-                List<List<Point>> lst = ConvertToListOfListOfPoints();
-
-                DrawPoints(pictureBox, lst);*/
-
-
-                pbSketch.Size = new Size(FindMaxX(), FindMaxY());
-
-                List<List<Point>> lst = ConvertToListOfListOfPoints();
-
                 MoveAllElements();
+
+                pbSketch.Size = new Size(FindMaxX()+20, FindMaxY()+20);
+
+                List<List<Point>> lst = ConvertToListOfListOfPoints();
 
                 DrawPoints(pbSketch, lst);
 
-                AddText();
+                //AddText();
             }
             
         }
-
+        /// <summary>
+        /// Converts to list of list of points.
+        /// </summary>
+        /// <returns></returns>
         private List<List<Point>> ConvertToListOfListOfPoints()
         {
             List<List<Point>> lst = new List<List<Point>>();
@@ -323,21 +305,21 @@ namespace AllegroToVarisciteConversion
                 }
 
                 // Assign the updated bitmap to the PictureBox
-                //pb.Image = bmp;
                 this.motherBoardImage = bmp;
                 bmp.Save(@"C:\Users\rozen\Downloads\image.png", ImageFormat.Png);
-                if(IsBitmapFormatCompatible(bmp))
-                {
-                    //pb.Invoke((MethodInvoker)(() => pb.Image = bmp));
-                }
-                else
+                if(!IsBitmapFormatCompatible(bmp))
                 {
                     MessageBox.Show("BitMap format error", "Alert!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-                
             }
         }
-
+        /// <summary>
+        /// Determines whether [is bitmap format compatible] [the specified bitmap].
+        /// </summary>
+        /// <param name="bitmap">The bitmap.</param>
+        /// <returns>
+        ///   <c>true</c> if [is bitmap format compatible] [the specified bitmap]; otherwise, <c>false</c>.
+        /// </returns>
         private bool IsBitmapFormatCompatible(Bitmap bitmap)
         {
             // Get the pixel format of the bitmap
@@ -354,7 +336,10 @@ namespace AllegroToVarisciteConversion
                     return false;
             }
         }
-
+        /// <summary>
+        /// Finds the maximum x.
+        /// </summary>
+        /// <returns></returns>
         private int FindMaxX()
         {
             List<MyDictionary> lst = this.coords;
@@ -371,7 +356,10 @@ namespace AllegroToVarisciteConversion
 
             return maxX;
         }
-
+        /// <summary>
+        /// Finds the maximum y.
+        /// </summary>
+        /// <returns></returns>
         private int FindMaxY()
         {
             List<MyDictionary> lst = this.coords;
@@ -505,7 +493,7 @@ namespace AllegroToVarisciteConversion
         private void AddText()
         {
             List<MyDictionary> lst = this.coords;
-
+            Bitmap image = this.motherBoardImage;
             for (int i = 0; i < lst.Count; i++)
             {
                 MyDictionary item = lst[i];
@@ -515,16 +503,14 @@ namespace AllegroToVarisciteConversion
                     int x = (GetMinOrMaxOfXOrY(item.Value, 'x', "min") + GetMinOrMaxOfXOrY(item.Value, 'x', "max")) / 2;
                     int y = (GetMinOrMaxOfXOrY(item.Value, 'y', "min") + GetMinOrMaxOfXOrY(item.Value, 'y', "max")) / 2;
 
-                    Bitmap image = this.motherBoardImage;
-
                     Graphics graphics = Graphics.FromImage(image);
                     Font font = new Font("Arial", 20);
                     Brush brush = new SolidBrush(Color.Black);
                     graphics.DrawString(item.Key, font, brush, x, y);
-
-                    this.motherBoardImage = image;
                 }
             }
+
+            this.motherBoardImage = image;
         }
         /// <summary>
         /// Gets the minimum or maximum of x or y.
@@ -581,7 +567,7 @@ namespace AllegroToVarisciteConversion
         private int GetMinYCoordination()
         {
             List<MyDictionary> lst = this.coords;
-            int num = -1;
+            int num = int.MaxValue;
             for (int i = 0; i < lst.Count; i++)
             {
                 for (int j = 0; j < lst[i].Value.Count; j++)
@@ -604,10 +590,10 @@ namespace AllegroToVarisciteConversion
                     List<Point> coordinations = lst[i].Value;
                     for (int j = 0; j < coordinations.Count; j++)
                     {
-                        int y = (coordinations[i].Y-GetMinYCoordination()+10);
-                        int x = coordinations[i].X;
+                        int y = (coordinations[j].Y-GetMinYCoordination());
+                        int x = coordinations[j].X;
 
-                        coordinations[i] = new Point(x, y);
+                        coordinations[j] = new Point(x, y);
                     }
                 }
             }
