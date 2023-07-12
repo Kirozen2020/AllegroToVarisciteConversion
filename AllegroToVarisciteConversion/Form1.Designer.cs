@@ -35,8 +35,6 @@
             this.placementReportFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.coordinatesReportFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveOutputFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveCircuitDrawingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.logLevelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -44,7 +42,6 @@
             this.infoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.debugToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pbSketch = new System.Windows.Forms.PictureBox();
-            this.schemeDrawingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbSketch)).BeginInit();
             this.SuspendLayout();
@@ -79,8 +76,7 @@
             // 
             this.openToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.placementReportFileToolStripMenuItem,
-            this.coordinatesReportFileToolStripMenuItem,
-            this.schemeDrawingToolStripMenuItem});
+            this.coordinatesReportFileToolStripMenuItem});
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
             this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.openToolStripMenuItem.Text = "Open";
@@ -101,31 +97,15 @@
             // 
             // saveAsToolStripMenuItem
             // 
-            this.saveAsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.saveOutputFileToolStripMenuItem,
-            this.saveCircuitDrawingToolStripMenuItem});
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
             this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.saveAsToolStripMenuItem.Text = "Save As";
-            // 
-            // saveOutputFileToolStripMenuItem
-            // 
-            this.saveOutputFileToolStripMenuItem.Name = "saveOutputFileToolStripMenuItem";
-            this.saveOutputFileToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
-            this.saveOutputFileToolStripMenuItem.Text = "Save Output File";
-            this.saveOutputFileToolStripMenuItem.Click += new System.EventHandler(this.saveOutputFileToolStripMenuItem_Click);
-            // 
-            // saveCircuitDrawingToolStripMenuItem
-            // 
-            this.saveCircuitDrawingToolStripMenuItem.Name = "saveCircuitDrawingToolStripMenuItem";
-            this.saveCircuitDrawingToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
-            this.saveCircuitDrawingToolStripMenuItem.Text = "Save Scheme Drawing";
-            this.saveCircuitDrawingToolStripMenuItem.Click += new System.EventHandler(this.saveCircuitDrawingToolStripMenuItem_Click);
+            this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -174,13 +154,6 @@
             this.pbSketch.TabIndex = 4;
             this.pbSketch.TabStop = false;
             // 
-            // schemeDrawingToolStripMenuItem
-            // 
-            this.schemeDrawingToolStripMenuItem.Name = "schemeDrawingToolStripMenuItem";
-            this.schemeDrawingToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
-            this.schemeDrawingToolStripMenuItem.Text = "Scheme Drawing";
-            this.schemeDrawingToolStripMenuItem.Click += new System.EventHandler(this.schemeDrawingToolStripMenuItem_Click);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -215,9 +188,6 @@
         private System.Windows.Forms.ToolStripMenuItem placementReportFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem coordinatesReportFileToolStripMenuItem;
         private System.Windows.Forms.PictureBox pbSketch;
-        private System.Windows.Forms.ToolStripMenuItem saveOutputFileToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem saveCircuitDrawingToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem schemeDrawingToolStripMenuItem;
     }
 }
 

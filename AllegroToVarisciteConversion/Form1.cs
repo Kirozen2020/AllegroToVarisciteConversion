@@ -443,52 +443,7 @@ namespace AllegroToVarisciteConversion
                 MessageBox.Show("You need to chose files first!", "Attention", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
-        /// <summary>
-        /// Handles the Click event of the saveCircuitDrawingToolStripMenuItem control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void saveCircuitDrawingToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            SaveFileDialog save = new SaveFileDialog();
-            save.InitialDirectory = @"C:\";
-            save.Filter = "PNG Image (*.png)|*.png|All Files (*.*)|*.*";
-            save.Title = "Save scheme drawing in...";
-            save.DefaultExt = "png";
-            if (save.ShowDialog() == DialogResult.OK)
-            {
-                this.schemeDrawingPatch = save.FileName;
-            }
-
-            if(this.placementReportPatch != null)
-            {
-                this.motherBoardImage.Save(this.schemeDrawingPatch, ImageFormat.Png);
-            }
-            else
-            {
-                MessageBox.Show("You need to open a Placement Report file first!", "Attention", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-        }
-        /// <summary>
-        /// Handles the Click event of the schemeDrawingToolStripMenuItem control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void schemeDrawingToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if(this.placementReportPatch != null && this.schemeDrawingPatch != null)
-            {
-                pbSketch.Image = Image.FromFile(this.schemeDrawingPatch);
-            }
-            else if(this.placementReportPatch == null)
-            {
-                MessageBox.Show("You need to open a Placement Report file first!", "Attention", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-            else if(this.schemeDrawingPatch == null)
-            {
-                MessageBox.Show("You nedd to save the schema on your pc first!", "Attention", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-        }
+        
         /// <summary>
         /// Adds the text.
         /// </summary>
@@ -600,6 +555,34 @@ namespace AllegroToVarisciteConversion
                 }
             }
 
+        }
+        /// <summary>
+        /// Handles the Click event of the saveAsToolStripMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string savePatch = null;
+            SaveFileDialog save = new SaveFileDialog();
+            save.InitialDirectory = @"C:\";
+            save.Filter = "CSV File (*.csv)|*.csv|All Files (*.*)|*.*";
+            save.Title = "Save output file in...";
+            save.DefaultExt = "csv";
+            if (save.ShowDialog() == DialogResult.OK)
+            {
+                savePatch = save.FileName;
+            }
+
+            if (this.placementCoordinatesPatch != null && this.placementReportPatch != null)
+            {
+                SaveFile(savePatch);
+                MessageBox.Show("File Saved", "Congratulations", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                MessageBox.Show("You need to chose files first!", "Attention", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
     }
 }
