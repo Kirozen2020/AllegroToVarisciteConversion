@@ -246,8 +246,6 @@ namespace AllegroToVarisciteConversion
             {
                 MoveAllElements();
 
-                //pbSketch.Size = new Size(FindMaxX()+20, FindMaxY()+20);
-
                 List<List<Point>> lst = ConvertToListOfListOfPoints();
 
                 DrawPoints(pbSketch, lst);
@@ -378,6 +376,22 @@ namespace AllegroToVarisciteConversion
 
             return maxY;
         }
+        //private int FindMinY()
+        //{
+        //    List<MyDictionary> lst = this.coords;
+
+        //    int minY = int.MinValue;
+
+        //    for (int i = 0; i < lst.Count; i++)
+        //    {
+        //        for (int j = 0; j < lst[i].Value.Count; j++)
+        //        {
+        //            minY = Math.Min(minY, lst[i].Value[j].Y);
+        //        }
+        //    }
+
+        //    return minY;
+        //}
 
         /// <summary>
         /// Handles the Click event of the coordinatesReportFileToolStripMenuItem control.
@@ -409,38 +423,10 @@ namespace AllegroToVarisciteConversion
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            DialogResult d = MessageBox.Show("Close Program?","Exit", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (d == DialogResult.Yes)
+            DialogResult ans = MessageBox.Show("Close Program?","Exit", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (ans == DialogResult.Yes)
             {
                 System.Environment.Exit(1);
-            }
-        }
-        /// <summary>
-        /// Handles the Click event of the saveOutputFileToolStripMenuItem control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void saveOutputFileToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            string savePatch = null;
-            SaveFileDialog save = new SaveFileDialog();
-            save.InitialDirectory = @"C:\";
-            save.Filter = "CSV File (*.csv)|*.csv|All Files (*.*)|*.*";
-            save.Title = "Save output file in...";
-            save.DefaultExt = "csv";
-            if (save.ShowDialog() == DialogResult.OK)
-            {
-                savePatch = save.FileName;
-            }
-
-            if (this.placementCoordinatesPatch != null && this.placementReportPatch != null)
-            {
-                SaveFile(savePatch);
-                MessageBox.Show("File Saved", "Congratulations", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            else
-            {
-                MessageBox.Show("You need to chose files first!", "Attention", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
         
@@ -529,7 +515,10 @@ namespace AllegroToVarisciteConversion
             {
                 for (int j = 0; j < lst[i].Value.Count; j++)
                 {
-                    num = Math.Min(num, lst[i].Value[j].Y);
+                    if (lst[i].Value[j].Y < num)
+                    {
+                        num = lst[i].Value[j].Y;
+                    }
                 }
             }
             return num;
@@ -539,22 +528,25 @@ namespace AllegroToVarisciteConversion
         /// </summary>
         private void MoveAllElements()
         {
-            if (this.coords != null)
+            List<MyDictionary> lst = this.coords;
+            for (int i = 0; i < lst.Count; i++)
             {
-                List<MyDictionary> lst = this.coords;
-                for (int i = 0; i < lst.Count; i++)
+                List<Point> coordinations = lst[i].Value;
+                for (int j = 0; j < coordinations.Count; j++)
                 {
-                    List<Point> coordinations = lst[i].Value;
-                    for (int j = 0; j < coordinations.Count; j++)
-                    {
-                        int y = (coordinations[j].Y-GetMinYCoordination());
-                        int x = coordinations[j].X;
+                    Point point = coordinations[j];
+                    int delay = GetMinYCoordination();
+                    int before = point.Y;
+                    point.Y -= 2000;
+                    int after = point.Y;
+                    //int y = (coordinations[j].Y-GetMinYCoordination());
+                    //int y = (coordinations[j].Y-FindMinY());
+                    //int x = coordinations[j].X;
 
-                        coordinations[j] = new Point(x, y);
-                    }
+                    //coordinations[j] = new Point(x, y);
                 }
             }
-
+            this.coords = lst;
         }
         /// <summary>
         /// Handles the Click event of the saveAsToolStripMenuItem control.
