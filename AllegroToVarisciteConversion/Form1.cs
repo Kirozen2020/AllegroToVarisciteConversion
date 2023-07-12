@@ -246,11 +246,13 @@ namespace AllegroToVarisciteConversion
             {
                 MoveAllElements();
 
-                pbSketch.Size = new Size(FindMaxX()+20, FindMaxY()+20);
+                //pbSketch.Size = new Size(FindMaxX()+20, FindMaxY()+20);
 
                 List<List<Point>> lst = ConvertToListOfListOfPoints();
 
                 DrawPoints(pbSketch, lst);
+
+                pbSketch.Image = Image.FromFile(@"../../Resources/image.png");
 
                 //AddText();
             }
@@ -277,7 +279,7 @@ namespace AllegroToVarisciteConversion
             if (pb == null || pointLists == null)
                 return;
 
-            using (Bitmap bmp = new Bitmap(pb.Width, pb.Height))
+            using (Bitmap bmp = new Bitmap(FindMaxX() + 20/*pb.Width*/, FindMaxY() + 20/*pb.Height*/))
             {
                 using (Graphics g = Graphics.FromImage(bmp))
                 {
@@ -306,7 +308,7 @@ namespace AllegroToVarisciteConversion
 
                 // Assign the updated bitmap to the PictureBox
                 this.motherBoardImage = bmp;
-                bmp.Save(@"C:\Users\rozen\Downloads\image.png", ImageFormat.Png);
+                bmp.Save(@"../../Resources/image.png", ImageFormat.Png);
                 if(!IsBitmapFormatCompatible(bmp))
                 {
                     MessageBox.Show("BitMap format error", "Alert!", MessageBoxButtons.OK, MessageBoxIcon.Error);
