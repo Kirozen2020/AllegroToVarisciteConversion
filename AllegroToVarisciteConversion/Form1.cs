@@ -564,5 +564,19 @@ namespace AllegroToVarisciteConversion
             }
             return num;
         }
+
+        private int GetMinYCoordination()
+        {
+            List<MyDictionary> lst = this.coords;
+            int num = -1;
+            for (int i = 0; i < lst.Count; i++)
+            {
+                for (int j = 0; j < lst[i].Value.Count; j++)
+                {
+                    num = Math.Min(num, lst[i].Value[j].Y);
+                }
+            }
+            return num;
+        }
     }
 }
