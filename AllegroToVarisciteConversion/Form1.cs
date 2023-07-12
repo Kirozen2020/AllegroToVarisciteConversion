@@ -564,7 +564,10 @@ namespace AllegroToVarisciteConversion
             }
             return num;
         }
-
+        /// <summary>
+        /// Gets the minimum y coordination.
+        /// </summary>
+        /// <returns></returns>
         private int GetMinYCoordination()
         {
             List<MyDictionary> lst = this.coords;
@@ -578,7 +581,9 @@ namespace AllegroToVarisciteConversion
             }
             return num;
         }
-
+        /// <summary>
+        /// Moves all elements.
+        /// </summary>
         private void MoveAllElements()
         {
             if (this.coords != null)
