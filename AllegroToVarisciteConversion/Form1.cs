@@ -495,5 +495,65 @@ namespace AllegroToVarisciteConversion
                 MessageBox.Show("You nedd to save the schema on your pc first!", "Attention", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
+
+        private void AddText(MyDictionary item)
+        {
+            if (item != null)
+            {
+                int x = (GetMinOrMaxOfXOrY(item.Value, 'x', "min")+GetMinOrMaxOfXOrY(item.Value, 'x', "max")) / 2;
+                int y = (GetMinOrMaxOfXOrY(item.Value, 'y', "min")+GetMinOrMaxOfXOrY(item.Value, 'y', "max")) / 2;
+
+                Bitmap image = this.motherBoardImage;
+
+                Graphics graphics = Graphics.FromImage(image);
+                Font font = new Font("Arial", 20);
+                Brush brush = new SolidBrush(Color.Black);
+                graphics.DrawString(item.Key, font, brush, x, y);
+
+                this.motherBoardImage = image;
+            }
+        }
+
+        private int GetMinOrMaxOfXOrY(List<Point> points, char letter, string function)
+        {
+            int num = 0;
+            if(function == "min")
+            {
+                num = int.MaxValue;
+                if(letter == 'x')
+                {
+                    for (int i = 0; i < points.Count; i++)
+                    {
+                        num = Math.Min(num, points[i].X);
+                    }
+                }
+                else if(letter == 'y')
+                {
+                    for (int i = 0; i < points.Count; i++)
+                    {
+                        num = Math.Min(num, points[i].Y);
+                    }
+                }
+            }
+            else if(function == "max")
+            {
+                num = int.MinValue;
+                if (letter == 'x')
+                {
+                    for (int i = 0; i < points.Count; i++)
+                    {
+                        num = Math.Max(num, points[i].X);
+                    }
+                }
+                else if (letter == 'y')
+                {
+                    for (int i = 0; i < points.Count; i++)
+                    {
+                        num = Math.Max(num, points[i].Y);
+                    }
+                }
+            }
+            return num;
+        }
     }
 }
