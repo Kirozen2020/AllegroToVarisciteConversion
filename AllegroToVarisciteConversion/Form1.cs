@@ -495,7 +495,10 @@ namespace AllegroToVarisciteConversion
                 MessageBox.Show("You nedd to save the schema on your pc first!", "Attention", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
-
+        /// <summary>
+        /// Adds the text.
+        /// </summary>
+        /// <param name="item">The item.</param>
         private void AddText(MyDictionary item)
         {
             if (item != null)
@@ -513,7 +516,13 @@ namespace AllegroToVarisciteConversion
                 this.motherBoardImage = image;
             }
         }
-
+        /// <summary>
+        /// Gets the minimum or maximum of x or y.
+        /// </summary>
+        /// <param name="points">The points.</param>
+        /// <param name="letter">The letter.</param>
+        /// <param name="function">The function.</param>
+        /// <returns></returns>
         private int GetMinOrMaxOfXOrY(List<Point> points, char letter, string function)
         {
             int num = 0;
