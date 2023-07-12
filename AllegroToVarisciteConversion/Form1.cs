@@ -269,7 +269,11 @@ namespace AllegroToVarisciteConversion
 
                 List<List<Point>> lst = ConvertToListOfListOfPoints();
 
+                MoveAllElements();
+
                 DrawPoints(pbSketch, lst);
+
+                AddText();
             }
             
         }
@@ -498,22 +502,28 @@ namespace AllegroToVarisciteConversion
         /// <summary>
         /// Adds the text.
         /// </summary>
-        /// <param name="item">The item.</param>
-        private void AddText(MyDictionary item)
+        private void AddText()
         {
-            if (item != null)
+            List<MyDictionary> lst = this.coords;
+
+            for (int i = 0; i < lst.Count; i++)
             {
-                int x = (GetMinOrMaxOfXOrY(item.Value, 'x', "min")+GetMinOrMaxOfXOrY(item.Value, 'x', "max")) / 2;
-                int y = (GetMinOrMaxOfXOrY(item.Value, 'y', "min")+GetMinOrMaxOfXOrY(item.Value, 'y', "max")) / 2;
+                MyDictionary item = lst[i];
 
-                Bitmap image = this.motherBoardImage;
+                if (item != null)
+                {
+                    int x = (GetMinOrMaxOfXOrY(item.Value, 'x', "min") + GetMinOrMaxOfXOrY(item.Value, 'x', "max")) / 2;
+                    int y = (GetMinOrMaxOfXOrY(item.Value, 'y', "min") + GetMinOrMaxOfXOrY(item.Value, 'y', "max")) / 2;
 
-                Graphics graphics = Graphics.FromImage(image);
-                Font font = new Font("Arial", 20);
-                Brush brush = new SolidBrush(Color.Black);
-                graphics.DrawString(item.Key, font, brush, x, y);
+                    Bitmap image = this.motherBoardImage;
 
-                this.motherBoardImage = image;
+                    Graphics graphics = Graphics.FromImage(image);
+                    Font font = new Font("Arial", 20);
+                    Brush brush = new SolidBrush(Color.Black);
+                    graphics.DrawString(item.Key, font, brush, x, y);
+
+                    this.motherBoardImage = image;
+                }
             }
         }
         /// <summary>
