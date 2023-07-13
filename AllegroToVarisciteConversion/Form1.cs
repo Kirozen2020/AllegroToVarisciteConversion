@@ -561,5 +561,58 @@ namespace AllegroToVarisciteConversion
                 MessageBox.Show("You need to chose files first!", "Attention", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
+
+        private ToolStripMenuItem lastClickedItem;
+
+        private void errorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ToolStripMenuItem item = (ToolStripMenuItem)sender;
+            item.Checked = !item.Checked;
+
+            if(item.Checked)
+            {
+                item.CheckState = CheckState.Checked;
+            }
+            if (lastClickedItem != null && lastClickedItem != item)
+            {
+                lastClickedItem.Checked = false;
+                lastClickedItem.CheckState = CheckState.Unchecked;
+            }
+            lastClickedItem = item;
+        }
+
+        private void infoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ToolStripMenuItem item = (ToolStripMenuItem)sender;
+            item.Checked = !item.Checked;
+
+            if (item.Checked)
+            {
+                item.CheckState = CheckState.Checked;
+            }
+            if (lastClickedItem != null && lastClickedItem != item)
+            {
+                lastClickedItem.Checked = false;
+                lastClickedItem.CheckState = CheckState.Unchecked;
+            }
+            lastClickedItem = item;
+        }
+
+        private void debugToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ToolStripMenuItem item = (ToolStripMenuItem)sender;
+            item.Checked = !item.Checked;
+
+            if (item.Checked)
+            {
+                item.CheckState = CheckState.Checked;
+            }
+            if (lastClickedItem != null && lastClickedItem != item)
+            {
+                lastClickedItem.Checked = false;
+                lastClickedItem.CheckState = CheckState.Unchecked;
+            }
+            lastClickedItem = item;
+        }
     }
 }
