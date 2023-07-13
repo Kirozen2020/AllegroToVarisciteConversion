@@ -244,7 +244,7 @@ namespace AllegroToVarisciteConversion
             
             if(this.coords != null)
             {
-                MoveAllElements();
+                MoveAllElements(ref this.coords);
 
                 List<List<Point>> lst = ConvertToListOfListOfPoints();
 
@@ -526,19 +526,18 @@ namespace AllegroToVarisciteConversion
         /// <summary>
         /// Moves all elements.
         /// </summary>
-        private void MoveAllElements()
+        private void MoveAllElements(ref List<MyDictionary> lst)
         {
-            List<MyDictionary> lst = this.coords;
+            //List<MyDictionary> lst = this.coords;
+            int deleyY = GetMinYCoordination()-10;
             for (int i = 0; i < lst.Count; i++)
             {
                 List<Point> coordinations = lst[i].Value;
                 for (int j = 0; j < coordinations.Count; j++)
                 {
                     Point point = coordinations[j];
-                    int delay = GetMinYCoordination();
-                    int before = point.Y;
-                    point.Y -= 2000;
-                    int after = point.Y;
+                    point.Y -= deleyY;
+                    coordinations[j] = point;
                     //int y = (coordinations[j].Y-GetMinYCoordination());
                     //int y = (coordinations[j].Y-FindMinY());
                     //int x = coordinations[j].X;
