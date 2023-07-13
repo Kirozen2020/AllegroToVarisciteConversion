@@ -44,6 +44,11 @@ namespace AllegroToVarisciteConversion
         /// The mother board image
         /// </summary>
         private Bitmap motherBoardImage;
+        /// <summary>
+        /// The last clicked item
+        /// </summary>
+        private ToolStripMenuItem lastClickedItem;
+
 
         /// <summary>
         /// Initializes the tabel.
@@ -561,9 +566,11 @@ namespace AllegroToVarisciteConversion
                 MessageBox.Show("You need to chose files first!", "Attention", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
-
-        private ToolStripMenuItem lastClickedItem;
-
+        /// <summary>
+        /// Handles the Click event of the errorToolStripMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void errorToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem item = (ToolStripMenuItem)sender;
@@ -580,7 +587,11 @@ namespace AllegroToVarisciteConversion
             }
             lastClickedItem = item;
         }
-
+        /// <summary>
+        /// Handles the Click event of the infoToolStripMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void infoToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem item = (ToolStripMenuItem)sender;
@@ -597,7 +608,11 @@ namespace AllegroToVarisciteConversion
             }
             lastClickedItem = item;
         }
-
+        /// <summary>
+        /// Handles the Click event of the debugToolStripMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void debugToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem item = (ToolStripMenuItem)sender;
