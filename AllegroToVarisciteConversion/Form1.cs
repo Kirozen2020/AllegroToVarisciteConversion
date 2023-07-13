@@ -19,6 +19,7 @@ namespace AllegroToVarisciteConversion
         {
             InitializeComponent();
         }
+
         /// <summary>
         /// The full patch place
         /// </summary>
@@ -246,17 +247,11 @@ namespace AllegroToVarisciteConversion
             {
                 MoveAllElements(ref this.coords);
 
-                
-
                 List<List<Point>> lst = ConvertToListOfListOfPoints();
 
                 DrawPoints(pbSketch, lst);
 
-                
-
                 pbSketch.Image = Image.FromFile(@"../../Resources/image.png");
-
-                
             }
             
         }
@@ -478,54 +473,6 @@ namespace AllegroToVarisciteConversion
             return sum;
         }
 
-        /// <summary>
-        /// Gets the minimum or maximum of x or y.
-        /// </summary>
-        /// <param name="points">The points.</param>
-        /// <param name="letter">The letter.</param>
-        /// <param name="function">The function.</param>
-        /// <returns></returns>
-        private int GetMinOrMaxOfXOrY(List<Point> points, char letter, string function)
-        {
-            int num = 0;
-            if(function == "min")
-            {
-                num = int.MaxValue;
-                if(letter == 'x')
-                {
-                    for (int i = 0; i < points.Count; i++)
-                    {
-                        num = Math.Min(num, points[i].X);
-                    }
-                }
-                else if(letter == 'y')
-                {
-                    for (int i = 0; i < points.Count; i++)
-                    {
-                        num = Math.Min(num, points[i].Y);
-                    }
-                }
-            }
-            else if(function == "max")
-            {
-                num = int.MinValue;
-                if (letter == 'x')
-                {
-                    for (int i = 0; i < points.Count; i++)
-                    {
-                        num = Math.Max(num, points[i].X);
-                    }
-                }
-                else if (letter == 'y')
-                {
-                    for (int i = 0; i < points.Count; i++)
-                    {
-                        num = Math.Max(num, points[i].Y);
-                    }
-                }
-            }
-            return num;
-        }
         /// <summary>
         /// Gets the minimum y coordination.
         /// </summary>
