@@ -246,13 +246,17 @@ namespace AllegroToVarisciteConversion
             {
                 MoveAllElements(ref this.coords);
 
+                
+
                 List<List<Point>> lst = ConvertToListOfListOfPoints();
 
                 DrawPoints(pbSketch, lst);
 
+                
+
                 pbSketch.Image = Image.FromFile(@"../../Resources/image.png");
 
-                //AddText();
+                
             }
             
         }
@@ -271,7 +275,11 @@ namespace AllegroToVarisciteConversion
 
             return lst;
         }
-
+        /// <summary>
+        /// Draws the points.
+        /// </summary>
+        /// <param name="pb">The pb.</param>
+        /// <param name="pointLists">The point lists.</param>
         private void DrawPoints(PictureBox pb, List<List<Point>> pointLists)
         {
             if (pb == null || pointLists == null)
@@ -310,6 +318,7 @@ namespace AllegroToVarisciteConversion
                     MessageBox.Show("BitMap format error", "Alert!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 this.motherBoardImage = bmp;
+                AddText(ref this.motherBoardImage);
                 bmp.Save(@"../../Resources/image.png", ImageFormat.Png);
             }
         }
@@ -416,28 +425,59 @@ namespace AllegroToVarisciteConversion
         /// <summary>
         /// Adds the text.
         /// </summary>
-        private void AddText()
+        private void AddText(ref Bitmap bitmap)
         {
-            List<MyDictionary> lst = this.coords;
-            Bitmap image = this.motherBoardImage;
-            for (int i = 0; i < lst.Count; i++)
+            try
             {
-                MyDictionary item = lst[i];
-
-                if (item != null)
+                List<MyDictionary> lst = this.coords;
+                for (int i = 0; i < lst.Count; i++)
                 {
-                    int x = (GetMinOrMaxOfXOrY(item.Value, 'x', "min") + GetMinOrMaxOfXOrY(item.Value, 'x', "max")) / 2;
-                    int y = (GetMinOrMaxOfXOrY(item.Value, 'y', "min") + GetMinOrMaxOfXOrY(item.Value, 'y', "max")) / 2;
+                    MyDictionary item = lst[i];
 
-                    Graphics graphics = Graphics.FromImage(image);
-                    Font font = new Font("Arial", 20);
-                    Brush brush = new SolidBrush(Color.Black);
-                    graphics.DrawString(item.Key, font, brush, x, y);
+                    if (item != null)
+                    {
+                        int x = SumPoints(item.Value, 'x')/item.Value.Count-20;
+                        int y = SumPoints(item.Value, 'y') / item.Value.Count-5;
+
+                        Graphics graphics = Graphics.FromImage(bitmap);
+                        Font font = new Font("Arial", 15);
+                        Brush brush = new SolidBrush(Color.Black);
+                        graphics.DrawString(item.Key, font, brush, x, y);
+                    }
                 }
             }
-
-            this.motherBoardImage = image;
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message+"\nCannot add text to scheme", "Error Text", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            
         }
+        /// <summary>
+        /// Sums the points.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="v">The v.</param>
+        /// <returns></returns>
+        private int SumPoints(List<Point> value, char v)
+        {
+            int sum = 0;
+            if(v == 'x')
+            {
+                for (int i = 0; i < value.Count; i++)
+                {
+                    sum += value[i].X;
+                }
+            }
+            else if(v == 'y')
+            {
+                for (int i = 0; i < value.Count; i++)
+                {
+                    sum += value[i].Y;
+                }
+            }
+            return sum;
+        }
+
         /// <summary>
         /// Gets the minimum or maximum of x or y.
         /// </summary>
