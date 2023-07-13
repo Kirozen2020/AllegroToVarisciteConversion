@@ -305,12 +305,12 @@ namespace AllegroToVarisciteConversion
                 }
 
                 // Assign the updated bitmap to the PictureBox
-                this.motherBoardImage = bmp;
-                bmp.Save(@"../../Resources/image.png", ImageFormat.Png);
                 if(!IsBitmapFormatCompatible(bmp))
                 {
                     MessageBox.Show("BitMap format error", "Alert!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
+                this.motherBoardImage = bmp;
+                bmp.Save(@"../../Resources/image.png", ImageFormat.Png);
             }
         }
         /// <summary>
@@ -376,23 +376,6 @@ namespace AllegroToVarisciteConversion
 
             return maxY;
         }
-        //private int FindMinY()
-        //{
-        //    List<MyDictionary> lst = this.coords;
-
-        //    int minY = int.MinValue;
-
-        //    for (int i = 0; i < lst.Count; i++)
-        //    {
-        //        for (int j = 0; j < lst[i].Value.Count; j++)
-        //        {
-        //            minY = Math.Min(minY, lst[i].Value[j].Y);
-        //        }
-        //    }
-
-        //    return minY;
-        //}
-
         /// <summary>
         /// Handles the Click event of the coordinatesReportFileToolStripMenuItem control.
         /// </summary>
@@ -524,12 +507,32 @@ namespace AllegroToVarisciteConversion
             return num;
         }
         /// <summary>
+        /// Gets the minimum x coordination.
+        /// </summary>
+        /// <returns></returns>
+        private int GetMinXCoordination()
+        {
+            List<MyDictionary> lst = this.coords;
+            int num = int.MaxValue;
+            for (int i = 0; i < lst.Count; i++)
+            {
+                for (int j = 0; j < lst[i].Value.Count; j++)
+                {
+                    if (lst[i].Value[j].X < num)
+                    {
+                        num = lst[i].Value[j].X;
+                    }
+                }
+            }
+            return num;
+        }
+        /// <summary>
         /// Moves all elements.
         /// </summary>
         private void MoveAllElements(ref List<MyDictionary> lst)
         {
-            //List<MyDictionary> lst = this.coords;
             int deleyY = GetMinYCoordination()-10;
+            int deleyX = GetMinXCoordination() - 10;
             for (int i = 0; i < lst.Count; i++)
             {
                 List<Point> coordinations = lst[i].Value;
@@ -537,12 +540,8 @@ namespace AllegroToVarisciteConversion
                 {
                     Point point = coordinations[j];
                     point.Y -= deleyY;
+                    point.X -= deleyX;
                     coordinations[j] = point;
-                    //int y = (coordinations[j].Y-GetMinYCoordination());
-                    //int y = (coordinations[j].Y-FindMinY());
-                    //int x = coordinations[j].X;
-
-                    //coordinations[j] = new Point(x, y);
                 }
             }
             this.coords = lst;
