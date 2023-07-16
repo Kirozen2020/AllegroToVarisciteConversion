@@ -93,20 +93,20 @@ namespace AllegroToVarisciteConversion
                     switch (index)
                     {
                         case 0:case 1:case 2:case 3:
-                            logTextDebug.AppendLine("Reading line " + index + ": {" + line.ToString() + "} Dumping line");
+                            logTextDebug.AppendLine("Reading line " + index + ": {" + ConvertListToString(line, index) + "} Dumping line");
                             break;
                         case 4:
-                            logTextDebug.AppendLine("Reading line " + index + ": {" + line.ToString() + "}");
+                            logTextDebug.AppendLine("Reading line " + index + ": {" + ConvertListToString(line, index) + "}");
                             logTextDebug.AppendLine("Getting Refdes is in column 0, X coordinate in column 1, Y coordinate in column 2");
                             logTextInfo.AppendLine("Getting Refdes is in column 0, X coordinate in column 1, Y coordinate in column 2");
                             break;
                         case 5:
-                            logTextDebug.AppendLine("Reading line " + index + ": {" + line.ToString() + "} Dumping line");
+                            logTextDebug.AppendLine("Reading line " + index + ": {" + ConvertListToString(line, index) + "} Dumping line");
                             break;
                     }
                     if(index >= 6)
                     {
-                        logTextDebug.AppendLine("Reading line " + index + ": {" + line.ToString() + "}");
+                        logTextDebug.AppendLine("Reading line " + index + ": {" + ConvertListToString(line, index) + "}");
                         if (CanConvertToNumeric(line[1]) == false)//error
                         {
                             logTextDebug.AppendLine($"ERROR!!! Cannot parse line {index} Refdes {line[0]} coordinate X has incorrect string value {line[1]} that cannot be parsed");
@@ -135,6 +135,29 @@ namespace AllegroToVarisciteConversion
             return tabel;
         }
         /// <summary>
+        /// Converts the list to string.
+        /// </summary>
+        /// <param name="str">The string.</param>
+        /// <param name="index">The index.</param>
+        /// <returns></returns>
+        private string ConvertListToString(string[] str, int index)
+        {
+            string line = "";
+            for (int i = 0; i < str.Length; i++)
+            {
+                if(index == 0 || index == 1 || index == 2 || index == 4)
+                {
+                    line += str[i]+" ";
+                }
+                else
+                {
+                    line += "  "+str[i] + "\t !";
+                }
+            }
+
+            return line.Substring(0, line.Length-1);
+        }
+        /// <summary>
         /// Determines whether this instance [can convert to numeric] the specified input.
         /// </summary>
         /// <param name="input">The input.</param>
@@ -143,30 +166,17 @@ namespace AllegroToVarisciteConversion
         /// </returns>
         private bool CanConvertToNumeric(string input)
         {
-            bool isConvertible = false;
-
-            if (int.TryParse(input, out _))
+            foreach(char c in input)
             {
-                // String can be converted to int
-                isConvertible = true;
+                if(!char.IsDigit(c))
+                {
+                    if(c != '.')
+                    {
+                        return false;
+                    }
+                }
             }
-            else if (float.TryParse(input, out _))
-            {
-                // String can be converted to float
-                isConvertible = true;
-            }
-            else if (double.TryParse(input, out _))
-            {
-                // String can be converted to double
-                isConvertible = true;
-            }
-            else if (decimal.TryParse(input, out _))
-            {
-                // String can be converted to decimal
-                isConvertible = true;
-            }
-
-            return isConvertible;
+            return true;
         }
         /// <summary>
         /// Removes the white spaces.
@@ -175,7 +185,6 @@ namespace AllegroToVarisciteConversion
         /// <returns></returns>
         private string RemoveWhiteSpaces(string line)
         {
-            logTextDebug.AppendLine($"Removing white spaces from Refdes {line[0]}");
             return new string(line.ToCharArray().Where(c => !Char.IsWhiteSpace(c)).ToArray());
         }
         /// <summary>
@@ -295,6 +304,7 @@ namespace AllegroToVarisciteConversion
         /// Saves the file.
         /// </summary>
         /// <param name="outputString">The output string.</param>
+        /// <param name="outputLogPatch">The output log patch.</param>
         private void SaveFile(string outputString, string outputLogPatch)
         {
             StringBuilder csv = new StringBuilder();
