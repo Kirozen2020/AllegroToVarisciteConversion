@@ -126,7 +126,7 @@ namespace AllegroToVarisciteConversion
                     index++;
                 }
             }
-            logTextDebug.AppendLine("Removing dump lines");
+            logTextDebug.AppendLine("\nRemoving dump lines");
             tabel.RemoveAt(0);
             tabel.RemoveAt(0);
             tabel.RemoveAt(0);
@@ -193,6 +193,9 @@ namespace AllegroToVarisciteConversion
         /// <returns></returns>
         private List<MyDictionary> InitElementCoords()
         {
+            logTextDebug.AppendLine("Start Converting placement report file");
+            logTextInfo.AppendLine("Start Converting placement report file");
+
             List<MyDictionary> coords = new List<MyDictionary>();
 
             MyDictionary temp = new MyDictionary("First element -> delete");
@@ -355,6 +358,8 @@ namespace AllegroToVarisciteConversion
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 this.placementReportPatch = openFileDialog.FileName;
+                logTextDebug.AppendLine("Opening placement file " + this.placementReportPatch);
+                logTextInfo.AppendLine("Opening placement file " + this.placementReportPatch);
             }
 
             if(this.placementReportPatch != null)
@@ -364,6 +369,9 @@ namespace AllegroToVarisciteConversion
             
             if(this.coords != null)
             {
+                logTextDebug.AppendLine("Start drawing the scheme");
+                logTextInfo.AppendLine("Start drawing the scheme");
+
                 MoveAllElements(ref this.coords);
 
                 List<List<Point>> lst = ConvertToListOfListOfPoints();
