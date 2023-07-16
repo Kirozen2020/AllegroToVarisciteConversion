@@ -89,6 +89,7 @@ namespace AllegroToVarisciteConversion
                         line[i] = RemoveWhiteSpaces(line[i]);
                     }
                     tabel.Add(line);
+
                     switch (index)
                     {
                         case 0:case 1:case 2:case 3:
@@ -125,6 +126,7 @@ namespace AllegroToVarisciteConversion
                     index++;
                 }
             }
+            logTextDebug.AppendLine("Removing dump lines");
             tabel.RemoveAt(0);
             tabel.RemoveAt(0);
             tabel.RemoveAt(0);
@@ -132,6 +134,13 @@ namespace AllegroToVarisciteConversion
             tabel.RemoveAt(1);
             return tabel;
         }
+        /// <summary>
+        /// Determines whether this instance [can convert to numeric] the specified input.
+        /// </summary>
+        /// <param name="input">The input.</param>
+        /// <returns>
+        ///   <c>true</c> if this instance [can convert to numeric] the specified input; otherwise, <c>false</c>.
+        /// </returns>
         private bool CanConvertToNumeric(string input)
         {
             bool isConvertible = false;
@@ -164,8 +173,9 @@ namespace AllegroToVarisciteConversion
         /// </summary>
         /// <param name="line">The line.</param>
         /// <returns></returns>
-        public static string RemoveWhiteSpaces(string line)
+        private string RemoveWhiteSpaces(string line)
         {
+            logTextDebug.AppendLine($"Removing white spaces from Refdes {line[0]}");
             return new string(line.ToCharArray().Where(c => !Char.IsWhiteSpace(c)).ToArray());
         }
         /// <summary>
@@ -285,7 +295,7 @@ namespace AllegroToVarisciteConversion
         /// Saves the file.
         /// </summary>
         /// <param name="outputString">The output string.</param>
-        private void SaveFile(string outputString)
+        private void SaveFile(string outputString, string outputLogPatch)
         {
             StringBuilder csv = new StringBuilder();
             string line = "";
@@ -306,6 +316,18 @@ namespace AllegroToVarisciteConversion
             }
 
             File.AppendAllText(outputString, csv.ToString());
+            switch (logMode)
+            {
+                case "error":
+                    File.WriteAllText(outputLogPatch, logTextError.ToString());
+                    break;
+                case "info":
+                    File.WriteAllText(outputLogPatch, logTextInfo.ToString());
+                    break;
+                case "debug":
+                    File.WriteAllText(outputLogPatch, logTextDebug.ToString());
+                    break;
+            }
         }
         
         /// <summary>
@@ -503,6 +525,9 @@ namespace AllegroToVarisciteConversion
             DialogResult ans = MessageBox.Show("Close Program?","Exit", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (ans == DialogResult.Yes)
             {
+                logTextDebug.AppendLine("Exit program");
+                logTextError.AppendLine("Exit program");
+                logTextInfo.AppendLine("Exit program");
                 System.Environment.Exit(1);
             }
         }
@@ -521,8 +546,8 @@ namespace AllegroToVarisciteConversion
 
                     if (item != null)
                     {
-                        int x = SumPoints(item.Value, 'x')/item.Value.Count-20;
-                        int y = SumPoints(item.Value, 'y') / item.Value.Count-5;
+                        int x = SumPoints(item.Value, 'x') / item.Value.Count - 20;
+                        int y = SumPoints(item.Value, 'y') / item.Value.Count - 5;
 
                         Graphics graphics = Graphics.FromImage(bitmap);
                         Font font = new Font("Arial", 15);
@@ -643,13 +668,25 @@ namespace AllegroToVarisciteConversion
 
             if (this.placementCoordinatesPatch != null && this.placementReportPatch != null)
             {
-                SaveFile(savePatch);
+                SaveFile(savePatch, ChangeFileExtension(savePatch, ".log"));
                 MessageBox.Show("File Saved", "Congratulations", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else
             {
                 MessageBox.Show("You need to chose files first!", "Attention", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
+        }
+        /// <summary>
+        /// Changes the file extension.
+        /// </summary>
+        /// <param name="filePath">The file path.</param>
+        /// <param name="newExtension">The new extension.</param>
+        /// <returns></returns>
+        private string ChangeFileExtension(string filePath, string newExtension)
+        {
+            string directory = Path.GetDirectoryName(filePath);
+            string fileName = Path.GetFileNameWithoutExtension(filePath);
+            return Path.Combine(directory, fileName + newExtension);
         }
         /// <summary>
         /// Handles the Click event of the errorToolStripMenuItem control.
