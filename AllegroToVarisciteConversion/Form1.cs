@@ -18,6 +18,8 @@ namespace AllegroToVarisciteConversion
         public Form1()
         {
             InitializeComponent();
+            logTextDebug.AppendLine("Program Start");
+            logTextInfo.AppendLine("Program Start");
         }
 
         /// <summary>
@@ -48,7 +50,22 @@ namespace AllegroToVarisciteConversion
         /// The last clicked item
         /// </summary>
         private ToolStripMenuItem lastClickedItem;
-
+        /// <summary>
+        /// The log mode
+        /// </summary>
+        private string logMode;
+        /// <summary>
+        /// The log text
+        /// </summary>
+        private StringBuilder logTextInfo = new StringBuilder();
+        /// <summary>
+        /// The log text debug
+        /// </summary>
+        private StringBuilder logTextDebug = new StringBuilder();
+        /// <summary>
+        /// The log text error
+        /// </summary>
+        private StringBuilder logTextError = new StringBuilder();
 
         /// <summary>
         /// Initializes the tabel.
@@ -56,8 +73,12 @@ namespace AllegroToVarisciteConversion
         /// <returns></returns>
         private List<string[]> InitTabel()
         {
+            //Add lines to log file
+            logTextDebug.AppendLine($"Start converting coordinates file to List<string[]> format");
+            logTextInfo.AppendLine($"Start converting coordinates file to List<string[]> format");
+
             List<string[]> tabel = new List<string[]>();
-            
+            int index = 0;
             using(var reader = new StreamReader(this.placementCoordinatesPatch))
             {
                 while (reader.EndOfStream == false)
@@ -68,6 +89,40 @@ namespace AllegroToVarisciteConversion
                         line[i] = RemoveWhiteSpaces(line[i]);
                     }
                     tabel.Add(line);
+                    switch (index)
+                    {
+                        case 0:case 1:case 2:case 3:
+                            logTextDebug.AppendLine("Reading line " + index + ": {" + line.ToString() + "} Dumping line");
+                            break;
+                        case 4:
+                            logTextDebug.AppendLine("Reading line " + index + ": {" + line.ToString() + "}");
+                            logTextDebug.AppendLine("Getting Refdes is in column 0, X coordinate in column 1, Y coordinate in column 2");
+                            logTextInfo.AppendLine("Getting Refdes is in column 0, X coordinate in column 1, Y coordinate in column 2");
+                            break;
+                        case 5:
+                            logTextDebug.AppendLine("Reading line " + index + ": {" + line.ToString() + "} Dumping line");
+                            break;
+                    }
+                    if(index >= 6)
+                    {
+                        logTextDebug.AppendLine("Reading line " + index + ": {" + line.ToString() + "}");
+                        if (CanConvertToNumeric(line[1]) == false)//error
+                        {
+                            logTextDebug.AppendLine($"ERROR!!! Cannot parse line {index} Refdes {line[0]} coordinate X has incorrect string value {line[1]} that cannot be parsed");
+                            logTextError.AppendLine($"ERROR!!! Cannot parse line {index} Refdes {line[0]} coordinate X has incorrect string value {line[1]} that cannot be parsed");
+                            logTextInfo.AppendLine($"ERROR!!! Cannot parse line {index} Refdes {line[0]} coordinate X has incorrect string value {line[1]} that cannot be parsed");
+                        }
+                        else if(CanConvertToNumeric(line[2]) == false)//error
+                        {
+                            logTextDebug.AppendLine($"ERROR!!! Cannot parse line {index} Refdes {line[0]} coordinate Y has incorrect string value {line[2]} that cannot be parsed");
+                            logTextError.AppendLine($"ERROR!!! Cannot parse line {index} Refdes {line[0]} coordinate Y has incorrect string value {line[2]} that cannot be parsed");
+                            logTextInfo.AppendLine($"ERROR!!! Cannot parse line {index} Refdes {line[0]} coordinate Y has incorrect string value {line[2]} that cannot be parsed");
+
+                        }
+                        logTextDebug.AppendLine($"Refdes {line[0]} is located at {line[1]},{line[2]}");
+                        logTextInfo.AppendLine($"Refdes {line[0]} is located at {line[1]},{line[2]}");
+                    }
+                    index++;
                 }
             }
             tabel.RemoveAt(0);
@@ -76,6 +131,33 @@ namespace AllegroToVarisciteConversion
 
             tabel.RemoveAt(1);
             return tabel;
+        }
+        private bool CanConvertToNumeric(string input)
+        {
+            bool isConvertible = false;
+
+            if (int.TryParse(input, out _))
+            {
+                // String can be converted to int
+                isConvertible = true;
+            }
+            else if (float.TryParse(input, out _))
+            {
+                // String can be converted to float
+                isConvertible = true;
+            }
+            else if (double.TryParse(input, out _))
+            {
+                // String can be converted to double
+                isConvertible = true;
+            }
+            else if (decimal.TryParse(input, out _))
+            {
+                // String can be converted to decimal
+                isConvertible = true;
+            }
+
+            return isConvertible;
         }
         /// <summary>
         /// Removes the white spaces.
@@ -400,6 +482,9 @@ namespace AllegroToVarisciteConversion
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 this.placementCoordinatesPatch = openFileDialog.FileName;
+
+                logTextDebug.AppendLine($"Opening coordinates file {this.placementCoordinatesPatch}");
+                logTextInfo.AppendLine($"Opening coordinates file {this.placementCoordinatesPatch}");
             }
 
             if(this.placementCoordinatesPatch != null)
@@ -586,6 +671,7 @@ namespace AllegroToVarisciteConversion
                 lastClickedItem.CheckState = CheckState.Unchecked;
             }
             lastClickedItem = item;
+            logMode = "error";
         }
         /// <summary>
         /// Handles the Click event of the infoToolStripMenuItem control.
@@ -607,6 +693,7 @@ namespace AllegroToVarisciteConversion
                 lastClickedItem.CheckState = CheckState.Unchecked;
             }
             lastClickedItem = item;
+            logMode = "info";
         }
         /// <summary>
         /// Handles the Click event of the debugToolStripMenuItem control.
@@ -628,6 +715,7 @@ namespace AllegroToVarisciteConversion
                 lastClickedItem.CheckState = CheckState.Unchecked;
             }
             lastClickedItem = item;
+            logMode = "debug";
         }
     }
 }
