@@ -76,8 +76,8 @@ namespace AllegroToVarisciteConversion
         private List<string[]> InitTabel()
         {
             //Add lines to log file
-            this.logTextDebug.AppendLine($"Start converting coordinates file to List<string[]> format");
-            this.logTextInfo.AppendLine($"Start converting coordinates file to List<string[]> format");
+            this.logTextDebug.AppendLine($"\nStart converting coordinates file to List<string[]> format\n");
+            this.logTextInfo.AppendLine($"\nStart converting coordinates file to List<string[]> format\n");
 
             List<string[]> tabel = new List<string[]>();
             int index = 0;
@@ -128,7 +128,6 @@ namespace AllegroToVarisciteConversion
                     index++;
                 }
             }
-            this.logTextDebug.AppendLine("\nRemoving dump lines");
             tabel.RemoveAt(0);
             tabel.RemoveAt(0);
             tabel.RemoveAt(0);
@@ -270,7 +269,7 @@ namespace AllegroToVarisciteConversion
             {
                 for (int i = 0; i < line.Length; i++)
                 {
-                    str += line[i] + "\t";
+                    str += line[i] + "  ";
                 }
                 str += "} Dumping line";
             }
@@ -278,7 +277,7 @@ namespace AllegroToVarisciteConversion
             {
                 for (int i = 0; i < line.Length; i++)
                 {
-                    str += line[i] + "\t";
+                    str += line[i] + "  ";
                 }
                 str += "} Name line";
             }
@@ -286,7 +285,7 @@ namespace AllegroToVarisciteConversion
             {
                 for (int i = 0; i < line.Length; i++)
                 {
-                    str += line[i] + "\t";
+                    str += line[i] + "  ";
                 }
                 str += "} coordination line";
             }
@@ -470,6 +469,10 @@ namespace AllegroToVarisciteConversion
         /// <param name="pointLists">The point lists.</param>
         private void DrawPoints(PictureBox pb, List<List<Point>> pointLists)
         {
+            if(this.motherBoardImage != null)
+            {
+                this.motherBoardImage.Dispose();
+            }
             if (pb == null || pointLists == null)
                 return;
 
@@ -510,7 +513,15 @@ namespace AllegroToVarisciteConversion
                 }
                 this.motherBoardImage = bmp;
                 AddText(ref this.motherBoardImage);
-                bmp.Save(@"../../Resources/image.png", ImageFormat.Png);
+                if(File.Exists(@"../../Resources/image.png"))
+                {
+                    bmp.Save(@"../../Resources/image.png");
+                }
+                else
+                {
+                    bmp.Save(@"../../Resources/image.png", ImageFormat.Png);
+                }
+                
             }
         }
         /// <summary>
