@@ -20,6 +20,8 @@ namespace AllegroToVarisciteConversion
             InitializeComponent();
             this.logTextDebug.AppendLine("Program Start");
             this.logTextInfo.AppendLine("Program Start");
+
+            infoToolStripMenuItem.CheckState = CheckState.Checked;
         }
 
         /// <summary>
@@ -202,8 +204,8 @@ namespace AllegroToVarisciteConversion
         /// <returns></returns>
         private List<MyDictionary> InitElementCoords()
         {
-            this.logTextDebug.AppendLine("Start Converting placement report file");
-            this.logTextInfo.AppendLine("Start Converting placement report file");
+            this.logTextDebug.AppendLine("\nStart converting placement report file");
+            this.logTextInfo.AppendLine("\nStart converting placement report file");
 
             int index = 0;
 
@@ -218,6 +220,11 @@ namespace AllegroToVarisciteConversion
                     var line = reader.ReadLine().Split(' ');
                     if (HasName(line))
                     {
+                        if(coords.Count != 0)
+                        {
+                            this.logTextDebug.AppendLine($"Refdes {temp.Key} is added with {temp.Value.Count} coordinations");
+                            this.logTextInfo.AppendLine($"Refdes {temp.Key} is added with {temp.Value.Count} coordinations");
+                        }
                         coords.Add(temp);
                         temp = new MyDictionary(line[12]);
                         this.logTextDebug.AppendLine($"Reading line {index}: {ConvertToLinePlacementReport(line, 1)}");
@@ -237,13 +244,13 @@ namespace AllegroToVarisciteConversion
                         temp.AddValue(int.Parse(t1), int.Parse(t2));
 
                         this.logTextDebug.AppendLine($"Coordination {t1},{t2} added to refdes {temp.Key}");
+                        //this.logTextInfo.AppendLine($"Coordination {t1},{t2} added to refdes {temp.Key}");
                     }
                     else
                     {
                         this.logTextDebug.AppendLine($"Reading line {index}: {ConvertToLinePlacementReport(line, 0)}");
                     }
-                    this.logTextDebug.AppendLine($"Refdes {temp.Key} is added with {temp.Value.Count} coordinations");
-                    this.logTextInfo.AppendLine($"Refdes {temp.Key} is added with {temp.Value.Count} coordinations");
+                    
                     index++;
                 }
             }
@@ -382,6 +389,11 @@ namespace AllegroToVarisciteConversion
             }
 
             File.AppendAllText(outputString, csv.ToString());
+
+            this.logTextInfo.AppendLine("\nFile saved at " + outputString);
+            this.logTextDebug.AppendLine("\nFile saved at " + outputString);
+            this.logTextError.AppendLine("\nFile saved at " + outputString);
+
             switch (logMode)
             {
                 case "error":
@@ -423,8 +435,8 @@ namespace AllegroToVarisciteConversion
             
             if(this.coords != null)
             {
-                this.logTextDebug.AppendLine("Start drawing the scheme");
-                this.logTextInfo.AppendLine("Start drawing the scheme");
+                this.logTextDebug.AppendLine("\nStart drawing the scheme\n");
+                this.logTextInfo.AppendLine("\nStart drawing the scheme\n");
 
                 MoveAllElements(ref this.coords);
 
