@@ -18,9 +18,8 @@ namespace AllegroToVarisciteConversion
         public Form1()
         {
             InitializeComponent();
-            this.logTextDebug.AppendLine("Program Start");
-            this.logTextInfo.AppendLine("Program Start");
 
+            this.logTextGlobal.AppendLine("Program Start");
             infoToolStripMenuItem.CheckState = CheckState.Checked;
         }
 
@@ -56,18 +55,24 @@ namespace AllegroToVarisciteConversion
         /// The log mode
         /// </summary>
         private string logMode = "info";
+
         /// <summary>
         /// The log text
         /// </summary>
-        private StringBuilder logTextInfo = new StringBuilder();
+        private StringBuilder logTextInfoPlacementCoordinates = new StringBuilder();
+        private StringBuilder logTextInfoPlacementReport = new StringBuilder();
         /// <summary>
         /// The log text debug
         /// </summary>
-        private StringBuilder logTextDebug = new StringBuilder();
+        private StringBuilder logTextDebugPlacementCoordinates = new StringBuilder();
+        private StringBuilder logTextDebugPlacementReport = new StringBuilder();
         /// <summary>
         /// The log text error
         /// </summary>
-        private StringBuilder logTextError = new StringBuilder();
+        private StringBuilder logTextErrorPlacementCoordinates = new StringBuilder();
+        private StringBuilder logTextErrorPlacementReport = new StringBuilder();
+
+        private StringBuilder logTextGlobal = new StringBuilder();
 
         /// <summary>
         /// Initializes the tabel.
@@ -75,9 +80,13 @@ namespace AllegroToVarisciteConversion
         /// <returns></returns>
         private List<string[]> InitTabel()
         {
+            CleanLogPlacementCoordinates();
             //Add lines to log file
-            this.logTextDebug.AppendLine($"\nStart converting coordinates file to List<string[]> format\n");
-            this.logTextInfo.AppendLine($"\nStart converting coordinates file to List<string[]> format\n");
+            this.logTextDebugPlacementCoordinates.AppendLine($"Opening coordinates file {this.placementCoordinatesPatch}");
+            this.logTextInfoPlacementCoordinates.AppendLine($"Opening coordinates file {this.placementCoordinatesPatch}");
+
+            this.logTextDebugPlacementCoordinates.AppendLine($"\nStart converting coordinates file to List<string[]> format\n");
+            this.logTextInfoPlacementCoordinates.AppendLine($"\nStart converting coordinates file to List<string[]> format\n");
 
             List<string[]> tabel = new List<string[]>();
             int index = 0;
@@ -95,35 +104,35 @@ namespace AllegroToVarisciteConversion
                     switch (index)
                     {
                         case 0:case 1:case 2:case 3:
-                            this.logTextDebug.AppendLine("Reading line " + index + ": {" + ConvertListToString(line, index) + "} Dumping line");
+                            this.logTextDebugPlacementCoordinates.AppendLine("Reading line " + index + ": {" + ConvertListToString(line, index) + "} Dumping line");
                             break;
                         case 4:
-                            this.logTextDebug.AppendLine("Reading line " + index + ": {" + ConvertListToString(line, index) + "}");
-                            this.logTextDebug.AppendLine("Getting Refdes is in column 0, X coordinate in column 1, Y coordinate in column 2");
-                            this.logTextInfo.AppendLine("Getting Refdes is in column 0, X coordinate in column 1, Y coordinate in column 2");
+                            this.logTextDebugPlacementCoordinates.AppendLine("Reading line " + index + ": {" + ConvertListToString(line, index) + "}");
+                            this.logTextDebugPlacementCoordinates.AppendLine("Getting Refdes is in column 0, X coordinate in column 1, Y coordinate in column 2");
+                            this.logTextInfoPlacementCoordinates.AppendLine("Getting Refdes is in column 0, X coordinate in column 1, Y coordinate in column 2");
                             break;
                         case 5:
-                            this.logTextDebug.AppendLine("Reading line " + index + ": {" + ConvertListToString(line, index) + "} Dumping line");
+                            this.logTextDebugPlacementCoordinates.AppendLine("Reading line " + index + ": {" + ConvertListToString(line, index) + "} Dumping line");
                             break;
                     }
                     if(index >= 6)
                     {
-                        this.logTextDebug.AppendLine("Reading line " + index + ": {" + ConvertListToString(line, index) + "}");
+                        this.logTextDebugPlacementCoordinates.AppendLine("Reading line " + index + ": {" + ConvertListToString(line, index) + "}");
                         if (CanConvertToNumeric(line[1]) == false)//error
                         {
-                            this.logTextDebug.AppendLine($"ERROR!!! Cannot parse line {index} Refdes {line[0]} coordinate X has incorrect string value {line[1]} that cannot be parsed");
-                            this.logTextError.AppendLine($"ERROR!!! Cannot parse line {index} Refdes {line[0]} coordinate X has incorrect string value {line[1]} that cannot be parsed");
-                            this.logTextInfo.AppendLine($"ERROR!!! Cannot parse line {index} Refdes {line[0]} coordinate X has incorrect string value {line[1]} that cannot be parsed");
+                            this.logTextDebugPlacementCoordinates.AppendLine($"ERROR!!! Cannot parse line {index} Refdes {line[0]} coordinate X has incorrect string value {line[1]} that cannot be parsed");
+                            this.logTextErrorPlacementCoordinates.AppendLine($"ERROR!!! Cannot parse line {index} Refdes {line[0]} coordinate X has incorrect string value {line[1]} that cannot be parsed");
+                            this.logTextInfoPlacementCoordinates.AppendLine($"ERROR!!! Cannot parse line {index} Refdes {line[0]} coordinate X has incorrect string value {line[1]} that cannot be parsed");
                         }
                         else if(CanConvertToNumeric(line[2]) == false)//error
                         {
-                            this.logTextDebug.AppendLine($"ERROR!!! Cannot parse line {index} Refdes {line[0]} coordinate Y has incorrect string value {line[2]} that cannot be parsed");
-                            this.logTextError.AppendLine($"ERROR!!! Cannot parse line {index} Refdes {line[0]} coordinate Y has incorrect string value {line[2]} that cannot be parsed");
-                            this.logTextInfo.AppendLine($"ERROR!!! Cannot parse line {index} Refdes {line[0]} coordinate Y has incorrect string value {line[2]} that cannot be parsed");
+                            this.logTextDebugPlacementCoordinates.AppendLine($"ERROR!!! Cannot parse line {index} Refdes {line[0]} coordinate Y has incorrect string value {line[2]} that cannot be parsed");
+                            this.logTextErrorPlacementCoordinates.AppendLine($"ERROR!!! Cannot parse line {index} Refdes {line[0]} coordinate Y has incorrect string value {line[2]} that cannot be parsed");
+                            this.logTextInfoPlacementCoordinates.AppendLine($"ERROR!!! Cannot parse line {index} Refdes {line[0]} coordinate Y has incorrect string value {line[2]} that cannot be parsed");
 
                         }
-                        this.logTextDebug.AppendLine($"Refdes {line[0]} is located at {line[1]},{line[2]}");
-                        this.logTextInfo.AppendLine($"Refdes {line[0]} is located at {line[1]},{line[2]}");
+                        this.logTextDebugPlacementCoordinates.AppendLine($"Refdes {line[0]} is located at {line[1]},{line[2]}");
+                        this.logTextInfoPlacementCoordinates.AppendLine($"Refdes {line[0]} is located at {line[1]},{line[2]}");
                     }
                     index++;
                 }
@@ -138,11 +147,17 @@ namespace AllegroToVarisciteConversion
         /// <summary>
         /// Cleans the log text.
         /// </summary>
-        private void CleanLogText()
+        private void CleanLogPlacementReport()
         {
-            this.logTextDebug.Clear();
-            this.logTextError.Clear();
-            this.logTextInfo.Clear();
+            this.logTextDebugPlacementReport.Clear();
+            this.logTextErrorPlacementReport.Clear();
+            this.logTextInfoPlacementReport.Clear();
+        }
+        private void CleanLogPlacementCoordinates()
+        {
+            this.logTextInfoPlacementCoordinates.Clear();
+            this.logTextErrorPlacementCoordinates.Clear();
+            this.logTextDebugPlacementCoordinates.Clear();
         }
         /// <summary>
         /// Converts the list to string.
@@ -203,8 +218,13 @@ namespace AllegroToVarisciteConversion
         /// <returns></returns>
         private List<MyDictionary> InitElementCoords()
         {
-            this.logTextDebug.AppendLine("\nStart converting placement report file");
-            this.logTextInfo.AppendLine("\nStart converting placement report file");
+            CleanLogPlacementReport();
+
+            this.logTextDebugPlacementReport.AppendLine("Opening placement file " + this.placementReportPatch);
+            this.logTextInfoPlacementReport.AppendLine("Opening placement file " + this.placementReportPatch);
+
+            this.logTextDebugPlacementReport.AppendLine("\nStart converting placement report file");
+            this.logTextInfoPlacementReport.AppendLine("\nStart converting placement report file");
 
             int index = 0;
 
@@ -221,12 +241,12 @@ namespace AllegroToVarisciteConversion
                     {
                         if(coords.Count != 0)
                         {
-                            this.logTextDebug.AppendLine($"Refdes {temp.Key} is added with {temp.Value.Count} coordinations");
-                            this.logTextInfo.AppendLine($"Refdes {temp.Key} is added with {temp.Value.Count} coordinations");
+                            this.logTextDebugPlacementReport.AppendLine($"Refdes {temp.Key} is added with {temp.Value.Count} coordinations");
+                            this.logTextInfoPlacementReport.AppendLine($"Refdes {temp.Key} is added with {temp.Value.Count} coordinations");
                         }
                         coords.Add(temp);
                         temp = new MyDictionary(line[12]);
-                        this.logTextDebug.AppendLine($"Reading line {index}: {ConvertToLinePlacementReport(line, 1)}");
+                        this.logTextDebugPlacementReport.AppendLine($"Reading line {index}: {ConvertToLinePlacementReport(line, 1)}");
                     }
                     else if (EndOfFile(line))
                     {
@@ -234,7 +254,7 @@ namespace AllegroToVarisciteConversion
                     }
                     else if (HasCoords(line))
                     {
-                        this.logTextDebug.AppendLine($"Reading line {index}: {ConvertToLinePlacementReport(line, 2)}");
+                        this.logTextDebugPlacementReport.AppendLine($"Reading line {index}: {ConvertToLinePlacementReport(line, 2)}");
                         var t1 = string.Concat(line[3].Where(Char.IsDigit));
                         t1 = t1.Substring(0, t1.Length - 2);
                         var t2 = string.Concat(line[4].Where(Char.IsDigit));
@@ -242,12 +262,12 @@ namespace AllegroToVarisciteConversion
 
                         temp.AddValue(int.Parse(t1), int.Parse(t2));
 
-                        this.logTextDebug.AppendLine($"Coordination {t1},{t2} added to refdes {temp.Key}");
+                        this.logTextDebugPlacementReport.AppendLine($"Coordination {t1},{t2} added to refdes {temp.Key}");
                         //this.logTextInfo.AppendLine($"Coordination {t1},{t2} added to refdes {temp.Key}");
                     }
                     else
                     {
-                        this.logTextDebug.AppendLine($"Reading line {index}: {ConvertToLinePlacementReport(line, 0)}");
+                        this.logTextDebugPlacementReport.AppendLine($"Reading line {index}: {ConvertToLinePlacementReport(line, 0)}");
                     }
                     
                     index++;
@@ -389,23 +409,33 @@ namespace AllegroToVarisciteConversion
 
             File.AppendAllText(outputString, csv.ToString());
 
-            this.logTextInfo.AppendLine("\nFile saved at " + outputString);
-            this.logTextDebug.AppendLine("\nFile saved at " + outputString);
-            this.logTextError.AppendLine("\nFile saved at " + outputString);
-
             switch (logMode)
             {
                 case "error":
-                    File.WriteAllText(outputLogPatch, this.logTextError.ToString());
+
+                    this.logTextGlobal.Append(this.logTextErrorPlacementCoordinates.ToString());
+                    this.logTextGlobal.Append(this.logTextErrorPlacementReport.ToString());
+                    this.logTextGlobal.AppendLine("\nFile saved at " + outputString);
+
+                    File.WriteAllText(outputLogPatch, this.logTextGlobal.ToString());
                     break;
                 case "info":
-                    File.WriteAllText(outputLogPatch, this.logTextInfo.ToString());
+                    this.logTextGlobal.Append(this.logTextInfoPlacementCoordinates.ToString());
+                    this.logTextGlobal.Append(this.logTextInfoPlacementReport.ToString());
+                    this.logTextGlobal.AppendLine("\nFile saved at " + outputString);
+
+                    File.WriteAllText(outputLogPatch, this.logTextGlobal.ToString());
                     break;
                 case "debug":
-                    File.WriteAllText(outputLogPatch, this.logTextDebug.ToString());
+                    this.logTextGlobal.Append(this.logTextDebugPlacementCoordinates.ToString());
+                    this.logTextGlobal.Append(this.logTextDebugPlacementReport.ToString());
+                    this.logTextGlobal.AppendLine("\nFile saved at " + outputString);
+
+                    File.WriteAllText(outputLogPatch, this.logTextGlobal.ToString());
                     break;
             }
-            CleanLogText();
+            CleanLogPlacementCoordinates();
+            CleanLogPlacementReport();
         }
         
         /// <summary>
@@ -423,8 +453,7 @@ namespace AllegroToVarisciteConversion
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 this.placementReportPatch = openFileDialog.FileName;
-                this.logTextDebug.AppendLine("Opening placement file " + this.placementReportPatch);
-                this.logTextInfo.AppendLine("Opening placement file " + this.placementReportPatch);
+                
             }
 
             if(this.placementReportPatch != null)
@@ -434,9 +463,6 @@ namespace AllegroToVarisciteConversion
             
             if(this.coords != null)
             {
-                this.logTextDebug.AppendLine("\nStart drawing the scheme\n");
-                this.logTextInfo.AppendLine("\nStart drawing the scheme\n");
-
                 MoveAllElements(ref this.coords);
 
                 List<List<Point>> lst = ConvertToListOfListOfPoints();
@@ -469,7 +495,10 @@ namespace AllegroToVarisciteConversion
         /// <param name="pointLists">The point lists.</param>
         private void DrawPoints(PictureBox pb, List<List<Point>> pointLists)
         {
-            if(this.motherBoardImage != null)
+            this.logTextDebugPlacementReport.AppendLine("Start drawing scheme\n");
+            this.logTextInfoPlacementReport.AppendLine("Start drawing scheme\n");
+
+            if (this.motherBoardImage != null)
             {
                 this.motherBoardImage.Dispose();
             }
@@ -478,6 +507,7 @@ namespace AllegroToVarisciteConversion
 
             using (Bitmap bmp = new Bitmap(FindMaxX() + 20/*pb.Width*/, FindMaxY() + 20/*pb.Height*/))
             {
+                
                 using (Graphics g = Graphics.FromImage(bmp))
                 {
                     // Clear the PictureBox
@@ -506,9 +536,9 @@ namespace AllegroToVarisciteConversion
                 // Assign the updated bitmap to the PictureBox
                 if(!IsBitmapFormatCompatible(bmp))
                 {
-                    this.logTextError.AppendLine("Errpr!!! Bitmap format is wrong, cannot converte bitmap to image");
-                    this.logTextDebug.AppendLine("Errpr!!! Bitmap format is wrong, cannot converte bitmap to image");
-                    this.logTextInfo.AppendLine("Errpr!!! Bitmap format is wrong, cannot converte bitmap to image");
+                    this.logTextErrorPlacementReport.AppendLine("Errpr!!! Bitmap format is wrong, cannot converte bitmap to image");
+                    this.logTextDebugPlacementReport.AppendLine("Errpr!!! Bitmap format is wrong, cannot converte bitmap to image");
+                    this.logTextInfoPlacementReport.AppendLine("Errpr!!! Bitmap format is wrong, cannot converte bitmap to image");
                     MessageBox.Show("BitMap format error", "Alert!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 this.motherBoardImage = bmp;
@@ -602,9 +632,6 @@ namespace AllegroToVarisciteConversion
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 this.placementCoordinatesPatch = openFileDialog.FileName;
-
-                this.logTextDebug.AppendLine($"Opening coordinates file {this.placementCoordinatesPatch}");
-                this.logTextInfo.AppendLine($"Opening coordinates file {this.placementCoordinatesPatch}");
             }
 
             if(this.placementCoordinatesPatch != null)
@@ -623,9 +650,7 @@ namespace AllegroToVarisciteConversion
             DialogResult ans = MessageBox.Show("Close Program?","Exit", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (ans == DialogResult.Yes)
             {
-                this.logTextDebug.AppendLine("Exit program");
-                this.logTextError.AppendLine("Exit program");
-                this.logTextInfo.AppendLine("Exit program");
+                this.logTextGlobal.AppendLine("Exit program");
                 System.Environment.Exit(1);
             }
         }
