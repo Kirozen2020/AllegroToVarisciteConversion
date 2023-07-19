@@ -60,18 +60,30 @@ namespace AllegroToVarisciteConversion
         /// The log text
         /// </summary>
         private StringBuilder logTextInfoPlacementCoordinates = new StringBuilder();
+        /// <summary>
+        /// The log text information placement report
+        /// </summary>
         private StringBuilder logTextInfoPlacementReport = new StringBuilder();
         /// <summary>
         /// The log text debug
         /// </summary>
         private StringBuilder logTextDebugPlacementCoordinates = new StringBuilder();
+        /// <summary>
+        /// The log text debug placement report
+        /// </summary>
         private StringBuilder logTextDebugPlacementReport = new StringBuilder();
         /// <summary>
         /// The log text error
         /// </summary>
         private StringBuilder logTextErrorPlacementCoordinates = new StringBuilder();
+        /// <summary>
+        /// The log text error placement report
+        /// </summary>
         private StringBuilder logTextErrorPlacementReport = new StringBuilder();
 
+        /// <summary>
+        /// The log text global
+        /// </summary>
         private StringBuilder logTextGlobal = new StringBuilder();
 
         /// <summary>
@@ -145,7 +157,7 @@ namespace AllegroToVarisciteConversion
             return tabel;
         }
         /// <summary>
-        /// Cleans the log text.
+        /// Cleans the log placement report.
         /// </summary>
         private void CleanLogPlacementReport()
         {
@@ -153,6 +165,9 @@ namespace AllegroToVarisciteConversion
             this.logTextErrorPlacementReport.Clear();
             this.logTextInfoPlacementReport.Clear();
         }
+        /// <summary>
+        /// Cleans the log placement coordinates.
+        /// </summary>
         private void CleanLogPlacementCoordinates()
         {
             this.logTextInfoPlacementCoordinates.Clear();
@@ -545,11 +560,11 @@ namespace AllegroToVarisciteConversion
                 AddText(ref this.motherBoardImage);
                 if(File.Exists(@"../../Resources/image.png"))
                 {
-                    bmp.Save(@"../../Resources/image.png");
+                    this.motherBoardImage.Save(@"../../Resources/image.png");
                 }
                 else
                 {
-                    bmp.Save(@"../../Resources/image.png", ImageFormat.Png);
+                    this.motherBoardImage.Save(@"../../Resources/image.png", ImageFormat.Png);
                 }
                 
             }
