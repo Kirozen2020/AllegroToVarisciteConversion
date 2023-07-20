@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 
@@ -23,6 +24,7 @@ namespace AllegroToVarisciteConversion
             infoToolStripMenuItem.CheckState = CheckState.Checked;
         }
 
+        public int imageNumber = 0;
         /// <summary>
         /// The full patch place
         /// </summary>
@@ -288,7 +290,17 @@ namespace AllegroToVarisciteConversion
                     index++;
                 }
             }
-            coords.RemoveAt(0);
+            if(coords.Count > 0)
+            {
+                coords.RemoveAt(0);
+            }
+            else
+            {
+                MessageBox.Show("Wrong Placement Report file", "Alert!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                this.logTextErrorPlacementReport.AppendLine("Error!!! Opend wrong file");
+                this.logTextInfoPlacementReport.AppendLine("Error!!! Opend wrong file");
+                this.logTextDebugPlacementReport.AppendLine("Error!!! Opend wrong file");
+            }
             return coords;
         }
         /// <summary>
@@ -477,8 +489,8 @@ namespace AllegroToVarisciteConversion
             {
                 this.coords = InitElementCoords();
             }
-            
-            if(this.coords != null)
+
+            if (this.coords.Count > 0)
             {
                 MoveAllElements(ref this.coords);
 
@@ -486,10 +498,47 @@ namespace AllegroToVarisciteConversion
 
                 DrawPoints(pbSketch, lst);
 
-                pbSketch.Image = Image.FromFile(@"../../Resources/image.png");
+                string noCoords = GetEmptyRefDeses();
+
+                MessageBox.Show(noCoords, "Empty RefDeses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                pbSketch.Image = Image.FromFile(@"../../Resources/image"+this.imageNumber+".bmp");
             }
             
         }
+        /// <summary>
+        /// Gets the empty reference deses.
+        /// </summary>
+        /// <returns></returns>
+        private string GetEmptyRefDeses()
+        {
+            List<string> names = new List<string>();
+            List<MyDictionary> allNames = this.coords;
+            string result = "RefDeses that are not visible on the diabram:\n";
+
+            for(int i = 0; i < allNames.Count; i++)
+            {
+                if (allNames[i].Value.Count == 0)
+                {
+                    names.Add(allNames[i].Key.ToString());
+                }
+            }
+
+            if(names.Count == 0)
+            {
+                return "there is no empty RefDeses";
+            }
+            else
+            {
+                for (int i = 0; i < names.Count; i++)
+                {
+                    result += names[i] + ", ";
+                }
+            }
+
+            return result.Remove(result.Length - 2);
+        }
+
         /// <summary>
         /// Converts to list of list of points.
         /// </summary>
@@ -512,13 +561,10 @@ namespace AllegroToVarisciteConversion
         /// <param name="pointLists">The point lists.</param>
         private void DrawPoints(PictureBox pb, List<List<Point>> pointLists)
         {
+            this.imageNumber++;
             this.logTextDebugPlacementReport.AppendLine("Start drawing scheme\n");
             this.logTextInfoPlacementReport.AppendLine("Start drawing scheme\n");
 
-            if (this.motherBoardImage != null)
-            {
-                this.motherBoardImage.Dispose();
-            }
             if (pb == null || pointLists == null)
                 return;
 
@@ -560,7 +606,15 @@ namespace AllegroToVarisciteConversion
                 }
                 this.motherBoardImage = bmp;
                 AddText(ref this.motherBoardImage);
-                pbSketch.Image = this.motherBoardImage;
+                try
+                {
+                    this.motherBoardImage.Save(@"../../Resources/image"+this.imageNumber+".bmp", ImageFormat.Bmp);
+                    this.motherBoardImage.Dispose();
+                }
+                catch(ExternalException ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
             }
         }
         /// <summary>
