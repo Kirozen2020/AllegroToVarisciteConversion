@@ -436,6 +436,7 @@ namespace AllegroToVarisciteConversion
                     break;
                 case "info":
                     this.logTextGlobal.Append(this.logTextInfoPlacementCoordinates.ToString());
+                    this.logTextGlobal.AppendLine();
                     this.logTextGlobal.Append(this.logTextInfoPlacementReport.ToString());
                     this.logTextGlobal.AppendLine("\nFile saved at " + outputString);
 
@@ -443,6 +444,7 @@ namespace AllegroToVarisciteConversion
                     break;
                 case "debug":
                     this.logTextGlobal.Append(this.logTextDebugPlacementCoordinates.ToString());
+                    this.logTextGlobal.AppendLine();
                     this.logTextGlobal.Append(this.logTextDebugPlacementReport.ToString());
                     this.logTextGlobal.AppendLine("\nFile saved at " + outputString);
 
@@ -826,6 +828,7 @@ namespace AllegroToVarisciteConversion
         private void errorToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem item = (ToolStripMenuItem)sender;
+            UncheckAllMenuItems(menuStrip1.Items);
             item.Checked = !item.Checked;
 
             if(item.Checked)
@@ -870,6 +873,7 @@ namespace AllegroToVarisciteConversion
         private void debugToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem item = (ToolStripMenuItem)sender;
+            UncheckAllMenuItems(menuStrip1.Items);
             item.Checked = !item.Checked;
 
             if (item.Checked)
@@ -883,6 +887,19 @@ namespace AllegroToVarisciteConversion
             }
             lastClickedItem = item;
             logMode = "debug";
+        }
+
+        private void UncheckAllMenuItems(ToolStripItemCollection items)
+        {
+            foreach (var item in items)
+            {
+                if (item is ToolStripMenuItem menuItem)
+                {
+                    menuItem.Checked = false;
+                    // If the subMenuItem has sub-items, uncheck them as well (recursive call).
+                    UncheckAllMenuItems(menuItem.DropDownItems);
+                }
+            }
         }
     }
 }
