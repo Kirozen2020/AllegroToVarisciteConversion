@@ -558,15 +558,7 @@ namespace AllegroToVarisciteConversion
                 }
                 this.motherBoardImage = bmp;
                 AddText(ref this.motherBoardImage);
-                if(File.Exists(@"../../Resources/image.png"))
-                {
-                    this.motherBoardImage.Save(@"../../Resources/image.png");
-                }
-                else
-                {
-                    this.motherBoardImage.Save(@"../../Resources/image.png", ImageFormat.Png);
-                }
-                
+                pbSketch.Image = this.motherBoardImage;
             }
         }
         /// <summary>
