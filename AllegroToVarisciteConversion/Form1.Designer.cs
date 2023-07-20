@@ -124,35 +124,35 @@
             this.infoToolStripMenuItem,
             this.debugToolStripMenuItem});
             this.logLevelToolStripMenuItem.Name = "logLevelToolStripMenuItem";
-            this.logLevelToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.logLevelToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.logLevelToolStripMenuItem.Text = "Log Level";
             // 
             // errorToolStripMenuItem
             // 
             this.errorToolStripMenuItem.Name = "errorToolStripMenuItem";
-            this.errorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.errorToolStripMenuItem.Size = new System.Drawing.Size(109, 22);
             this.errorToolStripMenuItem.Text = "Error";
             this.errorToolStripMenuItem.Click += new System.EventHandler(this.errorToolStripMenuItem_Click);
             // 
             // infoToolStripMenuItem
             // 
             this.infoToolStripMenuItem.Name = "infoToolStripMenuItem";
-            this.infoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.infoToolStripMenuItem.Size = new System.Drawing.Size(109, 22);
             this.infoToolStripMenuItem.Text = "Info";
             this.infoToolStripMenuItem.Click += new System.EventHandler(this.infoToolStripMenuItem_Click);
             // 
             // debugToolStripMenuItem
             // 
             this.debugToolStripMenuItem.Name = "debugToolStripMenuItem";
-            this.debugToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.debugToolStripMenuItem.Size = new System.Drawing.Size(109, 22);
             this.debugToolStripMenuItem.Text = "Debug";
             this.debugToolStripMenuItem.Click += new System.EventHandler(this.debugToolStripMenuItem_Click);
             // 
             // pbSketch
             // 
-            this.pbSketch.Location = new System.Drawing.Point(12, 40);
+            this.pbSketch.Location = new System.Drawing.Point(0, 27);
             this.pbSketch.Name = "pbSketch";
-            this.pbSketch.Size = new System.Drawing.Size(867, 431);
+            this.pbSketch.Size = new System.Drawing.Size(891, 456);
             this.pbSketch.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pbSketch.TabIndex = 4;
             this.pbSketch.TabStop = false;

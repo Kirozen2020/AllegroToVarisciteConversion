@@ -20,6 +20,8 @@ namespace AllegroToVarisciteConversion
         {
             InitializeComponent();
 
+            pbSketch.Dock = DockStyle.Fill;
+
             this.logTextGlobal.AppendLine("Program Start");
             infoToolStripMenuItem.CheckState = CheckState.Checked;
         }
@@ -114,48 +116,64 @@ namespace AllegroToVarisciteConversion
                         line[i] = RemoveWhiteSpaces(line[i]);
                     }
                     tabel.Add(line);
-
-                    switch (index)
+                    try
                     {
-                        case 0:case 1:case 2:case 3:
-                            this.logTextDebugPlacementCoordinates.AppendLine("Reading line " + index + ": {" + ConvertListToString(line, index) + "} Dumping line");
-                            break;
-                        case 4:
+                        switch (index)
+                        {
+                            case 0:
+                            case 1:
+                            case 2:
+                            case 3:
+                                this.logTextDebugPlacementCoordinates.AppendLine("Reading line " + index + ": {" + ConvertListToString(line, index) + "} Dumping line");
+                                break;
+                            case 4:
+                                this.logTextDebugPlacementCoordinates.AppendLine("Reading line " + index + ": {" + ConvertListToString(line, index) + "}");
+                                this.logTextDebugPlacementCoordinates.AppendLine("Getting Refdes is in column 0, X coordinate in column 1, Y coordinate in column 2");
+                                this.logTextInfoPlacementCoordinates.AppendLine("Getting Refdes is in column 0, X coordinate in column 1, Y coordinate in column 2");
+                                break;
+                            case 5:
+                                this.logTextDebugPlacementCoordinates.AppendLine("Reading line " + index + ": {" + ConvertListToString(line, index) + "} Dumping line");
+                                break;
+                        }
+                        if (index >= 6)
+                        {
                             this.logTextDebugPlacementCoordinates.AppendLine("Reading line " + index + ": {" + ConvertListToString(line, index) + "}");
-                            this.logTextDebugPlacementCoordinates.AppendLine("Getting Refdes is in column 0, X coordinate in column 1, Y coordinate in column 2");
-                            this.logTextInfoPlacementCoordinates.AppendLine("Getting Refdes is in column 0, X coordinate in column 1, Y coordinate in column 2");
-                            break;
-                        case 5:
-                            this.logTextDebugPlacementCoordinates.AppendLine("Reading line " + index + ": {" + ConvertListToString(line, index) + "} Dumping line");
-                            break;
-                    }
-                    if(index >= 6)
-                    {
-                        this.logTextDebugPlacementCoordinates.AppendLine("Reading line " + index + ": {" + ConvertListToString(line, index) + "}");
-                        if (CanConvertToNumeric(line[1]) == false)//error
-                        {
-                            this.logTextDebugPlacementCoordinates.AppendLine($"ERROR!!! Cannot parse line {index} Refdes {line[0]} coordinate X has incorrect string value {line[1]} that cannot be parsed");
-                            this.logTextErrorPlacementCoordinates.AppendLine($"ERROR!!! Cannot parse line {index} Refdes {line[0]} coordinate X has incorrect string value {line[1]} that cannot be parsed");
-                            this.logTextInfoPlacementCoordinates.AppendLine($"ERROR!!! Cannot parse line {index} Refdes {line[0]} coordinate X has incorrect string value {line[1]} that cannot be parsed");
-                        }
-                        else if(CanConvertToNumeric(line[2]) == false)//error
-                        {
-                            this.logTextDebugPlacementCoordinates.AppendLine($"ERROR!!! Cannot parse line {index} Refdes {line[0]} coordinate Y has incorrect string value {line[2]} that cannot be parsed");
-                            this.logTextErrorPlacementCoordinates.AppendLine($"ERROR!!! Cannot parse line {index} Refdes {line[0]} coordinate Y has incorrect string value {line[2]} that cannot be parsed");
-                            this.logTextInfoPlacementCoordinates.AppendLine($"ERROR!!! Cannot parse line {index} Refdes {line[0]} coordinate Y has incorrect string value {line[2]} that cannot be parsed");
+                            if (CanConvertToNumeric(line[1]) == false)//error
+                            {
+                                this.logTextDebugPlacementCoordinates.AppendLine($"ERROR!!! Cannot parse line {index} Refdes {line[0]} coordinate X has incorrect string value {line[1]} that cannot be parsed");
+                                this.logTextErrorPlacementCoordinates.AppendLine($"ERROR!!! Cannot parse line {index} Refdes {line[0]} coordinate X has incorrect string value {line[1]} that cannot be parsed");
+                                this.logTextInfoPlacementCoordinates.AppendLine($"ERROR!!! Cannot parse line {index} Refdes {line[0]} coordinate X has incorrect string value {line[1]} that cannot be parsed");
+                            }
+                            else if (CanConvertToNumeric(line[2]) == false)//error
+                            {
+                                this.logTextDebugPlacementCoordinates.AppendLine($"ERROR!!! Cannot parse line {index} Refdes {line[0]} coordinate Y has incorrect string value {line[2]} that cannot be parsed");
+                                this.logTextErrorPlacementCoordinates.AppendLine($"ERROR!!! Cannot parse line {index} Refdes {line[0]} coordinate Y has incorrect string value {line[2]} that cannot be parsed");
+                                this.logTextInfoPlacementCoordinates.AppendLine($"ERROR!!! Cannot parse line {index} Refdes {line[0]} coordinate Y has incorrect string value {line[2]} that cannot be parsed");
 
+                            }
+                            this.logTextDebugPlacementCoordinates.AppendLine($"Refdes {line[0]} is located at {line[1]},{line[2]}");
+                            this.logTextInfoPlacementCoordinates.AppendLine($"Refdes {line[0]} is located at {line[1]},{line[2]}");
                         }
-                        this.logTextDebugPlacementCoordinates.AppendLine($"Refdes {line[0]} is located at {line[1]},{line[2]}");
-                        this.logTextInfoPlacementCoordinates.AppendLine($"Refdes {line[0]} is located at {line[1]},{line[2]}");
+                    }
+                    catch(Exception e)
+                    {
+                        MessageBox.Show("The file you opening is invalid or empty\nPlease choose another file", "Attention!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                     index++;
                 }
             }
-            tabel.RemoveAt(0);
-            tabel.RemoveAt(0);
-            tabel.RemoveAt(0);
+            if(tabel.Count > 0)
+            {
+                tabel.RemoveAt(0);
+                tabel.RemoveAt(0);
+                tabel.RemoveAt(0);
 
-            tabel.RemoveAt(1);
+                tabel.RemoveAt(1);
+            }
+            else
+            {
+                MessageBox.Show("The file you opening is invalid or empty\nPlease choose another file", "Attention!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
             return tabel;
         }
         /// <summary>
@@ -296,7 +314,7 @@ namespace AllegroToVarisciteConversion
             }
             else
             {
-                MessageBox.Show("Wrong Placement Report file", "Alert!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Wrong Placement Report file", "Attention!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 this.logTextErrorPlacementReport.AppendLine("Error!!! Opend wrong file");
                 this.logTextInfoPlacementReport.AppendLine("Error!!! Opend wrong file");
                 this.logTextDebugPlacementReport.AppendLine("Error!!! Opend wrong file");
@@ -602,7 +620,7 @@ namespace AllegroToVarisciteConversion
                     this.logTextErrorPlacementReport.AppendLine("Errpr!!! Bitmap format is wrong, cannot converte bitmap to image");
                     this.logTextDebugPlacementReport.AppendLine("Errpr!!! Bitmap format is wrong, cannot converte bitmap to image");
                     this.logTextInfoPlacementReport.AppendLine("Errpr!!! Bitmap format is wrong, cannot converte bitmap to image");
-                    MessageBox.Show("BitMap format error", "Alert!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("BitMap format error", "Attention!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 this.motherBoardImage = bmp;
                 AddText(ref this.motherBoardImage);
