@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -21,7 +22,7 @@ namespace AllegroToVarisciteConversion
             InitializeComponent();
 
             pbSketch.Dock = DockStyle.Fill;
-
+            string commitId = GetLastPatchID();
             this.logTextGlobal.AppendLine("Program Start");
             infoToolStripMenuItem.CheckState = CheckState.Checked;
         }
@@ -89,6 +90,39 @@ namespace AllegroToVarisciteConversion
         /// The log text global
         /// </summary>
         private StringBuilder logTextGlobal = new StringBuilder();
+
+        private string GetLastPatchID()
+        {
+            string gitPath = @"C:\Program Files\Git\cmd\git.exe"; // Replace with the path to the git executable if it's not in the system's PATH environment variable.
+
+            // Set up the process information
+            ProcessStartInfo startInfo = new ProcessStartInfo
+            {
+                FileName = gitPath,
+                Arguments = "rev-parse HEAD",
+                RedirectStandardOutput = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+
+            // Create and start the process
+            using (Process process = new Process())
+            {
+                process.StartInfo = startInfo;
+                process.Start();
+
+                // Read the output of the command (commit ID)
+                string commitId = process.StandardOutput.ReadToEnd().Trim();
+
+                // Wait for the process to finish
+                process.WaitForExit();
+
+                //Console.WriteLine($"The last commit ID is: {commitId}");
+                MessageBox.Show(commitId);
+                return commitId;
+            }
+        }
+
 
         /// <summary>
         /// Initializes the tabel.
