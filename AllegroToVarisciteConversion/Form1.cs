@@ -509,6 +509,14 @@ namespace AllegroToVarisciteConversion
                 this.coords = InitElementCoords();
             }
 
+            if (this.coords != null && this.table != null)
+            {
+                if (this.coords.Count > 0 && this.table.Count > 0)
+                {
+                    MessageBox.Show(GetEmptyRefDeses(), "Empty RefDeses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+
             if (this.coords.Count > 0)
             {
                 MoveAllElements(ref this.coords);
@@ -516,10 +524,6 @@ namespace AllegroToVarisciteConversion
                 List<List<Point>> lst = ConvertToListOfListOfPoints();
 
                 DrawPoints(pbSketch, lst);
-
-                string noCoords = GetEmptyRefDeses();
-
-                MessageBox.Show(noCoords, "Empty RefDeses", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 pbSketch.Image = Image.FromFile(@"../../Resources/image"+this.imageNumber+".bmp");
             }
@@ -532,14 +536,14 @@ namespace AllegroToVarisciteConversion
         private string GetEmptyRefDeses()
         {
             List<string> names = new List<string>();
-            List<MyDictionary> allNames = this.coords;
-            string result = "RefDeses that are not visible on the diabram:\n";
+            List<string[]> allnames = this.table;
+            string result = "RefDeses that are not visible on the diagram:\n";
 
-            for(int i = 0; i < allNames.Count; i++)
+            for (int i = 1; i < allnames.Count; i++)
             {
-                if (allNames[i].Value.Count == 0)
+                if (GetCoords(allnames[i][0]) == "")
                 {
-                    names.Add(allNames[i].Key.ToString());
+                    names.Add(allnames[i][0]);
                 }
             }
 
@@ -720,7 +724,14 @@ namespace AllegroToVarisciteConversion
             {
                 this.table = InitTabel();
             }
-            
+
+            if (this.coords != null && this.table != null)
+            {
+                if (this.coords.Count > 0 && this.table.Count > 0)
+                {
+                    MessageBox.Show(GetEmptyRefDeses(), "Empty RefDeses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
         }
         /// <summary>
         /// Handles the Click event of the exitToolStripMenuItem control.
