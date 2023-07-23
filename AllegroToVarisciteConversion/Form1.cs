@@ -22,14 +22,8 @@ namespace AllegroToVarisciteConversion
             InitializeComponent();
 
             pbSketch.Dock = DockStyle.Fill;
-            if (IsThereNotCommitedChanges())
-            {
-                this.Text = "AllegroRoVarisciteConversion " + GetLastPatchID() + " -dirty";
-            }
-            else
-            {
-                this.Text = "AllegroRoVarisciteConversion " + GetLastPatchID();
-            }
+            this.Text = "AllegroToVarisciteConversion " + Revision.revision;
+
             this.logTextGlobal.AppendLine("Program Start");
             infoToolStripMenuItem.CheckState = CheckState.Checked;
         }
@@ -97,81 +91,6 @@ namespace AllegroToVarisciteConversion
         /// The log text global
         /// </summary>
         private StringBuilder logTextGlobal = new StringBuilder();
-
-        /// <summary>
-        /// Gets the last patch identifier.
-        /// </summary>
-        /// <returns></returns>
-        private string GetLastPatchID()
-        {
-            string gitPath = @"C:\Program Files\Git\cmd\git.exe"; // Replace with the path to the git executable if it's not in the system's PATH environment variable.
-
-            // Set up the process information
-            ProcessStartInfo startInfo = new ProcessStartInfo
-            {
-                FileName = gitPath,
-                Arguments = "rev-parse HEAD",
-                RedirectStandardOutput = true,
-                UseShellExecute = false,
-                CreateNoWindow = true
-            };
-
-            // Create and start the process
-            using (Process process = new Process())
-            {
-                process.StartInfo = startInfo;
-                process.Start();
-
-                // Read the output of the command (commit ID)
-                string commitId = process.StandardOutput.ReadToEnd().Trim();
-
-                // Wait for the process to finish
-                process.WaitForExit();
-
-                //MessageBox.Show(commitId);
-                return commitId;
-            }
-        }
-        /// <summary>
-        /// Determines whether [is there not commited changes].
-        /// </summary>
-        /// <returns>
-        ///   <c>true</c> if [is there not commited changes]; otherwise, <c>false</c>.
-        /// </returns>
-        private bool IsThereNotCommitedChanges()
-        {
-            string gitPath = "git"; // Replace with the path to the git executable if it's not in the system's PATH environment variable.
-
-            // Set up the process information
-            ProcessStartInfo startInfo = new ProcessStartInfo
-            {
-                FileName = gitPath,
-                Arguments = "status --porcelain",
-                RedirectStandardOutput = true,
-                UseShellExecute = false,
-                CreateNoWindow = true
-            };
-
-            // Create and start the process
-            using (Process process = new Process())
-            {
-                process.StartInfo = startInfo;
-                process.Start();
-
-                // Read the output of the git status command
-                string output = process.StandardOutput.ReadToEnd();
-
-                // Wait for the process to finish
-                process.WaitForExit();
-
-                // Check if there are any changes to be committed
-                bool hasChanges = !string.IsNullOrWhiteSpace(output);
-
-                //Console.WriteLine($"Are there any changes to be committed? {hasChanges}");
-                //MessageBox.Show(hasChanges.ToString());
-                return hasChanges;
-            }
-        }
 
         /// <summary>
         /// Initializes the tabel.
