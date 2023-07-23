@@ -11,10 +11,11 @@ REM Get the short commit ID
 for /f %%i in ('git rev-parse --short HEAD') do set "commit_id=%%i"
 
 REM Check if there are uncommitted changes
-git diff-index --quiet HEAD
+git diff --quiet
 if %ERRORLEVEL% == 0 (
     set "revision=%commit_id%"
 ) else (
+    git diff-index HEAD
     set "revision=%commit_id%-dirty"
 )
 
