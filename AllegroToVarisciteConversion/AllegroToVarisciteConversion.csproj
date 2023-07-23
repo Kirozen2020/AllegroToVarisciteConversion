@@ -59,6 +59,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Revision.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
@@ -80,6 +81,8 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="Scripts\ClearRevisionClass.bat" />
+    <None Include="Scripts\CreateRevisionClass.bat" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -88,4 +91,12 @@
     <Folder Include="Resources\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>CD $(SolutionDir)$(SolutionName)\Scripts\
+CALL CreateRevisionClass.bat</PreBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>CD $(SolutionDir)$(SolutionName)\Scripts\
+CALL ClearRevisionClass.bat</PostBuildEvent>
+  </PropertyGroup>
 </Project>
