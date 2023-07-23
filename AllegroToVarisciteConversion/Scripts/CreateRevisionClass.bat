@@ -19,6 +19,10 @@ if %ERRORLEVEL% == 0 (
     set "revision=%commit_id%-dirty"
 )
 
+For /f "tokens=1-4 delims=/ " %%a in ('date /t') do (set build_date=%%a-%%b-%%c)
+For /f "tokens=1-2 delims=/:" %%a in ('time /t') do (set build_time=%%a:%%b)
+
+set "revision=%revision%. Built at %build_date% %build_time%."
 REM Create the C# class file
 (
     echo using System;
