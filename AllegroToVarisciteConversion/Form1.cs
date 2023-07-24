@@ -61,6 +61,7 @@ namespace AllegroToVarisciteConversion
         /// The log mode
         /// </summary>
         private string logMode = "info";
+        private int errorCount = 0;
 
         /// <summary>
         /// The log text
@@ -142,12 +143,14 @@ namespace AllegroToVarisciteConversion
                             this.logTextDebugPlacementCoordinates.AppendLine("Reading line " + index + ": {" + ConvertListToString(line, index) + "}");
                             if (CanConvertToNumeric(line[1]) == false)//error
                             {
+                                this.errorCount++;
                                 this.logTextDebugPlacementCoordinates.AppendLine($"ERROR!!! Cannot parse line {index} Refdes {line[0]} coordinate X has incorrect string value {line[1]} that cannot be parsed");
                                 this.logTextErrorPlacementCoordinates.AppendLine($"ERROR!!! Cannot parse line {index} Refdes {line[0]} coordinate X has incorrect string value {line[1]} that cannot be parsed");
                                 this.logTextInfoPlacementCoordinates.AppendLine($"ERROR!!! Cannot parse line {index} Refdes {line[0]} coordinate X has incorrect string value {line[1]} that cannot be parsed");
                             }
                             else if (CanConvertToNumeric(line[2]) == false)//error
                             {
+                                this.errorCount++;
                                 this.logTextDebugPlacementCoordinates.AppendLine($"ERROR!!! Cannot parse line {index} Refdes {line[0]} coordinate Y has incorrect string value {line[2]} that cannot be parsed");
                                 this.logTextErrorPlacementCoordinates.AppendLine($"ERROR!!! Cannot parse line {index} Refdes {line[0]} coordinate Y has incorrect string value {line[2]} that cannot be parsed");
                                 this.logTextInfoPlacementCoordinates.AppendLine($"ERROR!!! Cannot parse line {index} Refdes {line[0]} coordinate Y has incorrect string value {line[2]} that cannot be parsed");
@@ -301,7 +304,6 @@ namespace AllegroToVarisciteConversion
                         temp.AddValue(int.Parse(t1), int.Parse(t2));
 
                         this.logTextDebugPlacementReport.AppendLine($"Coordination {t1},{t2} added to refdes {temp.Key}");
-                        //this.logTextInfo.AppendLine($"Coordination {t1},{t2} added to refdes {temp.Key}");
                     }
                     else
                     {
@@ -318,9 +320,9 @@ namespace AllegroToVarisciteConversion
             else
             {
                 MessageBox.Show("Wrong Placement Report file", "Attention!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                this.logTextErrorPlacementReport.AppendLine("Error!!! Opend wrong file");
-                this.logTextInfoPlacementReport.AppendLine("Error!!! Opend wrong file");
-                this.logTextDebugPlacementReport.AppendLine("Error!!! Opend wrong file");
+                //this.logTextErrorPlacementReport.AppendLine("Error!!! Opend wrong file");
+                //this.logTextInfoPlacementReport.AppendLine("Error!!! Opend wrong file");
+                //this.logTextDebugPlacementReport.AppendLine("Error!!! Opend wrong file");
             }
             return coords;
         }
@@ -463,6 +465,7 @@ namespace AllegroToVarisciteConversion
 
                     this.logTextGlobal.Append(this.logTextErrorPlacementCoordinates.ToString());
                     this.logTextGlobal.Append(this.logTextErrorPlacementReport.ToString());
+                    this.logTextGlobal.AppendLine("\nErrors count: " + this.errorCount);
                     this.logTextGlobal.AppendLine("\nFile saved at " + outputString);
 
                     File.WriteAllText(outputLogPatch, this.logTextGlobal.ToString());
@@ -471,6 +474,7 @@ namespace AllegroToVarisciteConversion
                     this.logTextGlobal.Append(this.logTextInfoPlacementCoordinates.ToString());
                     this.logTextGlobal.AppendLine();
                     this.logTextGlobal.Append(this.logTextInfoPlacementReport.ToString());
+                    this.logTextGlobal.AppendLine("\nErrors count: " + this.errorCount);
                     this.logTextGlobal.AppendLine("\nFile saved at " + outputString);
 
                     File.WriteAllText(outputLogPatch, this.logTextGlobal.ToString());
@@ -479,6 +483,7 @@ namespace AllegroToVarisciteConversion
                     this.logTextGlobal.Append(this.logTextDebugPlacementCoordinates.ToString());
                     this.logTextGlobal.AppendLine();
                     this.logTextGlobal.Append(this.logTextDebugPlacementReport.ToString());
+                    this.logTextGlobal.AppendLine("\nErrors count: " + this.errorCount);
                     this.logTextGlobal.AppendLine("\nFile saved at " + outputString);
 
                     File.WriteAllText(outputLogPatch, this.logTextGlobal.ToString());
@@ -486,6 +491,7 @@ namespace AllegroToVarisciteConversion
             }
             CleanLogPlacementCoordinates();
             CleanLogPlacementReport();
+            this.errorCount = 0;
         }
         
         /// <summary>
@@ -627,6 +633,7 @@ namespace AllegroToVarisciteConversion
                     this.logTextErrorPlacementReport.AppendLine("Errpr!!! Bitmap format is wrong, cannot converte bitmap to image");
                     this.logTextDebugPlacementReport.AppendLine("Errpr!!! Bitmap format is wrong, cannot converte bitmap to image");
                     this.logTextInfoPlacementReport.AppendLine("Errpr!!! Bitmap format is wrong, cannot converte bitmap to image");
+                    this.errorCount++;
                     MessageBox.Show("BitMap format error", "Attention!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 this.motherBoardImage = bmp;
@@ -777,6 +784,7 @@ namespace AllegroToVarisciteConversion
             catch(Exception ex)
             {
                 MessageBox.Show(ex.Message+"\nCannot add text to scheme", "Error Text", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                this.errorCount++;
             }
             
         }
