@@ -61,6 +61,9 @@ namespace AllegroToVarisciteConversion
         /// The log mode
         /// </summary>
         private string logMode = "info";
+        /// <summary>
+        /// The error count
+        /// </summary>
         private int errorCount = 0;
 
         /// <summary>
@@ -156,8 +159,11 @@ namespace AllegroToVarisciteConversion
                                 this.logTextInfoPlacementCoordinates.AppendLine($"ERROR!!! Cannot parse line {index} Refdes {line[0]} coordinate Y has incorrect string value {line[2]} that cannot be parsed");
 
                             }
-                            this.logTextDebugPlacementCoordinates.AppendLine($"Refdes {line[0]} is located at {line[1]},{line[2]}");
-                            this.logTextInfoPlacementCoordinates.AppendLine($"Refdes {line[0]} is located at {line[1]},{line[2]}");
+                            else
+                            {
+                                this.logTextDebugPlacementCoordinates.AppendLine($"Refdes {line[0]} is located at {line[1]},{line[2]}");
+                                this.logTextInfoPlacementCoordinates.AppendLine($"Refdes {line[0]} is located at {line[1]},{line[2]}");
+                            }
                         }
                     }
                     catch(Exception e)
@@ -179,6 +185,7 @@ namespace AllegroToVarisciteConversion
             else
             {
                 MessageBox.Show("The file you opening is invalid or empty\nPlease choose another file", "Attention!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                
             }
             return tabel;
         }
@@ -236,7 +243,7 @@ namespace AllegroToVarisciteConversion
             {
                 if(!char.IsDigit(c))
                 {
-                    if(c != '.')
+                    if (c != '.' && c != '(' && c != ')')
                     {
                         return false;
                     }
@@ -296,14 +303,41 @@ namespace AllegroToVarisciteConversion
                     else if (HasCoords(line))
                     {
                         this.logTextDebugPlacementReport.AppendLine($"Reading line {index}: {ConvertToLinePlacementReport(line, 2)}");
-                        var t1 = string.Concat(line[3].Where(Char.IsDigit));
-                        t1 = t1.Substring(0, t1.Length - 2);
-                        var t2 = string.Concat(line[4].Where(Char.IsDigit));
-                        t2 = t2.Substring(0, t2.Length - 2);
-
-                        temp.AddValue(int.Parse(t1), int.Parse(t2));
-
-                        this.logTextDebugPlacementReport.AppendLine($"Coordination {t1},{t2} added to refdes {temp.Key}");
+                        string t1 = null, t2 = null;
+                        if (CanConvertToNumeric(line[3]))
+                        {
+                            t1 = string.Concat(line[3].Where(Char.IsDigit));
+                            t1 = t1.Substring(0, t1.Length - 2);
+                        }
+                        else
+                        {
+                            string x = line[3];
+                            x = x.Substring(1);
+                            this.logTextErrorPlacementReport.AppendLine($"Error!!! Cannot convert {x} to number in refdes {temp.Key}");
+                            this.logTextDebugPlacementReport.AppendLine($"Error!!! Cannot convert {x} to number in refdes {temp.Key}");
+                            this.logTextInfoPlacementReport.AppendLine($"Error!!! Cannot convert {x} to number in refdes {temp.Key}");
+                            this.errorCount++;
+                        }
+                        if (CanConvertToNumeric(line[4]))
+                        {
+                            t2 = string.Concat(line[4].Where(Char.IsDigit));
+                            t2 = t2.Substring(0, t2.Length - 2);
+                        }
+                        else
+                        {
+                            string x = line[4];
+                            x = x.Substring(0, x.Length-1);
+                            this.logTextErrorPlacementReport.AppendLine($"Error!!! Cannot convert {x} to number in refdes {temp.Key}");
+                            this.logTextDebugPlacementReport.AppendLine($"Error!!! Cannot convert {x} to number in refdes {temp.Key}");
+                            this.logTextInfoPlacementReport.AppendLine($"Error!!! Cannot convert {x} to number in refdes {temp.Key}");
+                            this.errorCount++;
+                        }
+                        
+                        if(t1!=null && t2 != null)
+                        {
+                            temp.AddValue(int.Parse(t1), int.Parse(t2));
+                            this.logTextDebugPlacementReport.AppendLine($"Coordination {t1},{t2} added to refdes {temp.Key}");
+                        }
                     }
                     else
                     {
@@ -319,10 +353,7 @@ namespace AllegroToVarisciteConversion
             }
             else
             {
-                MessageBox.Show("Wrong Placement Report file", "Attention!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                //this.logTextErrorPlacementReport.AppendLine("Error!!! Opend wrong file");
-                //this.logTextInfoPlacementReport.AppendLine("Error!!! Opend wrong file");
-                //this.logTextDebugPlacementReport.AppendLine("Error!!! Opend wrong file");
+                MessageBox.Show("You opened a wrong file or an empty one", "Attention!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             return coords;
         }
@@ -517,25 +548,24 @@ namespace AllegroToVarisciteConversion
                 this.coords = InitElementCoords();
             }
 
-            if (this.coords != null && this.table != null)
+            if (this.coords != null)
             {
-                if (this.coords.Count > 0 && this.table.Count > 0)
+                if (this.coords.Count > 0)
                 {
-                    MessageBox.Show(GetEmptyRefDeses(), "Empty RefDeses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    if(this.table!= null)
+                    {
+                        MessageBox.Show(GetEmptyRefDeses(), "Empty RefDeses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    MoveAllElements(ref this.coords);
+
+                    List<List<Point>> lst = ConvertToListOfListOfPoints();
+
+                    DrawPoints(pbSketch, lst);
+
+                    pbSketch.Image = Image.FromFile(@"../../Resources/image" + this.imageNumber + ".bmp");
                 }
             }
 
-            if (this.coords.Count > 0)
-            {
-                MoveAllElements(ref this.coords);
-
-                List<List<Point>> lst = ConvertToListOfListOfPoints();
-
-                DrawPoints(pbSketch, lst);
-
-                pbSketch.Image = Image.FromFile(@"../../Resources/image"+this.imageNumber+".bmp");
-            }
-            
         }
         /// <summary>
         /// Gets the empty reference deses.
@@ -599,7 +629,7 @@ namespace AllegroToVarisciteConversion
             if (pb == null || pointLists == null)
                 return;
 
-            using (Bitmap bmp = new Bitmap(FindMaxX() + 20/*pb.Width*/, FindMaxY() + 20/*pb.Height*/))
+            using (Bitmap bmp = new Bitmap(FindMaxX() + 20, FindMaxY() + 20))
             {
                 
                 using (Graphics g = Graphics.FromImage(bmp))
@@ -891,16 +921,19 @@ namespace AllegroToVarisciteConversion
             {
                 savePatch = save.FileName;
             }
-
-            if (this.placementCoordinatesPatch != null && this.placementReportPatch != null)
+            if(savePatch != null)
             {
-                SaveFile(savePatch, ChangeFileExtension(savePatch, ".log"));
-                MessageBox.Show("File Saved", "Congratulations", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                if (this.placementCoordinatesPatch != null && this.placementReportPatch != null)
+                {
+                    SaveFile(savePatch, ChangeFileExtension(savePatch, ".log"));
+                    MessageBox.Show("File Saved", "Congratulations", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    MessageBox.Show("You need to chose files first!", "Attention", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
             }
-            else
-            {
-                MessageBox.Show("You need to chose files first!", "Attention", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
+            
         }
         /// <summary>
         /// Changes the file extension.
