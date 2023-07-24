@@ -561,8 +561,6 @@ namespace AllegroToVarisciteConversion
                     List<List<Point>> lst = ConvertToListOfListOfPoints();
 
                     DrawPoints(pbSketch, lst);
-
-                    pbSketch.Image = Image.FromFile(@"../../Resources/image" + this.imageNumber + ".bmp");
                 }
             }
 
@@ -668,15 +666,8 @@ namespace AllegroToVarisciteConversion
                 }
                 this.motherBoardImage = bmp;
                 AddText(ref this.motherBoardImage);
-                try
-                {
-                    this.motherBoardImage.Save(@"../../Resources/image"+this.imageNumber+".bmp", ImageFormat.Bmp);
-                    this.motherBoardImage.Dispose();
-                }
-                catch(ExternalException ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
+                Image image = Image.FromHbitmap(this.motherBoardImage.GetHbitmap());
+                pbSketch.Image = image;
             }
         }
         /// <summary>
