@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace AllegroToVarisciteConversion
@@ -678,10 +679,10 @@ namespace AllegroToVarisciteConversion
                 this.motherBoardImage.RotateFlip(RotateFlipType.RotateNoneFlipY);
                 AddText(ref this.motherBoardImage);
                 Image image = Image.FromHbitmap(this.motherBoardImage.GetHbitmap());
-                //image.RotateFlip(RotateFlipType.RotateNoneFlipY);
                 pbSketch.Image = image;
             }
         }
+
         /// <summary>
         /// Determines whether [is bitmap format compatible] [the specified bitmap].
         /// </summary>
@@ -784,7 +785,11 @@ namespace AllegroToVarisciteConversion
                 }
             }
         }
-
+        /// <summary>
+        /// Gets the last file patch.
+        /// </summary>
+        /// <param name="fileName">Name of the file.</param>
+        /// <returns></returns>
         private string GetLastFilePatch(string fileName)
         {
             string result = null;
@@ -795,7 +800,6 @@ namespace AllegroToVarisciteConversion
             {
                 result += split[i] + "\\";
             }
-            //MessageBox.Show(result);
             return result;
         }
 
