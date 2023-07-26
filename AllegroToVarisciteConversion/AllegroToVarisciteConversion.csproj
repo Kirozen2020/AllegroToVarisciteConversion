@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Arc.cs" />
     <Compile Include="Coords.cs" />
     <Compile Include="FigureControl.cs">
       <SubType>Component</SubType>

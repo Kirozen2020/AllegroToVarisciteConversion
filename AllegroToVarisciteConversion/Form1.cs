@@ -10,6 +10,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using static System.Windows.Forms.AxHost;
 
 namespace AllegroToVarisciteConversion
 {
@@ -682,7 +683,62 @@ namespace AllegroToVarisciteConversion
                 pbSketch.Image = image;
             }
         }
+        /// <summary>
+        /// Draws the arc.
+        /// </summary>
+        /// <param name="bitmap">The bitmap.</param>
+        private void DrawArc(ref Bitmap bitmap)
+        {
+            for (int i = 0; i < this.coords.Count; i++)
+            {
+                if (this.coords[i].Arcs.Count > 0)
+                {
 
+                    for (int j = 0; j < this.coords[i].Arcs.Count; j++)
+                    {
+                        Arc item = this.coords[i].Arcs[j];
+
+                        Graphics g = Graphics.FromImage(bitmap);
+                        Pen pen = new Pen(Color.Black, 2);
+
+
+                        // Calculate the rectangle for the arc
+                        int radius = (int)Math.Sqrt(Math.Pow(item.center.X - item.startPoint.X, 2) + Math.Pow(item.center.Y - item.startPoint.Y, 2));
+                        int x = item.center.X - radius;
+                        int y = item.center.Y - radius;
+                        int width = 2 * radius;
+                        int height = 2 * radius;
+
+                        // Calculate the start and sweep angles for the arc
+                        float startAngle = (float)Math.Atan2(item.startPoint.Y - item.center.Y, item.startPoint.X - item.center.X) * 180 / (float)Math.PI;
+                        float endAngle = (float)Math.Atan2(item.endPoint.Y - item.center.Y, item.endPoint.X - item.center.X) * 180 / (float)Math.PI;
+                        float sweepAngle = endAngle - startAngle;
+
+                        // Check for a full circle
+                        if (Math.Abs(sweepAngle) == 0)
+                        {
+                            g.DrawEllipse(pen, x, y, width, height);
+                        }
+                        else
+                        {
+                            // Determine the direction of the arc
+                            if (item.isClockWise && sweepAngle < 0)
+                            {
+                                sweepAngle += 360;
+                            }
+                            else if (!item.isClockWise && sweepAngle > 0)
+                            {
+                                sweepAngle -= 360;
+                            }
+
+                            // Draw the arc
+                            g.DrawArc(pen, x, y, width, height, startAngle, sweepAngle);
+                        }
+                        g.DrawLine(pen, item.startPoint.X, item.startPoint.Y, item.endPoint.X, item.endPoint.Y);
+                    }
+                }
+            }
+        }
         /// <summary>
         /// Determines whether [is bitmap format compatible] [the specified bitmap].
         /// </summary>

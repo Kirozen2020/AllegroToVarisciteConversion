@@ -21,7 +21,5 @@ namespace AllegroToVarisciteConversion
         public Point center { get; }
         public Point endPoint { get; }
         public Point startPoint { get; }
-
-
     }
 }
