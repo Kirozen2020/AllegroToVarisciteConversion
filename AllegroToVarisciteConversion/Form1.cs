@@ -665,8 +665,10 @@ namespace AllegroToVarisciteConversion
                     MessageBox.Show("BitMap format error", "Attention!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 this.motherBoardImage = bmp;
+                this.motherBoardImage.RotateFlip(RotateFlipType.RotateNoneFlipY);
                 AddText(ref this.motherBoardImage);
                 Image image = Image.FromHbitmap(this.motherBoardImage.GetHbitmap());
+                //image.RotateFlip(RotateFlipType.RotateNoneFlipY);
                 pbSketch.Image = image;
             }
         }
@@ -798,7 +800,16 @@ namespace AllegroToVarisciteConversion
                         Graphics graphics = Graphics.FromImage(bitmap);
                         Font font = new Font("Arial", 15);
                         Brush brush = new SolidBrush(Color.Black);
+
+                        y = bitmap.Height - y - 15;
+
+                        //graphics.TranslateTransform(bitmap.Width, bitmap.Height);
+                        //graphics.RotateTransform(180);
+                        //graphics.ScaleTransform(-1, -1);
+
                         graphics.DrawString(item.Key, font, brush, x, y);
+                        //SizeF textSize = graphics.MeasureString(item.Key, font);
+                        //graphics.DrawString(item.Key, font, brush, new PointF(-x - textSize.Width, -y - textSize.Height));
                     }
                 }
             }
