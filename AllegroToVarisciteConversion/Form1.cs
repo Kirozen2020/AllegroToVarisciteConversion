@@ -28,7 +28,10 @@ namespace AllegroToVarisciteConversion
             infoToolStripMenuItem.CheckState = CheckState.Checked;
         }
 
-        public int imageNumber = 0;
+        /// <summary>
+        /// The file patch
+        /// </summary>
+        public string filePatch = null;
         /// <summary>
         /// The full patch place
         /// </summary>
@@ -523,6 +526,7 @@ namespace AllegroToVarisciteConversion
             CleanLogPlacementCoordinates();
             CleanLogPlacementReport();
             this.errorCount = 0;
+            this.filePatch = null;
         }
         
         /// <summary>
@@ -535,12 +539,19 @@ namespace AllegroToVarisciteConversion
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "Text File (*.txt)|*.txt|All Files (*.*)|*.*";
             openFileDialog.Title = "Open Placement Report File...";
-            openFileDialog.InitialDirectory = @"C:\";
+            if (this.filePatch != null)
+            {
+                openFileDialog.InitialDirectory = this.filePatch;
+            }
+            else
+            {
+                openFileDialog.InitialDirectory = @"C:\";
+            }
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 this.placementReportPatch = openFileDialog.FileName;
-                
+                this.filePatch = GetLastFilePatch(openFileDialog.FileName);
             }
 
             if(this.placementReportPatch != null)
@@ -620,7 +631,6 @@ namespace AllegroToVarisciteConversion
         /// <param name="pointLists">The point lists.</param>
         private void DrawPoints(PictureBox pb, List<List<Point>> pointLists)
         {
-            this.imageNumber++;
             this.logTextDebugPlacementReport.AppendLine("Start drawing scheme\n");
             this.logTextInfoPlacementReport.AppendLine("Start drawing scheme\n");
 
@@ -745,11 +755,20 @@ namespace AllegroToVarisciteConversion
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "Text File (*.txt)|*.txt|All Files (*.*)|*.*";
             openFileDialog.Title = "Open Placement Coordinates File...";
-            openFileDialog.InitialDirectory = @"C:\";
+            if(this.filePatch != null)
+            {
+                openFileDialog.InitialDirectory = this.filePatch;
+            }
+            else
+            {
+
+                openFileDialog.InitialDirectory = @"C:\";
+            }
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 this.placementCoordinatesPatch = openFileDialog.FileName;
+                this.filePatch = GetLastFilePatch(openFileDialog.FileName);
             }
 
             if(this.placementCoordinatesPatch != null)
@@ -765,6 +784,21 @@ namespace AllegroToVarisciteConversion
                 }
             }
         }
+
+        private string GetLastFilePatch(string fileName)
+        {
+            string result = null;
+
+            string[] split = fileName.Split('\\');
+
+            for (int i = 0; i < split.Length-1; i++)
+            {
+                result += split[i] + "\\";
+            }
+            //MessageBox.Show(result);
+            return result;
+        }
+
         /// <summary>
         /// Handles the Click event of the exitToolStripMenuItem control.
         /// </summary>
@@ -803,13 +837,7 @@ namespace AllegroToVarisciteConversion
 
                         y = bitmap.Height - y - 15;
 
-                        //graphics.TranslateTransform(bitmap.Width, bitmap.Height);
-                        //graphics.RotateTransform(180);
-                        //graphics.ScaleTransform(-1, -1);
-
                         graphics.DrawString(item.Key, font, brush, x, y);
-                        //SizeF textSize = graphics.MeasureString(item.Key, font);
-                        //graphics.DrawString(item.Key, font, brush, new PointF(-x - textSize.Width, -y - textSize.Height));
                     }
                 }
             }
@@ -818,7 +846,6 @@ namespace AllegroToVarisciteConversion
                 MessageBox.Show(ex.Message+"\nCannot add text to scheme", "Error Text", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 this.errorCount++;
             }
-            
         }
         /// <summary>
         /// Sums the points.
