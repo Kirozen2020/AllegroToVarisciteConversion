@@ -448,6 +448,38 @@ namespace AllegroToVarisciteConversion
             return false;
         }
         /// <summary>
+        /// Determines whether the specified line has arc.
+        /// </summary>
+        /// <param name="line">The line.</param>
+        /// <returns>
+        ///   <c>true</c> if the specified line has arc; otherwise, <c>false</c>.
+        /// </returns>
+        public static bool HasArc(string[] line)
+        {
+            for (int i = 0; i < line.Length; i++)
+            {
+                if (line[i].Equals("seg:xy"))
+                    return true;
+            }
+            return false;
+        }
+        /// <summary>
+        /// Determines whether [has centar point] [the specified line].
+        /// </summary>
+        /// <param name="line">The line.</param>
+        /// <returns>
+        ///   <c>true</c> if [has centar point] [the specified line]; otherwise, <c>false</c>.
+        /// </returns>
+        public static bool HasCentarPoint(string[] line)
+        {
+            for (int i = 0; i < line.Length; i++)
+            {
+                if (line[i].Equals("center-xy:"))
+                    return true;
+            }
+            return false;
+        }
+        /// <summary>
         /// Gets the coords.
         /// </summary>
         /// <param name="name">The name.</param>
