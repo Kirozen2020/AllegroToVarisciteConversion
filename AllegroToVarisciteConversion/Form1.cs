@@ -281,6 +281,8 @@ namespace AllegroToVarisciteConversion
 
             int index = 0;
 
+            Arc arc = null;
+
             List<MyDictionary> coords = new List<MyDictionary>();
 
             MyDictionary temp = new MyDictionary("First element -> delete");
@@ -343,6 +345,42 @@ namespace AllegroToVarisciteConversion
                             temp.AddValue(int.Parse(t1), int.Parse(t2));
                             this.logTextDebugPlacementReport.AppendLine($"Coordination {t1},{t2} added to refdes {temp.Key}");
                         }
+                    }
+                    else if(HasArc(line))
+                    {
+                        //need to add check for converting and add log text
+                        string t1 = string.Concat(line[4].Where(Char.IsDigit));//delete first
+                        
+                        string t2 = string.Concat(line[5].Where(Char.IsDigit));//delete last
+                        
+                        Point start = new Point(int.Parse(t1), int.Parse(t2));
+
+                        string t3 = string.Concat(line[7].Where(Char.IsDigit));//delete first
+
+                        string t4 = string.Concat(line[8].Where(Char.IsDigit));//delete last
+
+                        Point end = new Point(int.Parse(t3), int.Parse(t4));
+
+                        arc = new Arc();
+                        arc.startPoint = start;
+                        arc.endPoint = end;
+                    }
+                    else if (HasCentarPoint(line))
+                    {
+                        string t1 = string.Concat(line[6].Where(char.IsDigit));
+
+                        string t2 = string.Concat(line[7].Where(char.IsDigit));
+
+                        arc.center = new Point(int.Parse(t1),int.Parse(t2));
+
+                        bool isClockwhise = false;
+                        if (!line[12].Equals("CCW"))
+                        {
+                            isClockwhise = true;
+                        }
+                        arc.isClockWise = isClockwhise;
+
+                        temp.AddArc(arc);
                     }
                     else
                     {

@@ -30,5 +30,13 @@ namespace AllegroToVarisciteConversion
             Arc arc = new Arc(isClockwise, center, end, start);
             this.Arcs.Add(arc);
         }
+
+        public void AddArc(Arc arc)
+        {
+            if(arc != null)
+            {
+                Arcs.Add(arc);
+            }
+        }
     }
 }

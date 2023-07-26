@@ -16,10 +16,13 @@ namespace AllegroToVarisciteConversion
             this.endPoint = endPoint;
             this.startPoint = startPoint;
         }
-
-        public bool isClockWise { get; }
-        public Point center { get; }
-        public Point endPoint { get; }
-        public Point startPoint { get; }
+        public Arc()
+        {
+            
+        }
+        public bool isClockWise { get; set; }
+        public Point center { get; set; }
+        public Point endPoint { get; set; }
+        public Point startPoint { get; set; }
     }
 }
