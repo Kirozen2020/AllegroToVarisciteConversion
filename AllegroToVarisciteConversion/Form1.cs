@@ -1286,5 +1286,38 @@ namespace AllegroToVarisciteConversion
                 }
             }
         }
+        /// <summary>
+        /// Emphasises the element.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        private void EmphasisElement(string name)
+        {
+            if(this.coords.Count > 0)
+            {
+                for (int i = 0; i < this.coords.Count; i++)
+                {
+                    if (this.coords[i].Key.Equals(name))
+                    {
+                        List<Point> points = this.coords[i].Value;
+                        List<Arc> arcs = this.coords[i].Arcs;
+                        Graphics g = Graphics.FromImage(this.motherBoardImage);
+                        Pen pen = new Pen(Color.Red, 2);
+
+                        if(points.Count > 1) {
+                            for (int j = 0; j < points.Count-1; j++)
+                            {
+                                g.DrawLine(pen, points[i], points[i + 1]);
+                            }
+
+                            g.DrawLine(pen, points[points.Count - 1], points[0]);
+                        }
+                        if(arcs.Count > 1)
+                        {
+                            //need to be added
+                        }
+                    }
+                }
+            }
+        }
     }
 }
