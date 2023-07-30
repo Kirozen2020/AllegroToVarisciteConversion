@@ -32,22 +32,26 @@ namespace AllegroToVarisciteConversion
         {
             InitializeComponent();
             this.namesList = namesList;
+            tableLayoutPanel1.Controls.Clear();
 
             // Set up the TableLayoutPanel properties
             tableLayoutPanel1.ColumnCount = 4;
             int rowCount = (int)Math.Ceiling(namesList.Count / 4.0);
             tableLayoutPanel1.RowCount = rowCount;
 
+            tableLayoutPanel1.AutoSize = true;
+            tableLayoutPanel1.AutoScroll = true;
             for (int i = 0; i < tableLayoutPanel1.ColumnCount; i++)
             {
-                tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
+                //tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F / tableLayoutPanel1.ColumnCount));
+                tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
             }
 
             for (int i = 0; i < rowCount; i++)
             {
-                tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F / rowCount));
+                tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.AutoSize));
             }
-            // Create and add checkboxes based on the names list
+            //Create and add checkboxes based on the names list
             for (int i = 0; i < namesList.Count; i++)
             {
                 CheckBox checkBox = new CheckBox
