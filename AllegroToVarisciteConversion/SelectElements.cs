@@ -12,32 +12,66 @@ namespace AllegroToVarisciteConversion
 {
     public partial class SelectElements : Form
     {
-
+        /// <summary>
+        /// The names list
+        /// </summary>
         private List<string> namesList;
-        public List<string> CheckedItemsList { get; private set; }
+        /// <summary>
+        /// Gets the checked items list.
+        /// </summary>
+        /// <value>
+        /// The checked items list.
+        /// </value>
+        public List<string> CheckedItemsList{ get; private set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SelectElements"/> class.
+        /// </summary>
+        /// <param name="namesList">The names list.</param>
         public SelectElements(List<string> namesList)
         {
             InitializeComponent();
             this.namesList = namesList;
 
+            // Set up the TableLayoutPanel properties
+            tableLayoutPanel1.ColumnCount = 4;
+            int rowCount = (int)Math.Ceiling(namesList.Count / 4.0);
+            tableLayoutPanel1.RowCount = rowCount;
+
+            for (int i = 0; i < tableLayoutPanel1.ColumnCount; i++)
+            {
+                tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
+            }
+
+            for (int i = 0; i < rowCount; i++)
+            {
+                tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F / rowCount));
+            }
             // Create and add checkboxes based on the names list
-            foreach (string name in namesList)
+            for (int i = 0; i < namesList.Count; i++)
             {
                 CheckBox checkBox = new CheckBox
                 {
-                    Text = name
+                    Text = namesList[i]
                 };
 
-                // Add the checkbox to the FlowLayoutPanel
-                flowLayoutPanel1.Controls.Add(checkBox);
+                // Add the checkbox to the TableLayoutPanel
+                tableLayoutPanel1.Controls.Add(checkBox, i % tableLayoutPanel1.ColumnCount, i / tableLayoutPanel1.ColumnCount);
             }
+
+            // Initialize the CheckedItemsList
+            CheckedItemsList = new List<string>();
         }
-        
+
+        /// <summary>
+        /// Handles the FormClosing event of the SelectElements control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="FormClosingEventArgs"/> instance containing the event data.</param>
         private void SelectElements_FormClosing(object sender, FormClosingEventArgs e)
         {
-            CheckedItemsList.Clear();
-            foreach (Control control in flowLayoutPanel1.Controls)
+            this.CheckedItemsList = new List<string>();
+            foreach (Control control in tableLayoutPanel1.Controls)
             {
                 if (control is CheckBox checkBox && checkBox.Checked)
                 {

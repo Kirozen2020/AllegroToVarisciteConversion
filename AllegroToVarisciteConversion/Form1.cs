@@ -28,6 +28,8 @@ namespace AllegroToVarisciteConversion
 
             this.logTextGlobal.AppendLine("Program Start");
             infoToolStripMenuItem.CheckState = CheckState.Checked;
+
+            selectComponentToolStripMenuItem.Visible = false;
         }
 
         /// <summary>
@@ -850,6 +852,7 @@ namespace AllegroToVarisciteConversion
                 AddText(ref this.motherBoardImage);
                 Image image = Image.FromHbitmap(this.motherBoardImage.GetHbitmap());
                 pbSketch.Image = image;
+                selectComponentToolStripMenuItem.Visible = true;
             }
         }
         /// <summary>
@@ -1319,10 +1322,22 @@ namespace AllegroToVarisciteConversion
                 }
             }
         }
-        
+        /// <summary>
+        /// Handles the Click event of the selectComponentToolStripMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
         private void selectComponentToolStripMenuItem_Click(object sender, EventArgs e)
         {
             List<string> allNames =new List<string>();
+
+            if(this.coords.Count > 1)
+            {
+                for (int i = 0; i < this.coords.Count; i++)
+                {
+                    allNames.Add(this.coords[i].Key);
+                }
+            }
 
             //add a for loop to fill the allNames list
 
