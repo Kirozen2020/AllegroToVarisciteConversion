@@ -42,6 +42,7 @@
             this.infoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.debugToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pbSketch = new System.Windows.Forms.PictureBox();
+            this.selectComponentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbSketch)).BeginInit();
             this.SuspendLayout();
@@ -55,7 +56,8 @@
             this.menuStrip1.BackColor = System.Drawing.SystemColors.Control;
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
-            this.optionToolStripMenuItem});
+            this.optionToolStripMenuItem,
+            this.selectComponentToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(891, 24);
@@ -157,6 +159,13 @@
             this.pbSketch.TabIndex = 4;
             this.pbSketch.TabStop = false;
             // 
+            // selectComponentToolStripMenuItem
+            // 
+            this.selectComponentToolStripMenuItem.Name = "selectComponentToolStripMenuItem";
+            this.selectComponentToolStripMenuItem.Size = new System.Drawing.Size(117, 20);
+            this.selectComponentToolStripMenuItem.Text = "Select Component";
+            this.selectComponentToolStripMenuItem.Click += new System.EventHandler(this.selectComponentToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -191,6 +200,7 @@
         private System.Windows.Forms.ToolStripMenuItem placementReportFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem coordinatesReportFileToolStripMenuItem;
         private System.Windows.Forms.PictureBox pbSketch;
+        private System.Windows.Forms.ToolStripMenuItem selectComponentToolStripMenuItem;
     }
 }
 

@@ -1319,5 +1319,19 @@ namespace AllegroToVarisciteConversion
                 }
             }
         }
+        
+        private void selectComponentToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            List<string> allNames =new List<string>();
+
+            //add a for loop to fill the allNames list
+
+            SelectElements selectElements = new SelectElements(allNames);
+            
+            if(selectElements.ShowDialog() == DialogResult.OK)
+            {
+                List<string> checksElements = selectElements.CheckedItemsList;
+            }
+        }
     }
 }
