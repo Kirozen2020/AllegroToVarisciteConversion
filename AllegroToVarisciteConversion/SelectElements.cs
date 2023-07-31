@@ -83,9 +83,12 @@ namespace AllegroToVarisciteConversion
                 }
             }
             this.DialogResult = DialogResult.OK;
-            //return DialogResult.OK;
         }
-
+        /// <summary>
+        /// Handles the Click event of the button1 control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void button1_Click(object sender, EventArgs e)
         {
             this.CheckedItemsList = new List<string>();
