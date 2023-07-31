@@ -1346,6 +1346,122 @@ namespace AllegroToVarisciteConversion
             if(selectElements.ShowDialog() == DialogResult.OK)
             {
                 List<string> checksElements = selectElements.CheckedItemsList;
+                List<List<Point>> lst = ConvertToListOfListOfPoints();
+                List<List<Point>> redElements = ConvertToListOfListOfPointsRED(checksElements);
+                DrawPoints(pbSketch, lst, redElements);
+            }
+        }
+        /// <summary>
+        /// Converts to list of list of points red.
+        /// </summary>
+        /// <param name="names">The names.</param>
+        /// <returns></returns>
+        private List<List<Point>> ConvertToListOfListOfPointsRED(List<string> names)
+        {
+            List<List<Point>> lst = new List<List<Point>>();
+
+            for (int i = 0; i < this.coords.Count; i++)
+            {
+                if (NameInList(this.coords[i].Key, names))
+                {
+                    lst.Add(this.coords[i].Value);
+                }
+            }
+            return lst;
+        }
+        /// <summary>
+        /// Names the in list.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <param name="names">The names.</param>
+        /// <returns></returns>
+        private bool NameInList(string key, List<string> names)
+        {
+            for (int i = 0; i < names.Count; i++)
+            {
+                if (names[i].Equals(key))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        /// <summary>
+        /// Draws the points.
+        /// </summary>
+        /// <param name="pb">The pb.</param>
+        /// <param name="pointLists">The point lists.</param>
+        /// <param name="redElements">The red elements.</param>
+        private void DrawPoints(PictureBox pb, List<List<Point>> pointLists, List<List<Point>> redElements)
+        {
+            this.logTextDebugPlacementReport.AppendLine("Start drawing scheme\n");
+            this.logTextInfoPlacementReport.AppendLine("Start drawing scheme\n");
+
+            if (pb == null || pointLists == null)
+                return;
+
+            using (Bitmap bmp = new Bitmap(FindMaxX() + 20, FindMaxY() + 20))
+            {
+
+                using (Graphics g = Graphics.FromImage(bmp))
+                {
+                    // Clear the PictureBox
+                    g.Clear(Color.White);
+
+                    // Draw lines for each list of points
+                    using (Pen pen = new Pen(Color.Black, 2))
+                    {
+                        foreach (List<Point> points in pointLists)
+                        {
+                            // Draw lines connecting the points
+                            if (points.Count > 1)
+                            {
+                                for (int i = 0; i < points.Count - 1; i++)
+                                {
+                                    g.DrawLine(pen, points[i], points[i + 1]);
+                                }
+
+                                // Connect the last point with the first point to complete the figure
+                                g.DrawLine(pen, points[points.Count - 1], points[0]);
+                            }
+                        }
+                    }
+
+                    // Draw lines for each list of points
+                    using (Pen pen = new Pen(Color.Red, 2))
+                    {
+                        foreach (List<Point> points in redElements)
+                        {
+                            // Draw lines connecting the points
+                            if (points.Count > 1)
+                            {
+                                for (int i = 0; i < points.Count - 1; i++)
+                                {
+                                    g.DrawLine(pen, points[i], points[i + 1]);
+                                }
+
+                                // Connect the last point with the first point to complete the figure
+                                g.DrawLine(pen, points[points.Count - 1], points[0]);
+                            }
+                        }
+                    }
+                }
+
+                // Assign the updated bitmap to the PictureBox
+                if (!IsBitmapFormatCompatible(bmp))
+                {
+                    this.logTextErrorPlacementReport.AppendLine("Errpr!!! Bitmap format is wrong, cannot converte bitmap to image");
+                    this.logTextDebugPlacementReport.AppendLine("Errpr!!! Bitmap format is wrong, cannot converte bitmap to image");
+                    this.logTextInfoPlacementReport.AppendLine("Errpr!!! Bitmap format is wrong, cannot converte bitmap to image");
+                    this.errorCount++;
+                    MessageBox.Show("BitMap format error", "Attention!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                this.motherBoardImage = bmp;
+                this.motherBoardImage.RotateFlip(RotateFlipType.RotateNoneFlipY);
+                AddText(ref this.motherBoardImage);
+                Image image = Image.FromHbitmap(this.motherBoardImage.GetHbitmap());
+                pbSketch.Image = image;
+                selectComponentToolStripMenuItem.Visible = true;
             }
         }
     }
