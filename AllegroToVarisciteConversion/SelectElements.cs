@@ -82,6 +82,22 @@ namespace AllegroToVarisciteConversion
                     CheckedItemsList.Add(checkBox.Text);
                 }
             }
+            this.DialogResult = DialogResult.OK;
+            //return DialogResult.OK;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            this.CheckedItemsList = new List<string>();
+            foreach (Control control in tableLayoutPanel1.Controls)
+            {
+                if (control is CheckBox checkBox && checkBox.Checked)
+                {
+                    CheckedItemsList.Add(checkBox.Text);
+                }
+            }
+            this.DialogResult = DialogResult.OK;
+            this.Close();
         }
     }
 }

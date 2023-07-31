@@ -1341,7 +1341,7 @@ namespace AllegroToVarisciteConversion
 
             //add a for loop to fill the allNames list
 
-            SelectElements selectElements = new SelectElements(allNames);
+            SelectElements selectElements = new SelectElements(SortAlphabetically(allNames));
             
             if(selectElements.ShowDialog() == DialogResult.OK)
             {
@@ -1350,6 +1350,21 @@ namespace AllegroToVarisciteConversion
                 List<List<Point>> redElements = ConvertToListOfListOfPointsRED(checksElements);
                 DrawPoints(pbSketch, lst, redElements);
             }
+        }
+        /// <summary>
+        /// Sorts the alphabetically.
+        /// </summary>
+        /// <param name="unsortedList">The unsorted list.</param>
+        /// <returns></returns>
+        static List<string> SortAlphabetically(List<string> unsortedList)
+        {
+            // Clone the original list to avoid modifying it directly
+            List<string> sortedList = new List<string>(unsortedList);
+
+            // Use the Sort method to sort the list alphabetically
+            sortedList.Sort();
+
+            return sortedList;
         }
         /// <summary>
         /// Converts to list of list of points red.
@@ -1428,7 +1443,7 @@ namespace AllegroToVarisciteConversion
                     }
 
                     // Draw lines for each list of points
-                    using (Pen pen = new Pen(Color.Red, 2))
+                    using (Pen pen = new Pen(Color.Red, 5))
                     {
                         foreach (List<Point> points in redElements)
                         {
@@ -1461,7 +1476,6 @@ namespace AllegroToVarisciteConversion
                 AddText(ref this.motherBoardImage);
                 Image image = Image.FromHbitmap(this.motherBoardImage.GetHbitmap());
                 pbSketch.Image = image;
-                selectComponentToolStripMenuItem.Visible = true;
             }
         }
     }
