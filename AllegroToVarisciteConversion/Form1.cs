@@ -606,7 +606,7 @@ namespace AllegroToVarisciteConversion
                     }
                     MoveAllElements(ref this.coords);
 
-                    List<List<Point>> lst = ConvertToListOfListOfPoints();
+                    List<List<Point3D>> lst = ConvertToListOfListOfPoints();
 
                     DrawPoints(pbSketch, lst);
                 }
@@ -650,9 +650,9 @@ namespace AllegroToVarisciteConversion
         /// Converts to list of list of points.
         /// </summary>
         /// <returns></returns>
-        private List<List<Point>> ConvertToListOfListOfPoints()
+        private List<List<Point3D>> ConvertToListOfListOfPoints()
         {
-            List<List<Point>> lst = new List<List<Point>>();
+            List<List<Point3D>> lst = new List<List<Point3D>>();
 
             for (int i = 0; i < this.coords.Count; i++)
             {
@@ -814,7 +814,7 @@ namespace AllegroToVarisciteConversion
             {
                 for (int j = 0; j < lst[i].Value.Count; j++)
                 {
-                    maxX = Math.Max(maxX, lst[i].Value[j].X);
+                    maxX = Math.Max(maxX, int.Parse(lst[i].Value[j].X));
                 }
             }
 
@@ -834,7 +834,7 @@ namespace AllegroToVarisciteConversion
             {
                 for (int j = 0; j < lst[i].Value.Count; j++)
                 {
-                    maxY = Math.Max(maxY, lst[i].Value[j].Y);
+                    maxY = Math.Max(maxY, int.Parse(lst[i].Value[j].Y));
                 }
             }
 
@@ -951,21 +951,21 @@ namespace AllegroToVarisciteConversion
         /// <param name="value">The value.</param>
         /// <param name="v">The v.</param>
         /// <returns></returns>
-        private int SumPoints(List<Point> value, char v)
+        private int SumPoints(List<Point3D> value, char v)
         {
             int sum = 0;
             if(v == 'x')
             {
                 for (int i = 0; i < value.Count; i++)
                 {
-                    sum += value[i].X;
+                    sum += int.Parse(value[i].X);
                 }
             }
             else if(v == 'y')
             {
                 for (int i = 0; i < value.Count; i++)
                 {
-                    sum += value[i].Y;
+                    sum += int.Parse(value[i].Y);
                 }
             }
             return sum;
@@ -983,9 +983,9 @@ namespace AllegroToVarisciteConversion
             {
                 for (int j = 0; j < lst[i].Value.Count; j++)
                 {
-                    if (lst[i].Value[j].Y < num)
+                    if (int.Parse(lst[i].Value[j].Y) < num)
                     {
-                        num = lst[i].Value[j].Y;
+                        num = int.Parse(lst[i].Value[j].Y);
                     }
                 }
             }
@@ -1003,9 +1003,9 @@ namespace AllegroToVarisciteConversion
             {
                 for (int j = 0; j < lst[i].Value.Count; j++)
                 {
-                    if (lst[i].Value[j].X < num)
+                    if (int.Parse(lst[i].Value[j].X) < num)
                     {
-                        num = lst[i].Value[j].X;
+                        num = int.Parse(lst[i].Value[j].X);
                     }
                 }
             }
@@ -1020,12 +1020,14 @@ namespace AllegroToVarisciteConversion
             int deleyX = GetMinXCoordination() - 10;
             for (int i = 0; i < lst.Count; i++)
             {
-                List<Point> coordinations = lst[i].Value;
+                List<Point3D> coordinations = lst[i].Value;
                 for (int j = 0; j < coordinations.Count; j++)
                 {
-                    Point point = coordinations[j];
-                    point.Y -= deleyY;
-                    point.X -= deleyX;
+                    Point3D point = coordinations[j];
+                    point.Y = (int.Parse(point.Y) - deleyY).ToString();
+                    point.X = (int.Parse(point.X) - deleyX).ToString();
+                    //point.Y -= deleyY;
+                    //point.X -= deleyX;
                     coordinations[j] = point;
                 }
             }
@@ -1182,8 +1184,8 @@ namespace AllegroToVarisciteConversion
             if(selectElements.ShowDialog() == DialogResult.OK)
             {
                 List<string> checksElements = selectElements.CheckedItemsList;
-                List<List<Point>> lst = ConvertToListOfListOfPoints();
-                List<List<Point>> redElements = ConvertToListOfListOfPointsRED(checksElements);
+                List<List<Point3D>> lst = ConvertToListOfListOfPoints();
+                List<List<Point3D>> redElements = ConvertToListOfListOfPointsRED(checksElements);
                 DrawPoints(pbSketch, lst, redElements);
             }
         }
@@ -1193,9 +1195,9 @@ namespace AllegroToVarisciteConversion
         /// </summary>
         /// <param name="names">The names.</param>
         /// <returns></returns>
-        private List<List<Point>> ConvertToListOfListOfPointsRED(List<string> names)
+        private List<List<Point3D>> ConvertToListOfListOfPointsRED(List<string> names)
         {
-            List<List<Point>> lst = new List<List<Point>>();
+            List<List<Point3D>> lst = new List<List<Point3D>>();
 
             for (int i = 0; i < this.coords.Count; i++)
             {
