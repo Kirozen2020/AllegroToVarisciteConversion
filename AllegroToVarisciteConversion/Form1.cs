@@ -723,6 +723,7 @@ namespace AllegroToVarisciteConversion
         /// Draws the arc.
         /// </summary>
         /// <param name="bitmap">The bitmap.</param>
+        /*
         private void DrawArc(ref Bitmap bitmap)
         {
             for (int i = 0; i < this.coords.Count; i++)
@@ -775,6 +776,7 @@ namespace AllegroToVarisciteConversion
                 }
             }
         }
+        */
         /// <summary>
         /// Determines whether [is bitmap format compatible] [the specified bitmap].
         /// </summary>
@@ -1175,7 +1177,7 @@ namespace AllegroToVarisciteConversion
 
             //add a for loop to fill the allNames list
 
-            SelectElements selectElements = new SelectElements(SortAlphabetically(allNames));
+            SelectElements selectElements = new SelectElements(allNames);
             
             if(selectElements.ShowDialog() == DialogResult.OK)
             {
@@ -1185,21 +1187,7 @@ namespace AllegroToVarisciteConversion
                 DrawPoints(pbSketch, lst, redElements);
             }
         }
-        /// <summary>
-        /// Sorts the alphabetically.
-        /// </summary>
-        /// <param name="unsortedList">The unsorted list.</param>
-        /// <returns></returns>
-        static List<string> SortAlphabetically(List<string> unsortedList)
-        {
-            // Clone the original list to avoid modifying it directly
-            List<string> sortedList = new List<string>(unsortedList);
-
-            // Use the Sort method to sort the list alphabetically
-            sortedList.Sort();
-
-            return sortedList;
-        }
+        
         /// <summary>
         /// Converts to list of list of points red.
         /// </summary>

@@ -31,19 +31,18 @@ namespace AllegroToVarisciteConversion
         public SelectElements(List<string> namesList)
         {
             InitializeComponent();
-            this.namesList = namesList;
+            this.namesList = SortAlphabetically(namesList);
             tableLayoutPanel1.Controls.Clear();
 
             // Set up the TableLayoutPanel properties
             tableLayoutPanel1.ColumnCount = 4;
-            int rowCount = (int)Math.Ceiling(namesList.Count / 4.0);
+            int rowCount = (int)Math.Ceiling(this.namesList.Count / 4.0);
             tableLayoutPanel1.RowCount = rowCount;
 
             tableLayoutPanel1.AutoSize = true;
             tableLayoutPanel1.AutoScroll = true;
             for (int i = 0; i < tableLayoutPanel1.ColumnCount; i++)
             {
-                //tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F / tableLayoutPanel1.ColumnCount));
                 tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
             }
 
@@ -52,11 +51,11 @@ namespace AllegroToVarisciteConversion
                 tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.AutoSize));
             }
             //Create and add checkboxes based on the names list
-            for (int i = 0; i < namesList.Count; i++)
+            for (int i = 0; i < this.namesList.Count; i++)
             {
                 CheckBox checkBox = new CheckBox
                 {
-                    Text = namesList[i]
+                    Text = this.namesList[i]
                 };
 
                 // Add the checkbox to the TableLayoutPanel
@@ -68,14 +67,21 @@ namespace AllegroToVarisciteConversion
         }
 
         /// <summary>
-        /// Handles the FormClosing event of the SelectElements control.
+        /// Sorts the alphabetically.
         /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="FormClosingEventArgs"/> instance containing the event data.</param>
-        private void SelectElements_FormClosing(object sender, FormClosingEventArgs e)
+        /// <param name="unsortedList">The unsorted list.</param>
+        /// <returns></returns>
+        static List<string> SortAlphabetically(List<string> unsortedList)
         {
-            this.DialogResult = DialogResult.Cancel;
+            // Clone the original list to avoid modifying it directly
+            List<string> sortedList = new List<string>(unsortedList);
+
+            // Use the Sort method to sort the list alphabetically
+            sortedList.Sort();
+
+            return sortedList;
         }
+
         /// <summary>
         /// Handles the Click event of the button1 control.
         /// </summary>
@@ -94,6 +100,7 @@ namespace AllegroToVarisciteConversion
             this.DialogResult = DialogResult.OK;
             this.Close();
         }
+
         /// <summary>
         /// Handles the Click event of the button2 control.
         /// </summary>

@@ -92,7 +92,6 @@
             this.Controls.Add(this.panel1);
             this.Name = "SelectElements";
             this.Text = "SelectElements";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.SelectElements_FormClosing);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.ResumeLayout(false);
