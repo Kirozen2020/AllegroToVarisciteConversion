@@ -74,14 +74,6 @@ namespace AllegroToVarisciteConversion
         /// <param name="e">The <see cref="FormClosingEventArgs"/> instance containing the event data.</param>
         private void SelectElements_FormClosing(object sender, FormClosingEventArgs e)
         {
-            this.CheckedItemsList = new List<string>();
-            foreach (Control control in tableLayoutPanel1.Controls)
-            {
-                if (control is CheckBox checkBox && checkBox.Checked)
-                {
-                    CheckedItemsList.Add(checkBox.Text);
-                }
-            }
             this.DialogResult = DialogResult.Cancel;
         }
         /// <summary>
@@ -100,6 +92,16 @@ namespace AllegroToVarisciteConversion
                 }
             }
             this.DialogResult = DialogResult.OK;
+            this.Close();
+        }
+        /// <summary>
+        /// Handles the Click event of the button2 control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void button2_Click(object sender, EventArgs e)
+        {
+            this.DialogResult = DialogResult.Cancel;
             this.Close();
         }
     }
