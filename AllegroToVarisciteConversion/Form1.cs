@@ -283,7 +283,6 @@ namespace AllegroToVarisciteConversion
 
             int index = 0;
 
-            Arc arc = null;
 
             List<MyDictionary> coords = new List<MyDictionary>();
 
@@ -348,126 +347,6 @@ namespace AllegroToVarisciteConversion
                             this.logTextDebugPlacementReport.AppendLine($"Coordination {t1},{t2} added to refdes {temp.Key}");
                         }
                     }
-                    else if(HasArc(line))
-                    {
-                        string t1 = null, t2 = null, t3 = null, t4 = null;
-                        //need to add check for converting and add log text
-                        if (CanConvertToNumeric(line[4]))
-                        {
-                            t1 = string.Concat(line[4].Where(Char.IsDigit));
-                            t1 = t1.Substring(0, t1.Length - 2);
-                        }
-                        else
-                        {
-                            string x = line[4];
-                            x = x.Substring(1);
-                            this.logTextErrorPlacementReport.AppendLine($"Error!!! Cannot convert {x} to number in refdes {temp.Key}");
-                            this.logTextDebugPlacementReport.AppendLine($"Error!!! Cannot convert {x} to number in refdes {temp.Key}");
-                            this.logTextInfoPlacementReport.AppendLine($"Error!!! Cannot convert {x} to number in refdes {temp.Key}");
-                            this.errorCount++;
-                        }
-
-                        if (CanConvertToNumeric(line[5]))
-                        {
-                            t2 = string.Concat(line[5].Where(Char.IsDigit));
-                            t2 = t2.Substring(0, t2.Length - 2);
-                        }
-                        else
-                        {
-                            string x = line[5];
-                            x = x.Substring(0, x.Length - 1);
-                            this.logTextErrorPlacementReport.AppendLine($"Error!!! Cannot convert {x} to number in refdes {temp.Key}");
-                            this.logTextDebugPlacementReport.AppendLine($"Error!!! Cannot convert {x} to number in refdes {temp.Key}");
-                            this.logTextInfoPlacementReport.AppendLine($"Error!!! Cannot convert {x} to number in refdes {temp.Key}");
-                            this.errorCount++;
-                        }
-
-                        if (CanConvertToNumeric(line[7]))
-                        {
-                            t3 = string.Concat(line[7].Where(Char.IsDigit));
-                            t3 = t3.Substring(0, t3.Length - 2);
-                        }
-                        else
-                        {
-                            string x = line[7];
-                            x = x.Substring(1);
-                            this.logTextErrorPlacementReport.AppendLine($"Error!!! Cannot convert {x} to number in refdes {temp.Key}");
-                            this.logTextDebugPlacementReport.AppendLine($"Error!!! Cannot convert {x} to number in refdes {temp.Key}");
-                            this.logTextInfoPlacementReport.AppendLine($"Error!!! Cannot convert {x} to number in refdes {temp.Key}");
-                            this.errorCount++;
-                        }
-
-                        if (CanConvertToNumeric(line[8]))
-                        {
-                            t4 = string.Concat(line[8].Where(Char.IsDigit));
-                            t4 = t4.Substring(0, t4.Length - 2);
-                        }
-                        else
-                        {
-                            string x = line[8];
-                            x = x.Substring(0, x.Length - 1);
-                            this.logTextErrorPlacementReport.AppendLine($"Error!!! Cannot convert {x} to number in refdes {temp.Key}");
-                            this.logTextDebugPlacementReport.AppendLine($"Error!!! Cannot convert {x} to number in refdes {temp.Key}");
-                            this.logTextInfoPlacementReport.AppendLine($"Error!!! Cannot convert {x} to number in refdes {temp.Key}");
-                            this.errorCount++;
-                        }
-                        if(t1 != null && t2 != null && t3 != null && t4 != null)
-                        {
-                            Point start = new Point(int.Parse(t1), int.Parse(t2));
-                            Point end = new Point(int.Parse(t3), int.Parse(t4));
-                            arc = new Arc();
-                            arc.startPoint = start;
-                            arc.endPoint = end;
-                        }
-                    }
-                    else if (HasCentarPoint(line))
-                    {
-                        string t1 = null, t2 = null;
-                        if (CanConvertToNumeric(line[6]))
-                        {
-                            t1 = string.Concat(line[6].Where(Char.IsDigit));
-                            t1 = t1.Substring(0, t1.Length - 2);
-                        }
-                        else
-                        {
-                            string x = line[6];
-                            x = x.Substring(1);
-
-                            this.errorCount++;
-                        }
-
-                        if (CanConvertToNumeric(line[7]))
-                        {
-                            t2 = string.Concat(line[7].Where(Char.IsDigit));
-                            t2 = t2.Substring(0, t2.Length - 2);
-                        }
-                        else
-                        {
-                            string x = line[7];
-                            x = x.Substring(0, x.Length - 1);
-
-                            this.errorCount++;
-                        }
-
-                        if(t1 != null && t2 != null)
-                        {
-                            arc.center = new Point(int.Parse(t1), int.Parse(t2));
-                        }
-
-                        bool isClockwhise = false;
-                        if (line[12].Equals("CCW") || line[12].Equals("CW"))
-                        {
-                            if (!line[12].Equals("CCW"))
-                            {
-                                isClockwhise = true;
-                            }
-                            arc.isClockWise = isClockwhise;
-                        }
-                        if (!isArcEmpty(arc))
-                        {
-                            temp.AddArc(arc);
-                        }
-                    }
                     else
                     {
                         this.logTextDebugPlacementReport.AppendLine($"Reading line {index}: {ConvertToLinePlacementReport(line, 0)}");
@@ -485,21 +364,6 @@ namespace AllegroToVarisciteConversion
                 MessageBox.Show("You opened a wrong file or an empty one", "Attention!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             return coords;
-        }
-        /// <summary>
-        /// Determines whether [is arc empty] [the specified arc].
-        /// </summary>
-        /// <param name="arc">The arc.</param>
-        /// <returns>
-        ///   <c>true</c> if [is arc empty] [the specified arc]; otherwise, <c>false</c>.
-        /// </returns>
-        private bool isArcEmpty(Arc arc)
-        {
-            if(arc.endPoint == null) { return true; }
-            if(arc.startPoint == null) { return true; }
-            if(arc.center == null) { return true; }
-
-            return false;
         }
         /// <summary>
         /// Converts to line placement report.

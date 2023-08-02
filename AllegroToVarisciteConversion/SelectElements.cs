@@ -82,7 +82,7 @@ namespace AllegroToVarisciteConversion
                     CheckedItemsList.Add(checkBox.Text);
                 }
             }
-            this.DialogResult = DialogResult.OK;
+            this.DialogResult = DialogResult.Cancel;
         }
         /// <summary>
         /// Handles the Click event of the button1 control.
