@@ -347,6 +347,38 @@ namespace AllegroToVarisciteConversion
                             this.logTextDebugPlacementReport.AppendLine($"Coordination {t1},{t2} added to refdes {temp.Key}");
                         }
                     }
+                    else if (HasArc(line))
+                    {
+                        string x1 = null, y1 = null, x2 = null, y2 = null, centerX = null, centerY = null, isClockwise = null;
+
+                        x1 = string.Concat(line[4].Where(char.IsDigit));
+                        x1 = x1.Substring(0, x1.Length - 2);
+
+                        y1 = string.Concat(line[5].Where(char.IsDigit));
+                        x2 = string.Concat(line[7].Where(char.IsDigit));
+                        y2 = string.Concat(line[8].Where(char.IsDigit));
+
+                        //get next line that hold the center point 
+                        line = reader.ReadLine().Split(' ');
+                        centerX = string.Concat(line[6].Where(char.IsDigit));
+                        centerY = string.Concat(line[7].Where(char.IsDigit));
+
+                        if (line[12].Equals("CCW"))
+                        {
+                            isClockwise = "0";
+                        }
+                        else
+                        {
+                            isClockwise = "1";
+                        }
+
+                        if (x1 != null && y1 != null && x2 != null && y2 != null && centerX != null && centerY != null && isClockwise != null)
+                        {
+                            temp.AddValue(int.Parse(x1), int.Parse(y1));
+                            temp.AddValue(int.Parse(centerX), int.Parse(centerY), int.Parse(isClockwise));
+                            temp.AddValue(int.Parse(x2), int.Parse(y2));
+                        }
+                    }
                     else
                     {
                         this.logTextDebugPlacementReport.AppendLine($"Reading line {index}: {ConvertToLinePlacementReport(line, 0)}");
@@ -615,7 +647,7 @@ namespace AllegroToVarisciteConversion
 
                     List<List<Point3D>> lst = ConvertToListOfListOfPoints();
 
-                    DrawPoints(pbSketch, lst);
+                    //DrawPoints(pbSketch, lst);
                 }
             }
 
@@ -1193,7 +1225,7 @@ namespace AllegroToVarisciteConversion
                 List<string> checksElements = selectElements.CheckedItemsList;
                 List<List<Point3D>> lst = ConvertToListOfListOfPoints();
                 List<List<Point3D>> redElements = ConvertToListOfListOfPointsRED(checksElements);
-                DrawPoints(pbSketch, lst, redElements);
+                //DrawPoints(pbSketch, lst, redElements);
             }
         }
         
