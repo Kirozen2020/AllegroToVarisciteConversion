@@ -27,7 +27,8 @@ namespace AllegroToVarisciteConversion
         /// Initializes a new instance of the <see cref="MyDictionary"/> class.
         /// </summary>
         /// <param name="key">The key.</param>
-        public MyDictionary(string key) {
+        public MyDictionary(string key) 
+        {
             this.Key = key;
             this.Value = new List<Point3D>();
         }

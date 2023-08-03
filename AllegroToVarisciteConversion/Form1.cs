@@ -412,8 +412,6 @@ namespace AllegroToVarisciteConversion
                             this.errorCount++;
                         }
                         
-
-                        //get next line that hold the center point 
                         line = reader.ReadLine().Split(' ');
                         index++;
                         this.logTextDebugPlacementReport.AppendLine($"Reading line {index}: {ConvertToLinePlacementReport(line, 2)}");
@@ -469,10 +467,11 @@ namespace AllegroToVarisciteConversion
                         {
                             temp.AddValue(int.Parse(x1), int.Parse(y1));
                             this.logTextDebugPlacementReport.AppendLine($"Start point fo arc: {x1},{y1} added to refdes {temp.Key}");
-                            temp.AddValue(int.Parse(x2), int.Parse(y2));
-                            this.logTextDebugPlacementReport.AppendLine($"End point fo arc: {x2},{y2} added to refdes {temp.Key}");
                             temp.AddValue(int.Parse(centerX), int.Parse(centerY), int.Parse(isClockwise));
                             this.logTextDebugPlacementReport.AppendLine($"Center point fo arc: {centerX},{centerY} added to refdes {temp.Key}");
+                            temp.AddValue(int.Parse(x2), int.Parse(y2));
+                            this.logTextDebugPlacementReport.AppendLine($"End point fo arc: {x2},{y2} added to refdes {temp.Key}");
+                            
                         }
                     }
                     else
@@ -827,9 +826,10 @@ namespace AllegroToVarisciteConversion
                             {
                                 for (int i = 0; i < points.Count - 1; i++)
                                 {
-                                    if (points[i+1] != null)
+                                    if (i+1 < points.Count-1)
                                     {
-                                        if (points[i+1].Z != null)
+                                        
+                                        if (!points[i+1].IsRegularPoint())
                                         {
                                             Point start = points[i].GetRegularPoint();
                                             Point center = points[i+1].GetRegularPoint();
@@ -846,13 +846,13 @@ namespace AllegroToVarisciteConversion
                                             int wigth = 2 * radius;
                                             int height = 2 * radius;
 
-                                            float startAngle = (float)Math.Atan2(start.Y-center.Y,start.X-center.X)*180 / (float)Math.PI;
-                                            float endAngle = (float)Math.Atan2(end.Y-center.Y, end.X-center.X)*180 / (float)Math.PI;
+                                            float startAngle = (float)Math.Atan2(start.Y - center.Y, start.X - center.X) * 180 / (float)Math.PI;
+                                            float endAngle = (float)Math.Atan2(end.Y - center.Y, end.X - center.X) * 180 / (float)Math.PI;
                                             float sweepAngle = endAngle - startAngle;
 
                                             if(Math.Abs(sweepAngle) == 0)
                                             {
-                                                g.DrawEllipse(pen, x,y,wigth, height);
+                                                g.DrawEllipse(pen, x, y, wigth, height);
                                             }
                                             else
                                             {
@@ -865,16 +865,18 @@ namespace AllegroToVarisciteConversion
                                                     sweepAngle -= 360;
                                                 }
 
-                                                g.DrawArc(pen,x,y,wigth,height,startAngle,sweepAngle);
+                                                g.DrawArc(pen, x, y, wigth, height, startAngle, sweepAngle);
                                             }
                                             g.DrawLine(pen, start.X, start.Y, end.X, end.Y);
+                                            i += 1;
                                         }
+                                        
                                     }
                                     else
                                     {
                                         g.DrawLine(pen, points[i].GetRegularPoint(), points[i + 1].GetRegularPoint());
                                     }
-                                    
+                                    g.DrawLine(pen, points[i].GetRegularPoint(), points[i + 1].GetRegularPoint());
                                 }
 
                                 // Connect the last point with the first point to complete the figure
@@ -901,64 +903,6 @@ namespace AllegroToVarisciteConversion
                 selectComponentToolStripMenuItem.Visible = true;
             }
         }
-        /// <summary>
-        /// Draws the arc.
-        /// </summary>
-        /// <param name="bitmap">The bitmap.</param>
-        /*
-        private void DrawArc(ref Bitmap bitmap)
-        {
-            for (int i = 0; i < this.coords.Count; i++)
-            {
-                if (this.coords[i].Arcs.Count > 0)
-                {
-
-                    for (int j = 0; j < this.coords[i].Arcs.Count; j++)
-                    {
-                        Arc item = this.coords[i].Arcs[j];
-
-                        Graphics g = Graphics.FromImage(bitmap);
-                        Pen pen = new Pen(Color.Black, 2);
-
-
-                        // Calculate the rectangle for the arc
-                        int radius = (int)Math.Sqrt(Math.Pow(item.center.X - item.startPoint.X, 2) + Math.Pow(item.center.Y - item.startPoint.Y, 2));
-                        int x = item.center.X - radius;
-                        int y = item.center.Y - radius;
-                        int width = 2 * radius;
-                        int height = 2 * radius;
-
-                        // Calculate the start and sweep angles for the arc
-                        float startAngle = (float)Math.Atan2(item.startPoint.Y - item.center.Y, item.startPoint.X - item.center.X) * 180 / (float)Math.PI;
-                        float endAngle = (float)Math.Atan2(item.endPoint.Y - item.center.Y, item.endPoint.X - item.center.X) * 180 / (float)Math.PI;
-                        float sweepAngle = endAngle - startAngle;
-
-                        // Check for a full circle
-                        if (Math.Abs(sweepAngle) == 0)
-                        {
-                            g.DrawEllipse(pen, x, y, width, height);
-                        }
-                        else
-                        {
-                            // Determine the direction of the arc
-                            if (item.isClockWise && sweepAngle < 0)
-                            {
-                                sweepAngle += 360;
-                            }
-                            else if (!item.isClockWise && sweepAngle > 0)
-                            {
-                                sweepAngle -= 360;
-                            }
-
-                            // Draw the arc
-                            g.DrawArc(pen, x, y, width, height, startAngle, sweepAngle);
-                        }
-                        g.DrawLine(pen, item.startPoint.X, item.startPoint.Y, item.endPoint.X, item.endPoint.Y);
-                    }
-                }
-            }
-        }
-        */
         /// <summary>
         /// Determines whether [is bitmap format compatible] [the specified bitmap].
         /// </summary>
@@ -1368,7 +1312,7 @@ namespace AllegroToVarisciteConversion
                 List<string> checksElements = selectElements.CheckedItemsList;
                 List<List<Point3D>> lst = ConvertToListOfListOfPoints();
                 List<List<Point3D>> redElements = ConvertToListOfListOfPointsRED(checksElements);
-                //DrawPoints(pbSketch, lst, redElements);
+                DrawPoints(pbSketch, lst, redElements);
             }
         }
         
@@ -1413,7 +1357,7 @@ namespace AllegroToVarisciteConversion
         /// <param name="pb">The pb.</param>
         /// <param name="pointLists">The point lists.</param>
         /// <param name="redElements">The red elements.</param>
-        private void DrawPoints(PictureBox pb, List<List<Point>> pointLists, List<List<Point>> redElements)
+        private void DrawPoints(PictureBox pb, List<List<Point3D>> pointLists, List<List<Point3D>> redElements)
         {
             this.logTextDebugPlacementReport.AppendLine("Start drawing scheme\n");
             this.logTextInfoPlacementReport.AppendLine("Start drawing scheme\n");
@@ -1432,18 +1376,18 @@ namespace AllegroToVarisciteConversion
                     // Draw lines for each list of points
                     using (Pen pen = new Pen(Color.Black, 2))
                     {
-                        foreach (List<Point> points in pointLists)
+                        foreach (List<Point3D> points in pointLists)
                         {
                             // Draw lines connecting the points
                             if (points.Count > 1)
                             {
                                 for (int i = 0; i < points.Count - 1; i++)
                                 {
-                                    g.DrawLine(pen, points[i], points[i + 1]);
+                                    g.DrawLine(pen, points[i].GetRegularPoint(), points[i + 1].GetRegularPoint());
                                 }
 
                                 // Connect the last point with the first point to complete the figure
-                                g.DrawLine(pen, points[points.Count - 1], points[0]);
+                                g.DrawLine(pen, points[points.Count - 1].GetRegularPoint(), points[0].GetRegularPoint());
                             }
                         }
                     }
@@ -1451,18 +1395,18 @@ namespace AllegroToVarisciteConversion
                     // Draw lines for each list of points
                     using (Pen pen = new Pen(Color.Red, 5))
                     {
-                        foreach (List<Point> points in redElements)
+                        foreach (List<Point3D> points in redElements)
                         {
                             // Draw lines connecting the points
                             if (points.Count > 1)
                             {
                                 for (int i = 0; i < points.Count - 1; i++)
                                 {
-                                    g.DrawLine(pen, points[i], points[i + 1]);
+                                    g.DrawLine(pen, points[i].GetRegularPoint(), points[i + 1].GetRegularPoint());
                                 }
 
                                 // Connect the last point with the first point to complete the figure
-                                g.DrawLine(pen, points[points.Count - 1], points[0]);
+                                g.DrawLine(pen, points[points.Count - 1].GetRegularPoint(), points[0].GetRegularPoint());
                             }
                         }
                     }

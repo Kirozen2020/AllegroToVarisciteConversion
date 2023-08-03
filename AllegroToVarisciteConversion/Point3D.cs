@@ -9,8 +9,26 @@ namespace AllegroToVarisciteConversion
 {
     internal class Point3D
     {
+        /// <summary>
+        /// Gets or sets the x.
+        /// </summary>
+        /// <value>
+        /// The x.
+        /// </value>
         public string X { get; set; }
+        /// <summary>
+        /// Gets or sets the y.
+        /// </summary>
+        /// <value>
+        /// The y.
+        /// </value>
         public string Y { get; set; }
+        /// <summary>
+        /// Gets or sets the z.
+        /// </summary>
+        /// <value>
+        /// The z.
+        /// </value>
         public string Z { get; set; }
         /// <summary>
         /// Initializes a new instance of the <see cref="Point3D"/> class.
@@ -21,7 +39,7 @@ namespace AllegroToVarisciteConversion
         {
             this.X = x.ToString();
             this.Y = y.ToString();
-            this.Z = null;
+            this.Z = "Empty";
         }
         /// <summary>
         /// Initializes a new instance of the <see cref="Point3D"/> class.
@@ -47,7 +65,7 @@ namespace AllegroToVarisciteConversion
         /// </returns>
         public bool IsRegularPoint()
         {
-            return (this.Z == null);
+            return (this.Z == "Empty");
         }
         /// <summary>
         /// Gets the regular point.
@@ -57,7 +75,5 @@ namespace AllegroToVarisciteConversion
         {
             return new Point(int.Parse(this.X), int.Parse(this.Y));
         }
-
-
     }
 }
