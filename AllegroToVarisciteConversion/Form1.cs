@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using static System.Windows.Forms.AxHost;
 
 namespace AllegroToVarisciteConversion
 {
@@ -808,7 +804,7 @@ namespace AllegroToVarisciteConversion
             if (pb == null || pointLists == null)
                 return;
 
-            using (Bitmap bmp = new Bitmap(FindMaxX() + 20, FindMaxY() + 20))
+            using (Bitmap bmp = new Bitmap(FindMaxX() + 30, FindMaxY() + 30))
             {
                 
                 using (Graphics g = Graphics.FromImage(bmp))
@@ -1149,10 +1145,8 @@ namespace AllegroToVarisciteConversion
                 for (int j = 0; j < coordinations.Count; j++)
                 {
                     Point3D point = coordinations[j];
-                    point.Y = (int.Parse(point.Y) - deleyY).ToString();
-                    point.X = (int.Parse(point.X) - deleyX).ToString();
-                    //point.Y -= deleyY;
-                    //point.X -= deleyX;
+                    point.Y = (int.Parse(point.Y) - deleyY + 20).ToString();
+                    point.X = (int.Parse(point.X) - deleyX + 50).ToString();
                     coordinations[j] = point;
                 }
             }
@@ -1364,7 +1358,7 @@ namespace AllegroToVarisciteConversion
             if (pb == null || pointLists == null)
                 return;
 
-            using (Bitmap bmp = new Bitmap(FindMaxX() + 20, FindMaxY() + 20))
+            using (Bitmap bmp = new Bitmap(FindMaxX() + 30, FindMaxY() + 30))
             {
 
                 using (Graphics g = Graphics.FromImage(bmp))
