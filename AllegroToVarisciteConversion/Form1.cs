@@ -497,7 +497,14 @@ namespace AllegroToVarisciteConversion
                     MyDictionary x = coords[i];
                     for (int j = 0; j < x.Value.Count; j++)
                     {
-                        line += $"[{x.Value[j].X};{x.Value[j].Y}]";
+                        if (x.Value[j].Z != null)
+                        {
+                            line += $"[{x.Value[j].X};{x.Value[j].Y};{x.Value[j].Z}]";
+                        }
+                        else
+                        {
+                            line += $"[{x.Value[j].X};{x.Value[j].Y}]";
+                        }
                     }
                 }
             }
