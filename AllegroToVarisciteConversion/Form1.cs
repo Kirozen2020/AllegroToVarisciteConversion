@@ -349,6 +349,7 @@ namespace AllegroToVarisciteConversion
                     }
                     else if (HasArc(line))
                     {
+                        this.logTextDebugPlacementReport.AppendLine($"Reading line {index}: {ConvertToLinePlacementReport(line,2)}")
                         string x1 = null, y1 = null, x2 = null, y2 = null, centerX = null, centerY = null, isClockwise = null;
 
                         if (CanConvertToNumeric(line[4]))
@@ -360,7 +361,9 @@ namespace AllegroToVarisciteConversion
                         {
                             string t1 = line[4];
                             t1 = t1.Substring(1);
-                            //add log events
+                            this.logTextErrorPlacementReport.AppendLine($"Error!!! Cannot convert {t1} to number in refdes {temp.Key}");
+                            this.logTextDebugPlacementReport.AppendLine($"Error!!! Cannot convert {t1} to number in refdes {temp.Key}");
+                            this.logTextInfoPlacementReport.AppendLine($"Error!!! Cannot convert {t1} to number in refdes {temp.Key}");
                             this.errorCount++;
                         }
 
@@ -373,7 +376,9 @@ namespace AllegroToVarisciteConversion
                         {
                             string t1 = line[5];
                             t1 = t1.Substring(0, t1.Length - 1);
-                            //add log events
+                            this.logTextErrorPlacementReport.AppendLine($"Error!!! Cannot convert {t1} to number in refdes {temp.Key}");
+                            this.logTextDebugPlacementReport.AppendLine($"Error!!! Cannot convert {t1} to number in refdes {temp.Key}");
+                            this.logTextInfoPlacementReport.AppendLine($"Error!!! Cannot convert {t1} to number in refdes {temp.Key}");
                             this.errorCount++;
                         }
 
@@ -386,7 +391,9 @@ namespace AllegroToVarisciteConversion
                         {
                             string t1 = line[7];
                             t1 = t1.Substring(1);
-                            //add log events
+                            this.logTextErrorPlacementReport.AppendLine($"Error!!! Cannot convert {t1} to number in refdes {temp.Key}");
+                            this.logTextDebugPlacementReport.AppendLine($"Error!!! Cannot convert {t1} to number in refdes {temp.Key}");
+                            this.logTextInfoPlacementReport.AppendLine($"Error!!! Cannot convert {t1} to number in refdes {temp.Key}");
                             this.errorCount++;
                         }
 
@@ -399,14 +406,17 @@ namespace AllegroToVarisciteConversion
                         {
                             string t1 = line[8];
                             t1 = t1.Substring(0, t1.Length - 1);
-                            //add log events
+                            this.logTextErrorPlacementReport.AppendLine($"Error!!! Cannot convert {t1} to number in refdes {temp.Key}");
+                            this.logTextDebugPlacementReport.AppendLine($"Error!!! Cannot convert {t1} to number in refdes {temp.Key}");
+                            this.logTextInfoPlacementReport.AppendLine($"Error!!! Cannot convert {t1} to number in refdes {temp.Key}");
                             this.errorCount++;
                         }
                         
 
                         //get next line that hold the center point 
                         line = reader.ReadLine().Split(' ');
-
+                        index++;
+                        this.logTextDebugPlacementReport.AppendLine($"Reading line {index}: {ConvertToLinePlacementReport(line,2)}")
                         if (CanConvertToNumeric(line[6]))
                         {
                             centerX = string.Concat(line[6].Where(char.IsDigit));
@@ -416,7 +426,9 @@ namespace AllegroToVarisciteConversion
                         {
                             string t1 = line[6];
                             t1 = t1.Substring(1);
-                            //add log events
+                            this.logTextErrorPlacementReport.AppendLine($"Error!!! Cannot convert {t1} to number in refdes {temp.Key}");
+                            this.logTextDebugPlacementReport.AppendLine($"Error!!! Cannot convert {t1} to number in refdes {temp.Key}");
+                            this.logTextInfoPlacementReport.AppendLine($"Error!!! Cannot convert {t1} to number in refdes {temp.Key}");
                             this.errorCount++;
                         }
 
@@ -429,7 +441,9 @@ namespace AllegroToVarisciteConversion
                         {
                             string t1 = line[7];
                             t1 = t1.Substring(0, t1.Length - 1);
-                            //add log events
+                            this.logTextErrorPlacementReport.AppendLine($"Error!!! Cannot convert {t1} to number in refdes {temp.Key}");
+                            this.logTextDebugPlacementReport.AppendLine($"Error!!! Cannot convert {t1} to number in refdes {temp.Key}");
+                            this.logTextInfoPlacementReport.AppendLine($"Error!!! Cannot convert {t1} to number in refdes {temp.Key}");
                             this.errorCount++;
                         }
                         
@@ -445,15 +459,20 @@ namespace AllegroToVarisciteConversion
                         else
                         {
                             string t1 = line[12];
-                            //add log events
+                            this.logTextErrorPlacementReport.AppendLine($"Error!!! The arc data does not have \"CCW\" or \"CW\" parametar in refdef {temp.Key}");
+                            this.logTextDebugPlacementReport.AppendLine($"Error!!! The arc data does not have \"CCW\" or \"CW\" parametar in refdes {temp.Key}");
+                            this.logTextInfoPlacementReport.AppendLine($"Error!!! The arc data does not have \"CCW\" or \"CW\" parametar in refdes {temp.Key}");
                             this.errorCount++;
                         }
 
                         if (x1 != null && y1 != null && x2 != null && y2 != null && centerX != null && centerY != null && isClockwise != null)
                         {
                             temp.AddValue(int.Parse(x1), int.Parse(y1));
-                            temp.AddValue(int.Parse(centerX), int.Parse(centerY), int.Parse(isClockwise));
+                            this.logTextDebugPlacementReport.AppendLine($"Start point fo arc: {x1},{y1} added to refdes {temp.Key}");
                             temp.AddValue(int.Parse(x2), int.Parse(y2));
+                            this.logTextDebugPlacementReport.AppendLine($"End point fo arc: {x2},{y2} added to refdes {temp.Key}");
+                            temp.AddValue(int.Parse(centerX), int.Parse(centerY), int.Parse(isClockwise));
+                            this.logTextDebugPlacementReport.AppendLine($"Center point fo arc: {centerX},{centerY} added to refdes {temp.Key}");
                         }
                     }
                     else
