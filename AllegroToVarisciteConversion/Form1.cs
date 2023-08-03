@@ -618,9 +618,10 @@ namespace AllegroToVarisciteConversion
                 if (coords[i].Key.Equals(name))
                 {
                     MyDictionary x = coords[i];
+                    line += ":";
                     for (int j = 0; j < x.Value.Count; j++)
                     {
-                        if (x.Value[j].Z != null)
+                        if (!x.Value[j].IsRegularPoint())
                         {
                             line += $"[{x.Value[j].X};{x.Value[j].Y};{x.Value[j].Z}]";
                         }
@@ -655,7 +656,7 @@ namespace AllegroToVarisciteConversion
                     line += this.table[i][j].ToString() + ",";
                 }
                 line += GetCoords(this.table[i][0]);
-                csv.AppendLine(":"+line);
+                csv.AppendLine(line);
             }
 
             File.AppendAllText(outputString, csv.ToString());
