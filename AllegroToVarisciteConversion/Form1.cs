@@ -351,25 +351,102 @@ namespace AllegroToVarisciteConversion
                     {
                         string x1 = null, y1 = null, x2 = null, y2 = null, centerX = null, centerY = null, isClockwise = null;
 
-                        x1 = string.Concat(line[4].Where(char.IsDigit));
-                        x1 = x1.Substring(0, x1.Length - 2);
+                        if (CanConvertToNumeric(line[4]))
+                        {
+                            x1 = string.Concat(line[4].Where(char.IsDigit));
+                            x1 = x1.Substring(0, x1.Length - 2);
+                        }
+                        else
+                        {
+                            string t1 = line[4];
+                            t1 = t1.Substring(1);
+                            //add log events
+                            this.errorCount++;
+                        }
 
-                        y1 = string.Concat(line[5].Where(char.IsDigit));
-                        x2 = string.Concat(line[7].Where(char.IsDigit));
-                        y2 = string.Concat(line[8].Where(char.IsDigit));
+                        if (CanConvertToNumeric(line[5]))
+                        {
+                            y1 = string.Concat(line[5].Where(char.IsDigit));
+                            y1 = y1.Substring(0,y1.Length - 2);
+                        }
+                        else
+                        {
+                            string t1 = line[5];
+                            t1 = t1.Substring(0, t1.Length - 1);
+                            //add log events
+                            this.errorCount++;
+                        }
+
+                        if (CanConvertToNumeric(line[7]))
+                        {
+                            x2 = string.Concat(line[7].Where(char.IsDigit));
+                            x2 = x2.Substring(0, x2.Length - 2);
+                        }
+                        else
+                        {
+                            string t1 = line[7];
+                            t1 = t1.Substring(1);
+                            //add log events
+                            this.errorCount++;
+                        }
+
+                        if (CanConvertToNumeric(line[8]))
+                        {
+                            y2 = string.Concat(line[8].Where(char.IsDigit));
+                            y2 = y2.Substring(0, y2.Length - 2);
+                        }
+                        else
+                        {
+                            string t1 = line[8];
+                            t1 = t1.Substring(0, t1.Length - 1);
+                            //add log events
+                            this.errorCount++;
+                        }
+                        
 
                         //get next line that hold the center point 
                         line = reader.ReadLine().Split(' ');
-                        centerX = string.Concat(line[6].Where(char.IsDigit));
-                        centerY = string.Concat(line[7].Where(char.IsDigit));
+
+                        if (CanConvertToNumeric(line[6]))
+                        {
+                            centerX = string.Concat(line[6].Where(char.IsDigit));
+                            centerX = centerX.Substring(0, centerX.Length - 2);
+                        }
+                        else
+                        {
+                            string t1 = line[6];
+                            t1 = t1.Substring(1);
+                            //add log events
+                            this.errorCount++;
+                        }
+
+                        if (CanConvertToNumeric(line[7]))
+                        {
+                            centerY = string.Concat(line[7].Where(char.IsDigit));
+                            centerY = centerY.Substring(0, centerY.Length - 2);
+                        }
+                        else
+                        {
+                            string t1 = line[7];
+                            t1 = t1.Substring(0, t1.Length - 1);
+                            //add log events
+                            this.errorCount++;
+                        }
+                        
 
                         if (line[12].Equals("CCW"))
                         {
                             isClockwise = "0";
                         }
-                        else
+                        else if (line[12].Equals("CW"))
                         {
                             isClockwise = "1";
+                        }
+                        else
+                        {
+                            string t1 = line[12];
+                            //add log events
+                            this.errorCount++;
                         }
 
                         if (x1 != null && y1 != null && x2 != null && y2 != null && centerX != null && centerY != null && isClockwise != null)
