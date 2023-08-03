@@ -349,7 +349,7 @@ namespace AllegroToVarisciteConversion
                     }
                     else if (HasArc(line))
                     {
-                        this.logTextDebugPlacementReport.AppendLine($"Reading line {index}: {ConvertToLinePlacementReport(line,2)}")
+                        this.logTextDebugPlacementReport.AppendLine($"Reading line {index}: {ConvertToLinePlacementReport(line, 2)}");
                         string x1 = null, y1 = null, x2 = null, y2 = null, centerX = null, centerY = null, isClockwise = null;
 
                         if (CanConvertToNumeric(line[4]))
@@ -416,7 +416,7 @@ namespace AllegroToVarisciteConversion
                         //get next line that hold the center point 
                         line = reader.ReadLine().Split(' ');
                         index++;
-                        this.logTextDebugPlacementReport.AppendLine($"Reading line {index}: {ConvertToLinePlacementReport(line,2)}")
+                        this.logTextDebugPlacementReport.AppendLine($"Reading line {index}: {ConvertToLinePlacementReport(line, 2)}");
                         if (CanConvertToNumeric(line[6]))
                         {
                             centerX = string.Concat(line[6].Where(char.IsDigit));
@@ -743,7 +743,7 @@ namespace AllegroToVarisciteConversion
 
                     List<List<Point3D>> lst = ConvertToListOfListOfPoints();
 
-                    //DrawPoints(pbSketch, lst);
+                    DrawPoints(pbSketch, lst);
                 }
             }
 
@@ -801,7 +801,7 @@ namespace AllegroToVarisciteConversion
         /// </summary>
         /// <param name="pb">The pb.</param>
         /// <param name="pointLists">The point lists.</param>
-        private void DrawPoints(PictureBox pb, List<List<Point>> pointLists)
+        private void DrawPoints(PictureBox pb, List<List<Point3D>> pointLists)
         {
             this.logTextDebugPlacementReport.AppendLine("Start drawing scheme\n");
             this.logTextInfoPlacementReport.AppendLine("Start drawing scheme\n");
@@ -820,18 +820,65 @@ namespace AllegroToVarisciteConversion
                     // Draw lines for each list of points
                     using (Pen pen = new Pen(Color.Black, 2))
                     {
-                        foreach (List<Point> points in pointLists)
+                        foreach (List<Point3D> points in pointLists)
                         {
                             // Draw lines connecting the points
                             if (points.Count > 1)
                             {
                                 for (int i = 0; i < points.Count - 1; i++)
                                 {
-                                    g.DrawLine(pen, points[i], points[i + 1]);
+                                    if (points[i+1] != null)
+                                    {
+                                        if (points[i+1].Z != null)
+                                        {
+                                            Point start = points[i].GetRegularPoint();
+                                            Point center = points[i+1].GetRegularPoint();
+                                            bool isClockwise = false;
+                                            if (!points[i + 1].Z.Equals("0"))
+                                            {
+                                                isClockwise = true;
+                                            }
+                                            Point end = points[i+2].GetRegularPoint();
+
+                                            int radius = (int)Math.Sqrt(Math.Pow(center.X - start.X, 2) + Math.Pow(center.Y - start.Y, 2));
+                                            int x = center.X - radius;
+                                            int y = center.Y - radius;
+                                            int wigth = 2 * radius;
+                                            int height = 2 * radius;
+
+                                            float startAngle = (float)Math.Atan2(start.Y-center.Y,start.X-center.X)*180 / (float)Math.PI;
+                                            float endAngle = (float)Math.Atan2(end.Y-center.Y, end.X-center.X)*180 / (float)Math.PI;
+                                            float sweepAngle = endAngle - startAngle;
+
+                                            if(Math.Abs(sweepAngle) == 0)
+                                            {
+                                                g.DrawEllipse(pen, x,y,wigth, height);
+                                            }
+                                            else
+                                            {
+                                                if(isClockwise && sweepAngle < 0)
+                                                {
+                                                    sweepAngle += 360;
+                                                }
+                                                else if(!isClockwise && sweepAngle > 0)
+                                                {
+                                                    sweepAngle -= 360;
+                                                }
+
+                                                g.DrawArc(pen,x,y,wigth,height,startAngle,sweepAngle);
+                                            }
+                                            g.DrawLine(pen, start.X, start.Y, end.X, end.Y);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        g.DrawLine(pen, points[i].GetRegularPoint(), points[i + 1].GetRegularPoint());
+                                    }
+                                    
                                 }
 
                                 // Connect the last point with the first point to complete the figure
-                                g.DrawLine(pen, points[points.Count - 1], points[0]);
+                                g.DrawLine(pen, points[points.Count - 1].GetRegularPoint(), points[0].GetRegularPoint());
                             }
                         }
                     }
