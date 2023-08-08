@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -77,9 +78,37 @@ namespace AllegroToVarisciteConversion
             List<string> sortedList = new List<string>(unsortedList);
 
             // Use the Sort method to sort the list alphabetically
-            sortedList.Sort();
+            sortedList.Sort(CustomStringComparer);
 
             return sortedList;
+        }
+        /// <summary>
+        /// Customs the string comparer.
+        /// </summary>
+        /// <param name="x">The x.</param>
+        /// <param name="y">The y.</param>
+        /// <returns></returns>
+        static int CustomStringComparer(string x, string y)
+        {
+            IEnumerable<string> xParts = Regex.Split(x, "([0-9]+)");
+            IEnumerable<string> yParts = Regex.Split(y, "([0-9]+)");
+
+            using (IEnumerator<string> xEnum = xParts.GetEnumerator(), yEnum = yParts.GetEnumerator())
+            {
+                while (xEnum.MoveNext() && yEnum.MoveNext())
+                {
+                    if (xEnum.Current != yEnum.Current)
+                    {
+                        if (int.TryParse(xEnum.Current, out int xNum) && int.TryParse(yEnum.Current, out int yNum))
+                        {
+                            return xNum.CompareTo(yNum);
+                        }
+                        return xEnum.Current.CompareTo(yEnum.Current);
+                    }
+                }
+
+                return xParts.Count().CompareTo(yParts.Count());
+            }
         }
 
         /// <summary>
