@@ -29,21 +29,21 @@ namespace AllegroToVarisciteConversion
         }
 
         /// <summary>
-        /// The file patch
+        /// The file Path
         /// </summary>
-        public string filePatch = null;
+        public string filePath = null;
         /// <summary>
-        /// The full patch place
+        /// The full Path place
         /// </summary>
-        public string placementReportPatch;
+        public string placementReportPath;
         /// <summary>
-        /// The full patch coords
+        /// The full Path coords
         /// </summary>
-        public string placementCoordinatesPatch;
+        public string placementCoordinatesPath;
         /// <summary>
-        /// The scheme drawing patch
+        /// The scheme drawing Path
         /// </summary>
-        public string schemeDrawingPatch;
+        public string schemeDrawingPath;
         /// <summary>
         /// The coords
         /// </summary>
@@ -107,15 +107,15 @@ namespace AllegroToVarisciteConversion
         {
             CleanLogPlacementCoordinates();
             //Add lines to log file
-            this.logTextDebugPlacementCoordinates.AppendLine($"Opening coordinates file {this.placementCoordinatesPatch}");
-            this.logTextInfoPlacementCoordinates.AppendLine($"Opening coordinates file {this.placementCoordinatesPatch}");
+            this.logTextDebugPlacementCoordinates.AppendLine($"Opening coordinates file {this.placementCoordinatesPath}");
+            this.logTextInfoPlacementCoordinates.AppendLine($"Opening coordinates file {this.placementCoordinatesPath}");
 
             this.logTextDebugPlacementCoordinates.AppendLine($"\nStart converting coordinates file to List<string[]> format\n");
             this.logTextInfoPlacementCoordinates.AppendLine($"\nStart converting coordinates file to List<string[]> format\n");
 
             List<string[]> tabel = new List<string[]>();
             int index = 0;
-            using(var reader = new StreamReader(this.placementCoordinatesPatch))
+            using(var reader = new StreamReader(this.placementCoordinatesPath))
             {
                 while (reader.EndOfStream == false)
                 {
@@ -271,8 +271,8 @@ namespace AllegroToVarisciteConversion
         {
             CleanLogPlacementReport();
 
-            this.logTextDebugPlacementReport.AppendLine("Opening placement file " + this.placementReportPatch);
-            this.logTextInfoPlacementReport.AppendLine("Opening placement file " + this.placementReportPatch);
+            this.logTextDebugPlacementReport.AppendLine("Opening placement file " + this.placementReportPath);
+            this.logTextInfoPlacementReport.AppendLine("Opening placement file " + this.placementReportPath);
 
             this.logTextDebugPlacementReport.AppendLine("\nStart converting placement report file");
             this.logTextInfoPlacementReport.AppendLine("\nStart converting placement report file");
@@ -284,7 +284,7 @@ namespace AllegroToVarisciteConversion
 
             MyDictionary temp = new MyDictionary("First element -> delete");
 
-            using (var reader = new StreamReader(this.placementReportPatch))
+            using (var reader = new StreamReader(this.placementReportPath))
             {
                 while(reader.EndOfStream == false)
                 {
@@ -340,7 +340,7 @@ namespace AllegroToVarisciteConversion
                         if(t1!=null && t2 != null)
                         {
                             temp.AddValue(int.Parse(t1), int.Parse(t2));
-                            this.logTextDebugPlacementReport.AppendLine($"Coordination {t1},{t2} added to refdes {temp.Key}");
+                            this.logTextDebugPlacementReport.AppendLine($"Coordinates {t1},{t2} added to refdes {temp.Key}");
                         }
                     }
                     else if (HasArc(line))
@@ -519,7 +519,7 @@ namespace AllegroToVarisciteConversion
                 {
                     str += line[i] + "  ";
                 }
-                str += "} coordination line";
+                str += "} coordinates line";
             }
             
 
@@ -638,8 +638,8 @@ namespace AllegroToVarisciteConversion
         /// Saves the file.
         /// </summary>
         /// <param name="outputString">The output string.</param>
-        /// <param name="outputLogPatch">The output log patch.</param>
-        private void SaveFile(string outputString, string outputLogPatch)
+        /// <param name="outputLogPath">The output log Path.</param>
+        private void SaveFile(string outputString, string outputLogPath)
         {
             StringBuilder csv = new StringBuilder();
             string line = "";
@@ -670,7 +670,7 @@ namespace AllegroToVarisciteConversion
                     this.logTextGlobal.AppendLine("\nErrors count: " + this.errorCount);
                     this.logTextGlobal.AppendLine("\nFile saved at " + outputString);
 
-                    File.WriteAllText(outputLogPatch, this.logTextGlobal.ToString());
+                    File.WriteAllText(outputLogPath, this.logTextGlobal.ToString());
                     break;
                 case "info":
                     this.logTextGlobal.Append(this.logTextInfoPlacementCoordinates.ToString());
@@ -679,7 +679,7 @@ namespace AllegroToVarisciteConversion
                     this.logTextGlobal.AppendLine("\nErrors count: " + this.errorCount);
                     this.logTextGlobal.AppendLine("\nFile saved at " + outputString);
 
-                    File.WriteAllText(outputLogPatch, this.logTextGlobal.ToString());
+                    File.WriteAllText(outputLogPath, this.logTextGlobal.ToString());
                     break;
                 case "debug":
                     this.logTextGlobal.Append(this.logTextDebugPlacementCoordinates.ToString());
@@ -688,13 +688,13 @@ namespace AllegroToVarisciteConversion
                     this.logTextGlobal.AppendLine("\nErrors count: " + this.errorCount);
                     this.logTextGlobal.AppendLine("\nFile saved at " + outputString);
 
-                    File.WriteAllText(outputLogPatch, this.logTextGlobal.ToString());
+                    File.WriteAllText(outputLogPath, this.logTextGlobal.ToString());
                     break;
             }
             CleanLogPlacementCoordinates();
             CleanLogPlacementReport();
             this.errorCount = 0;
-            this.filePatch = null;
+            this.filePath = null;
         }
         
         /// <summary>
@@ -707,9 +707,9 @@ namespace AllegroToVarisciteConversion
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "Text File (*.txt)|*.txt|All Files (*.*)|*.*";
             openFileDialog.Title = "Open Placement Report File...";
-            if (this.filePatch != null)
+            if (this.filePath != null)
             {
-                openFileDialog.InitialDirectory = this.filePatch;
+                openFileDialog.InitialDirectory = this.filePath;
             }
             else
             {
@@ -718,11 +718,11 @@ namespace AllegroToVarisciteConversion
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                this.placementReportPatch = openFileDialog.FileName;
-                this.filePatch = GetLastFilePatch(openFileDialog.FileName);
+                this.placementReportPath = openFileDialog.FileName;
+                this.filePath = GetLastFilePath(openFileDialog.FileName);
             }
 
-            if(this.placementReportPatch != null)
+            if(this.placementReportPath != null)
             {
                 this.coords = InitElementCoords();
             }
@@ -885,9 +885,9 @@ namespace AllegroToVarisciteConversion
                 // Assign the updated bitmap to the PictureBox
                 if(!IsBitmapFormatCompatible(bmp))
                 {
-                    this.logTextErrorPlacementReport.AppendLine("Errpr!!! Bitmap format is wrong, cannot converte bitmap to image");
-                    this.logTextDebugPlacementReport.AppendLine("Errpr!!! Bitmap format is wrong, cannot converte bitmap to image");
-                    this.logTextInfoPlacementReport.AppendLine("Errpr!!! Bitmap format is wrong, cannot converte bitmap to image");
+                    this.logTextErrorPlacementReport.AppendLine("Error!!! Bitmap format is wrong, cannot converte bitmap to image");
+                    this.logTextDebugPlacementReport.AppendLine("Error!!! Bitmap format is wrong, cannot converte bitmap to image");
+                    this.logTextInfoPlacementReport.AppendLine("Error!!! Bitmap format is wrong, cannot converte bitmap to image");
                     this.errorCount++;
                     MessageBox.Show("BitMap format error", "Attention!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
@@ -972,9 +972,9 @@ namespace AllegroToVarisciteConversion
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "Text File (*.txt)|*.txt|All Files (*.*)|*.*";
             openFileDialog.Title = "Open Placement Coordinates File...";
-            if(this.filePatch != null)
+            if(this.filePath != null)
             {
-                openFileDialog.InitialDirectory = this.filePatch;
+                openFileDialog.InitialDirectory = this.filePath;
             }
             else
             {
@@ -984,11 +984,11 @@ namespace AllegroToVarisciteConversion
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                this.placementCoordinatesPatch = openFileDialog.FileName;
-                this.filePatch = GetLastFilePatch(openFileDialog.FileName);
+                this.placementCoordinatesPath = openFileDialog.FileName;
+                this.filePath = GetLastFilePath(openFileDialog.FileName);
             }
 
-            if(this.placementCoordinatesPatch != null)
+            if(this.placementCoordinatesPath != null)
             {
                 this.table = InitTabel();
             }
@@ -1002,11 +1002,11 @@ namespace AllegroToVarisciteConversion
             }
         }
         /// <summary>
-        /// Gets the last file patch.
+        /// Gets the last file Path.
         /// </summary>
         /// <param name="fileName">Name of the file.</param>
         /// <returns></returns>
-        private string GetLastFilePatch(string fileName)
+        private string GetLastFilePath(string fileName)
         {
             string result = null;
 
@@ -1160,21 +1160,28 @@ namespace AllegroToVarisciteConversion
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string savePatch = null;
+            string savePath = null;
             SaveFileDialog save = new SaveFileDialog();
-            save.InitialDirectory = @"C:\";
             save.Filter = "CSV File (*.csv)|*.csv|All Files (*.*)|*.*";
             save.Title = "Save output file in...";
             save.DefaultExt = "csv";
+            if(this.filePath != null)
+            {
+                save.InitialDirectory = this.filePath;
+            }
+            else
+            {
+                save.InitialDirectory = @"C:\";
+            }
             if (save.ShowDialog() == DialogResult.OK)
             {
-                savePatch = save.FileName;
+                savePath = save.FileName;
             }
-            if(savePatch != null)
+            if(savePath != null)
             {
-                if (this.placementCoordinatesPatch != null && this.placementReportPatch != null)
+                if (this.placementCoordinatesPath != null && this.placementReportPath != null)
                 {
-                    SaveFile(savePatch, ChangeFileExtension(savePatch, ".log"));
+                    SaveFile(savePath, ChangeFileExtension(savePath, ".log"));
                     MessageBox.Show("File Saved", "Congratulations", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
@@ -1507,9 +1514,9 @@ namespace AllegroToVarisciteConversion
                 // Assign the updated bitmap to the PictureBox
                 if (!IsBitmapFormatCompatible(bmp))
                 {
-                    this.logTextErrorPlacementReport.AppendLine("Errpr!!! Bitmap format is wrong, cannot converte bitmap to image");
-                    this.logTextDebugPlacementReport.AppendLine("Errpr!!! Bitmap format is wrong, cannot converte bitmap to image");
-                    this.logTextInfoPlacementReport.AppendLine("Errpr!!! Bitmap format is wrong, cannot converte bitmap to image");
+                    this.logTextErrorPlacementReport.AppendLine("Error!!! Bitmap format is wrong, cannot converte bitmap to image");
+                    this.logTextDebugPlacementReport.AppendLine("Error!!! Bitmap format is wrong, cannot converte bitmap to image");
+                    this.logTextInfoPlacementReport.AppendLine("Error!!! Bitmap format is wrong, cannot converte bitmap to image");
                     this.errorCount++;
                     MessageBox.Show("BitMap format error", "Attention!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
