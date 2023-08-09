@@ -41,9 +41,8 @@
             this.errorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.infoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.debugToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.selectComponentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pbSketch = new System.Windows.Forms.PictureBox();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.listBox1 = new System.Windows.Forms.ListBox();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbSketch)).BeginInit();
             this.SuspendLayout();
@@ -57,8 +56,7 @@
             this.menuStrip1.BackColor = System.Drawing.SystemColors.Control;
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
-            this.optionToolStripMenuItem,
-            this.selectComponentToolStripMenuItem});
+            this.optionToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(891, 24);
@@ -151,13 +149,6 @@
             this.debugToolStripMenuItem.Text = "Debug";
             this.debugToolStripMenuItem.Click += new System.EventHandler(this.debugToolStripMenuItem_Click);
             // 
-            // selectComponentToolStripMenuItem
-            // 
-            this.selectComponentToolStripMenuItem.Name = "selectComponentToolStripMenuItem";
-            this.selectComponentToolStripMenuItem.Size = new System.Drawing.Size(117, 20);
-            this.selectComponentToolStripMenuItem.Text = "Select Component";
-            this.selectComponentToolStripMenuItem.Click += new System.EventHandler(this.selectComponentToolStripMenuItem_Click);
-            // 
             // pbSketch
             // 
             this.pbSketch.Location = new System.Drawing.Point(168, 27);
@@ -167,21 +158,22 @@
             this.pbSketch.TabIndex = 4;
             this.pbSketch.TabStop = false;
             // 
-            // panel1
+            // listBox1
             // 
-            this.panel1.AutoScroll = true;
-            this.panel1.BackColor = System.Drawing.SystemColors.ButtonShadow;
-            this.panel1.Location = new System.Drawing.Point(0, 27);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(162, 456);
-            this.panel1.TabIndex = 5;
+            this.listBox1.BackColor = System.Drawing.Color.Silver;
+            this.listBox1.FormattingEnabled = true;
+            this.listBox1.Location = new System.Drawing.Point(0, 27);
+            this.listBox1.Name = "listBox1";
+            this.listBox1.Size = new System.Drawing.Size(162, 459);
+            this.listBox1.TabIndex = 5;
+            this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(891, 483);
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.listBox1);
             this.Controls.Add(this.pbSketch);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
@@ -212,8 +204,7 @@
         private System.Windows.Forms.ToolStripMenuItem placementReportFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem coordinatesReportFileToolStripMenuItem;
         private System.Windows.Forms.PictureBox pbSketch;
-        private System.Windows.Forms.ToolStripMenuItem selectComponentToolStripMenuItem;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.ListBox listBox1;
     }
 }
 

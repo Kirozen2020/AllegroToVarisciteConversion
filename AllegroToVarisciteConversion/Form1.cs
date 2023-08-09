@@ -25,8 +25,6 @@ namespace AllegroToVarisciteConversion
 
             this.logTextGlobal.AppendLine("Program Start");
             infoToolStripMenuItem.CheckState = CheckState.Checked;
-
-            selectComponentToolStripMenuItem.Visible = false;
         }
 
         /// <summary>
@@ -888,9 +886,9 @@ namespace AllegroToVarisciteConversion
                 // Assign the updated bitmap to the PictureBox
                 if(!IsBitmapFormatCompatible(bmp))
                 {
-                    this.logTextErrorPlacementReport.AppendLine("Error!!! Bitmap format is wrong, cannot converte bitmap to image");
-                    this.logTextDebugPlacementReport.AppendLine("Error!!! Bitmap format is wrong, cannot converte bitmap to image");
-                    this.logTextInfoPlacementReport.AppendLine("Error!!! Bitmap format is wrong, cannot converte bitmap to image");
+                    this.logTextErrorPlacementReport.AppendLine("Error!!! Bitmap format is wrong, cannot convert bitmap to image");
+                    this.logTextDebugPlacementReport.AppendLine("Error!!! Bitmap format is wrong, cannot convert bitmap to image");
+                    this.logTextInfoPlacementReport.AppendLine("Error!!! Bitmap format is wrong, cannot convert bitmap to image");
                     this.errorCount++;
                     MessageBox.Show("BitMap format error", "Attention!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
@@ -907,16 +905,8 @@ namespace AllegroToVarisciteConversion
 
                 names.Sort(CustomStringComparer);
 
-                for (int i = 0; i < names.Count; i++)
-                {
-                    CheckBox checkBox = new CheckBox();
-                    checkBox.Text = names[i];
-                    checkBox.Location = new Point(10, 10 + i * 25);
-                    checkBox.AutoSize = true;
-
-                    panel1.Controls.Add(checkBox);
-                }
-                selectComponentToolStripMenuItem.Visible = true;
+                listBox1.DataSource = names;
+                listBox1.SelectionMode = SelectionMode.MultiExtended;
             }
         }
         /// <summary>
@@ -1363,46 +1353,7 @@ namespace AllegroToVarisciteConversion
                 }
             }
         }
-        /// <summary>
-        /// Handles the Click event of the selectComponentToolStripMenuItem control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
-        private void selectComponentToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            List<string> allNames =new List<string>();
 
-            if(this.coords.Count > 1)
-            {
-                for (int i = 0; i < this.coords.Count; i++)
-                {
-                    allNames.Add(this.coords[i].Key);
-                }
-            }
-
-            List<string> checkedCheckBoxNames = new List<string>();
-
-            foreach(Control control in panel1.Controls)
-            {
-                if(control is CheckBox checkBox && checkBox.Checked)
-                {
-                    checkedCheckBoxNames.Add(checkBox.Text);
-                }
-            }
-
-            List<List<Point3D>> lst = ConvertToListOfListOfPoints();
-            List<List<Point3D>> redElements = ConvertToListOfListOfPointsRED(checkedCheckBoxNames);
-            DrawPoints(pbSketch, lst, redElements);
-
-            foreach(Control control1 in panel1.Controls)
-            {
-                if(control1 is CheckBox checkBox)
-                {
-                    checkBox.Checked = false;
-                }
-            }
-        }
-        
         /// <summary>
         /// Converts to list of list of points red.
         /// </summary>
@@ -1600,9 +1551,9 @@ namespace AllegroToVarisciteConversion
                 // Assign the updated bitmap to the PictureBox
                 if (!IsBitmapFormatCompatible(bmp))
                 {
-                    this.logTextErrorPlacementReport.AppendLine("Error!!! Bitmap format is wrong, cannot converte bitmap to image");
-                    this.logTextDebugPlacementReport.AppendLine("Error!!! Bitmap format is wrong, cannot converte bitmap to image");
-                    this.logTextInfoPlacementReport.AppendLine("Error!!! Bitmap format is wrong, cannot converte bitmap to image");
+                    this.logTextErrorPlacementReport.AppendLine("Error!!! Bitmap format is wrong, cannot convert bitmap to image");
+                    this.logTextDebugPlacementReport.AppendLine("Error!!! Bitmap format is wrong, cannot convert bitmap to image");
+                    this.logTextInfoPlacementReport.AppendLine("Error!!! Bitmap format is wrong, cannot convert bitmap to image");
                     this.errorCount++;
                     MessageBox.Show("BitMap format error", "Attention!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
@@ -1615,9 +1566,33 @@ namespace AllegroToVarisciteConversion
 
         private void Form1_Resize(object sender, EventArgs e)
         {
-            panel1.Height = this.Height - 66;
+            listBox1.Height = this.Height - 66;
             pbSketch.Height = this.Height - 70;
-            pbSketch.Width = this.Width - panel1.Width - 30;
+            pbSketch.Width = this.Width - listBox1.Width - 30;
+        }
+
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            List<string> allNames = new List<string>();
+
+            if (this.coords.Count > 1)
+            {
+                for (int i = 0; i < this.coords.Count; i++)
+                {
+                    allNames.Add(this.coords[i].Key);
+                }
+            }
+
+            List<string> checkedCheckBoxNames = new List<string>();
+
+            foreach (var selectedItem in listBox1.SelectedItems)
+            {
+                checkedCheckBoxNames.Add(selectedItem.ToString());
+            }
+
+            List<List<Point3D>> lst = ConvertToListOfListOfPoints();
+            List<List<Point3D>> redElements = ConvertToListOfListOfPointsRED(checkedCheckBoxNames);
+            DrawPoints(pbSketch, lst, redElements);
         }
     }
 }
