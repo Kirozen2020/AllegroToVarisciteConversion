@@ -736,6 +736,8 @@ namespace AllegroToVarisciteConversion
                     }
                     MoveAllElements(ref this.coords);
 
+                    this.coords = DeleteUnnecessaryCoords();
+
                     this.coords = FlipImage(this.coords);
                     
                     List<List<Point3D>> lst = ConvertToListOfListOfPoints();
@@ -744,6 +746,30 @@ namespace AllegroToVarisciteConversion
                 }
             }
 
+        }
+        /// <summary>
+        /// Deletes the unnecessary coords.
+        /// </summary>
+        /// <returns></returns>
+        private List<MyDictionary> DeleteUnnecessaryCoords()
+        {
+            List<MyDictionary> result = this.coords;
+            List<MyDictionary> temp = this.coords;
+            int count = 0;
+
+            for (int i = 0; i < result.Count; i++)
+            {
+                for (int j = 0; j < result[i].Value.Count-1; j++)
+                {
+                    if (result[i].Value[j].GetRegularPoint().Equals(result[i].Value[j + 1].GetRegularPoint()))
+                    {
+                        temp[i].Value.Remove(result[i].Value[j]);
+                        count++;
+                    }
+                }
+            }
+
+            return temp;
         }
         /// <summary>
         /// Gets the empty reference deses.
@@ -1563,14 +1589,22 @@ namespace AllegroToVarisciteConversion
                 pbSketch.Image = image;
             }
         }
-
+        /// <summary>
+        /// Handles the Resize event of the Form1 control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void Form1_Resize(object sender, EventArgs e)
         {
             listBox1.Height = this.Height - 66;
             pbSketch.Height = this.Height - 70;
             pbSketch.Width = this.Width - listBox1.Width - 30;
         }
-
+        /// <summary>
+        /// Handles the SelectedIndexChanged event of the listBox1 control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             List<string> allNames = new List<string>();
