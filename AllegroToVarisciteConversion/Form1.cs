@@ -737,6 +737,8 @@ namespace AllegroToVarisciteConversion
                     }
                     MoveAllElements(ref this.coords);
 
+                    this.coords = FlipImage(this.coords);
+                    
                     List<List<Point3D>> lst = ConvertToListOfListOfPoints();
 
                     DrawPoints(pbSketch, lst);
@@ -892,12 +894,34 @@ namespace AllegroToVarisciteConversion
                     MessageBox.Show("BitMap format error", "Attention!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 this.motherBoardImage = bmp;
-                this.motherBoardImage.RotateFlip(RotateFlipType.RotateNoneFlipY);
                 AddText(ref this.motherBoardImage);
                 Image image = Image.FromHbitmap(this.motherBoardImage.GetHbitmap());
                 pbSketch.Image = image;
                 selectComponentToolStripMenuItem.Visible = true;
             }
+        }
+        /// <summary>
+        /// Flips the image.
+        /// </summary>
+        /// <param name="list">The list.</param>
+        /// <returns></returns>
+        private List<MyDictionary> FlipImage(List<MyDictionary> list)
+        {
+            List<MyDictionary> result = new List<MyDictionary>();
+            int maxY = FindMaxY() + 30;
+
+            foreach (var dict in list)
+            {
+                MyDictionary newDict = new MyDictionary(dict.Key);
+
+                foreach (var point in dict.Value)
+                {
+                    int newY = maxY - int.Parse(point.Y);
+                    newDict.Value.Add(new Point3D(int.Parse(point.X), newY));
+                }
+                result.Add(newDict);
+            }
+            return result;
         }
         /// <summary>
         /// Determines whether [is bitmap format compatible] [the specified bitmap].
@@ -1054,8 +1078,6 @@ namespace AllegroToVarisciteConversion
                         Graphics graphics = Graphics.FromImage(bitmap);
                         Font font = new Font("Arial", 15);
                         Brush brush = new SolidBrush(Color.Black);
-
-                        y = bitmap.Height - y - 15;
 
                         graphics.DrawString(item.Key, font, brush, x, y);
                     }
@@ -1521,7 +1543,6 @@ namespace AllegroToVarisciteConversion
                     MessageBox.Show("BitMap format error", "Attention!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 this.motherBoardImage = bmp;
-                this.motherBoardImage.RotateFlip(RotateFlipType.RotateNoneFlipY);
                 AddText(ref this.motherBoardImage);
                 Image image = Image.FromHbitmap(this.motherBoardImage.GetHbitmap());
                 pbSketch.Image = image;
