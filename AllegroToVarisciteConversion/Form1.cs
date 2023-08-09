@@ -6,6 +6,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace AllegroToVarisciteConversion
@@ -897,7 +898,53 @@ namespace AllegroToVarisciteConversion
                 AddText(ref this.motherBoardImage);
                 Image image = Image.FromHbitmap(this.motherBoardImage.GetHbitmap());
                 pbSketch.Image = image;
+
+                List<string> names = new List<string>();
+                foreach (var item in this.coords)
+                {
+                    names.Add(item.Key);
+                }
+
+                names.Sort(CustomStringComparer);
+
+                for (int i = 0; i < names.Count; i++)
+                {
+                    CheckBox checkBox = new CheckBox();
+                    checkBox.Text = names[i];
+                    checkBox.Location = new Point(10, 10 + i * 25);
+                    checkBox.AutoSize = true;
+
+                    panel1.Controls.Add(checkBox);
+                }
                 selectComponentToolStripMenuItem.Visible = true;
+            }
+        }
+        /// <summary>
+        /// Customs the string comparer.
+        /// </summary>
+        /// <param name="x">The x.</param>
+        /// <param name="y">The y.</param>
+        /// <returns></returns>
+        static int CustomStringComparer(string x, string y)
+        {
+            IEnumerable<string> xParts = Regex.Split(x, "([0-9]+)");
+            IEnumerable<string> yParts = Regex.Split(y, "([0-9]+)");
+
+            using (IEnumerator<string> xEnum = xParts.GetEnumerator(), yEnum = yParts.GetEnumerator())
+            {
+                while (xEnum.MoveNext() && yEnum.MoveNext())
+                {
+                    if (xEnum.Current != yEnum.Current)
+                    {
+                        if (int.TryParse(xEnum.Current, out int xNum) && int.TryParse(yEnum.Current, out int yNum))
+                        {
+                            return xNum.CompareTo(yNum);
+                        }
+                        return xEnum.Current.CompareTo(yEnum.Current);
+                    }
+                }
+
+                return xParts.Count().CompareTo(yParts.Count());
             }
         }
         /// <summary>
@@ -1333,16 +1380,26 @@ namespace AllegroToVarisciteConversion
                 }
             }
 
-            //add a for loop to fill the allNames list
+            List<string> checkedCheckBoxNames = new List<string>();
 
-            SelectElements selectElements = new SelectElements(allNames);
-            
-            if(selectElements.ShowDialog() == DialogResult.OK)
+            foreach(Control control in panel1.Controls)
             {
-                List<string> checksElements = selectElements.CheckedItemsList;
-                List<List<Point3D>> lst = ConvertToListOfListOfPoints();
-                List<List<Point3D>> redElements = ConvertToListOfListOfPointsRED(checksElements);
-                DrawPoints(pbSketch, lst, redElements);
+                if(control is CheckBox checkBox && checkBox.Checked)
+                {
+                    checkedCheckBoxNames.Add(checkBox.Text);
+                }
+            }
+
+            List<List<Point3D>> lst = ConvertToListOfListOfPoints();
+            List<List<Point3D>> redElements = ConvertToListOfListOfPointsRED(checkedCheckBoxNames);
+            DrawPoints(pbSketch, lst, redElements);
+
+            foreach(Control control1 in panel1.Controls)
+            {
+                if(control1 is CheckBox checkBox)
+                {
+                    checkBox.Checked = false;
+                }
             }
         }
         
@@ -1558,7 +1615,7 @@ namespace AllegroToVarisciteConversion
 
         private void Form1_Resize(object sender, EventArgs e)
         {
-            panel1.Height = this.Height;
+            panel1.Height = this.Height - 66;
             pbSketch.Height = this.Height - 70;
             pbSketch.Width = this.Width - panel1.Width - 30;
         }
