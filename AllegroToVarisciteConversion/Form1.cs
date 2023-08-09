@@ -19,7 +19,7 @@ namespace AllegroToVarisciteConversion
         {
             InitializeComponent();
 
-            pbSketch.Dock = DockStyle.Fill;
+            //pbSketch.Dock = DockStyle.Fill;
             this.Text = "AllegroToVarisciteConversion " + Revision.revision;
 
             this.logTextGlobal.AppendLine("Program Start");
@@ -917,7 +917,14 @@ namespace AllegroToVarisciteConversion
                 foreach (var point in dict.Value)
                 {
                     int newY = maxY - int.Parse(point.Y);
-                    newDict.Value.Add(new Point3D(int.Parse(point.X), newY));
+                    if(point.Z != "Empty")
+                    {
+                        newDict.Value.Add(new Point3D(int.Parse(point.X), newY, int.Parse(point.Z)));
+                    }
+                    else
+                    {
+                        newDict.Value.Add(new Point3D(int.Parse(point.X), newY));
+                    }
                 }
                 result.Add(newDict);
             }
@@ -1547,6 +1554,13 @@ namespace AllegroToVarisciteConversion
                 Image image = Image.FromHbitmap(this.motherBoardImage.GetHbitmap());
                 pbSketch.Image = image;
             }
+        }
+
+        private void Form1_Resize(object sender, EventArgs e)
+        {
+            panel1.Height = this.Height;
+            pbSketch.Height = this.Height - 70;
+            pbSketch.Width = this.Width - panel1.Width - 30;
         }
     }
 }

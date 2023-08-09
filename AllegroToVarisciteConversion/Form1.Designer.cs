@@ -169,6 +169,8 @@
             // 
             // panel1
             // 
+            this.panel1.AutoScroll = true;
+            this.panel1.BackColor = System.Drawing.SystemColors.ButtonShadow;
             this.panel1.Location = new System.Drawing.Point(0, 27);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(162, 456);
@@ -185,6 +187,7 @@
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
             this.Text = "Form1";
+            this.Resize += new System.EventHandler(this.Form1_Resize);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbSketch)).EndInit();
