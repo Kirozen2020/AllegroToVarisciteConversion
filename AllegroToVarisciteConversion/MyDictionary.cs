@@ -24,6 +24,13 @@ namespace AllegroToVarisciteConversion
         /// </value>
         public List<Point3D> Value { get; }
         /// <summary>
+        /// Gets the merror.
+        /// </summary>
+        /// <value>
+        /// The merror.
+        /// </value>
+        public string Mirror { get; private set; }
+        /// <summary>
         /// Initializes a new instance of the <see cref="MyDictionary"/> class.
         /// </summary>
         /// <param name="key">The key.</param>
@@ -31,6 +38,14 @@ namespace AllegroToVarisciteConversion
         {
             this.Key = key;
             this.Value = new List<Point3D>();
+        }
+        /// <summary>
+        /// Adds the mirror.
+        /// </summary>
+        /// <param name="x">The x.</param>
+        public void AddMirror(string x)
+        {
+            this.Mirror = x.ToString();
         }
         /// <summary>
         /// Adds the value.
