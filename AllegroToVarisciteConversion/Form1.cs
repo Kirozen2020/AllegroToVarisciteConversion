@@ -20,7 +20,6 @@ namespace AllegroToVarisciteConversion
         {
             InitializeComponent();
 
-            //pbSketch.Dock = DockStyle.Fill;
             this.Text = "AllegroToVarisciteConversion " + Revision.revision;
 
             this.logTextGlobal.AppendLine("Program Start");
@@ -695,7 +694,13 @@ namespace AllegroToVarisciteConversion
             this.errorCount = 0;
             this.filePath = null;
         }
-        
+        private void SaveFileUsingOneFile(string outputString, string outputLogPath)
+        {
+            StringBuilder csv = new StringBuilder();
+            csv.AppendLine("REFDES,SYM_X,SYM_Y,SYM_ROTATE,SYM_MIRROR,DFX");
+            string line = "";
+
+        }
         /// <summary>
         /// Handles the Click event of the placementReportFileToolStripMenuItem control.
         /// </summary>
@@ -1276,7 +1281,16 @@ namespace AllegroToVarisciteConversion
                     SaveFile(savePath, ChangeFileExtension(savePath, ".log"));
                     MessageBox.Show("File Saved", "Congratulations", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
-                else
+                else if (this.placementReportPath == null && this.placementCoordinatesPath != null)
+                {
+                    DialogResult ans = MessageBox.Show("You want to savw the file using only Placement Coordinates file?", "Saving process", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
+                    if(ans == DialogResult.OK)
+                    {
+                        SaveFileUsingOneFile(savePath, ChangeFileExtension(savePath, ".log"));
+                        MessageBox.Show("File saved", "Congratulations", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                }
+                else if(this.placementCoordinatesPath == null && this.placementReportPath == null)
                 {
                     MessageBox.Show("You need to chose files first!", "Attention", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
