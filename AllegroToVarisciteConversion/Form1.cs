@@ -499,7 +499,13 @@ namespace AllegroToVarisciteConversion
             }
             return coords;
         }
-
+        /// <summary>
+        /// Determines whether [has subclass data] [the specified line].
+        /// </summary>
+        /// <param name="line">The line.</param>
+        /// <returns>
+        ///   <c>true</c> if [has subclass data] [the specified line]; otherwise, <c>false</c>.
+        /// </returns>
         private bool HasSubclassData(string[] line)
         {
             for (int i = 0; i < line.Length; i++)
@@ -511,7 +517,6 @@ namespace AllegroToVarisciteConversion
             }
             return false;
         }
-
         /// <summary>
         /// Converts to line placement report.
         /// </summary>
@@ -1065,6 +1070,7 @@ namespace AllegroToVarisciteConversion
             foreach (var dict in list)
             {
                 MyDictionary newDict = new MyDictionary(dict.Key);
+                newDict.AddMirror(dict.Mirror);
 
                 foreach (var point in dict.Value)
                 {
@@ -1367,7 +1373,7 @@ namespace AllegroToVarisciteConversion
                 }
                 else if (this.placementReportPath != null && this.placementCoordinatesPath == null)
                 {
-                    DialogResult ans = MessageBox.Show("You want to savw the file using only Placement Report file?", "Saving process", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
+                    DialogResult ans = MessageBox.Show("You want to create output file using only Placement Report file?", "Saving process", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
                     if(ans == DialogResult.OK)
                     {
                         SaveFileUsingOneFile(savePath, ChangeFileExtension(savePath, ".log"));

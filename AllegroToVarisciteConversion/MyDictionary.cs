@@ -45,7 +45,7 @@ namespace AllegroToVarisciteConversion
         /// <param name="x">The x.</param>
         public void AddMirror(string x)
         {
-            this.Mirror = x.ToString();
+            this.Mirror = x;
         }
         /// <summary>
         /// Adds the value.
