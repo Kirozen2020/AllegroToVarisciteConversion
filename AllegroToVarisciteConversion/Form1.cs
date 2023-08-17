@@ -298,6 +298,19 @@ namespace AllegroToVarisciteConversion
                         temp = new MyDictionary(line[12]);
                         this.logTextDebugPlacementReport.AppendLine($"Reading line {index}: {ConvertToLinePlacementReport(line, 1)}");
                     }
+                    else if (HasSubclassData(line))
+                    {
+                        this.logTextDebugPlacementReport.AppendLine($"Reading line {index}: {ConvertToLinePlacementReport(line, 3)}");
+                        string[] subclass = line[13].Split('_');
+                        if (subclass[2].Equals("TOP"))
+                        {
+                            temp.AddMirror("NO");
+                        }
+                        else if (subclass[2].Equals("BOTTOM"))
+                        {
+                            temp.AddMirror("YES");
+                        }
+                    }
                     else if (EndOfFile(line))
                     {
                         coords.Add(temp);
@@ -486,6 +499,19 @@ namespace AllegroToVarisciteConversion
             }
             return coords;
         }
+
+        private bool HasSubclassData(string[] line)
+        {
+            for (int i = 0; i < line.Length; i++)
+            {
+                if (line[i].Equals("subclass"))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         /// <summary>
         /// Converts to line placement report.
         /// </summary>
@@ -519,8 +545,18 @@ namespace AllegroToVarisciteConversion
                 }
                 str += "} coordinates line";
             }
+            if (mode == 3)
+            {
+                for (int i = 0; i < line.Length; i++)
+                {
+                    if (line[i] != " ")
+                    {
+                        str += line[i] + " ";
+                    }
+                }
+                str += "} Mirror line";
+            }
             
-
             return str;
         }
         /// <summary>
@@ -694,19 +730,60 @@ namespace AllegroToVarisciteConversion
             this.errorCount = 0;
             this.filePath = null;
         }
+        /// <summary>
+        /// Saves the file using one file.
+        /// </summary>
+        /// <param name="outputString">The output string.</param>
+        /// <param name="outputLogPath">The output log path.</param>
         private void SaveFileUsingOneFile(string outputString, string outputLogPath)
         {
             StringBuilder csv = new StringBuilder();
-            csv.AppendLine("REFDES,SYM_X,SYM_Y,SYM_ROTATE,SYM_MIRROR,DFX");
+            csv.AppendLine("REFDES,SYM_X,SYM_Y,SYM_ROTATE,SYM_MIRROR,DFX");//Top line
             string line = "";
 
             for (int i = 0; i < this.coords.Count; i++)
             {
-                line = this.coords[i].Key + $",0,0,0,{this.coords[i].Mirror}";
+                line = $"{this.coords[i].Key},0,0,0,{this.coords[i].Mirror},";
                 line += GetCoords(this.coords[i].Key);
                 csv.AppendLine(line);
             }
 
+            File.AppendAllText(outputString, csv.ToString());//Save file to pc
+
+            switch (logMode)
+            {
+                case "error":
+
+                    this.logTextGlobal.Append(this.logTextErrorPlacementCoordinates.ToString());
+                    this.logTextGlobal.Append(this.logTextErrorPlacementReport.ToString());
+                    this.logTextGlobal.AppendLine("\nErrors count: " + this.errorCount);
+                    this.logTextGlobal.AppendLine("\nFile saved at " + outputString);
+
+                    File.WriteAllText(outputLogPath, this.logTextGlobal.ToString());
+                    break;
+                case "info":
+                    this.logTextGlobal.Append(this.logTextInfoPlacementCoordinates.ToString());
+                    this.logTextGlobal.AppendLine();
+                    this.logTextGlobal.Append(this.logTextInfoPlacementReport.ToString());
+                    this.logTextGlobal.AppendLine("\nErrors count: " + this.errorCount);
+                    this.logTextGlobal.AppendLine("\nFile saved at " + outputString);
+
+                    File.WriteAllText(outputLogPath, this.logTextGlobal.ToString());
+                    break;
+                case "debug":
+                    this.logTextGlobal.Append(this.logTextDebugPlacementCoordinates.ToString());
+                    this.logTextGlobal.AppendLine();
+                    this.logTextGlobal.Append(this.logTextDebugPlacementReport.ToString());
+                    this.logTextGlobal.AppendLine("\nErrors count: " + this.errorCount);
+                    this.logTextGlobal.AppendLine("\nFile saved at " + outputString);
+
+                    File.WriteAllText(outputLogPath, this.logTextGlobal.ToString());
+                    break;
+            }
+            CleanLogPlacementCoordinates();
+            CleanLogPlacementReport();
+            this.errorCount = 0;
+            this.filePath = null;
         }
         /// <summary>
         /// Handles the Click event of the placementReportFileToolStripMenuItem control.
