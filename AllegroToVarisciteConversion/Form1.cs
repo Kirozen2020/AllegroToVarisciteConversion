@@ -700,6 +700,13 @@ namespace AllegroToVarisciteConversion
             csv.AppendLine("REFDES,SYM_X,SYM_Y,SYM_ROTATE,SYM_MIRROR,DFX");
             string line = "";
 
+            for (int i = 0; i < this.coords.Count; i++)
+            {
+                line = this.coords[i].Key + $",0,0,0,{this.coords[i].Mirror}";
+                line += GetCoords(this.coords[i].Key);
+                csv.AppendLine(line);
+            }
+
         }
         /// <summary>
         /// Handles the Click event of the placementReportFileToolStripMenuItem control.
@@ -1281,9 +1288,9 @@ namespace AllegroToVarisciteConversion
                     SaveFile(savePath, ChangeFileExtension(savePath, ".log"));
                     MessageBox.Show("File Saved", "Congratulations", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
-                else if (this.placementReportPath == null && this.placementCoordinatesPath != null)
+                else if (this.placementReportPath != null && this.placementCoordinatesPath == null)
                 {
-                    DialogResult ans = MessageBox.Show("You want to savw the file using only Placement Coordinates file?", "Saving process", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
+                    DialogResult ans = MessageBox.Show("You want to savw the file using only Placement Report file?", "Saving process", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
                     if(ans == DialogResult.OK)
                     {
                         SaveFileUsingOneFile(savePath, ChangeFileExtension(savePath, ".log"));
