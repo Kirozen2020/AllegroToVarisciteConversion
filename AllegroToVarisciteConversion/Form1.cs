@@ -66,6 +66,10 @@ namespace AllegroToVarisciteConversion
         /// The error count
         /// </summary>
         private int errorCount = 0;
+        /// <summary>
+        /// The number of VPC
+        /// </summary>
+        private int numberOfVPC = 0;
 
         /// <summary>
         /// The log text
@@ -481,6 +485,13 @@ namespace AllegroToVarisciteConversion
                             
                         }
                     }
+                    else if (PVCLine(line))
+                    {
+                        while (!line[1].Equals("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"))//              1 / 0
+                        {
+
+                        }
+                    }
                     else
                     {
                         this.logTextDebugPlacementReport.AppendLine($"Reading line {index}: {ConvertToLinePlacementReport(line, 0)}");
@@ -498,6 +509,22 @@ namespace AllegroToVarisciteConversion
                 MessageBox.Show("You opened a wrong file or an empty one", "Attention!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             return coords;
+        }
+        /// <summary>
+        /// PVCs the line.
+        /// </summary>
+        /// <param name="line">The line.</param>
+        /// <returns></returns>
+        private bool PVCLine(string[] line)
+        {
+            for (int i = 0; i < line.Length-1; i++)
+            {
+                if (line[i].Equals("BOARD") && line[i + 1].Equals("GEOMETRY"))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
         /// <summary>
         /// Determines whether [has subclass data] [the specified line].
