@@ -69,7 +69,7 @@ namespace AllegroToVarisciteConversion
         /// <summary>
         /// The number of VPC
         /// </summary>
-        private int numberOfVPC = 0;
+        private int numberOfVPC = 1;
 
         /// <summary>
         /// The log text
@@ -281,7 +281,6 @@ namespace AllegroToVarisciteConversion
 
             int index = 0;
 
-
             List<MyDictionary> coords = new List<MyDictionary>();
 
             MyDictionary temp = new MyDictionary("First element -> delete");
@@ -302,18 +301,34 @@ namespace AllegroToVarisciteConversion
                         temp = new MyDictionary(line[12]);
                         this.logTextDebugPlacementReport.AppendLine($"Reading line {index}: {ConvertToLinePlacementReport(line, 1)}");
                     }
+                    else if (VPCLine(line))
+                    {
+                        if (coords.Count != 0)
+                        {
+                            this.logTextDebugPlacementReport.AppendLine($"Refdes {temp.Key} is added with {temp.Value.Count} coordinations");
+                            this.logTextInfoPlacementReport.AppendLine($"Refdes {temp.Key} is added with {temp.Value.Count} coordinations");
+                        }
+                        coords.Add(temp);
+                        temp = new MyDictionary("VPC"+this.numberOfVPC);
+                        this.numberOfVPC++;
+                        this.logTextDebugPlacementReport.AppendLine($"Reading line {index}: {ConvertToLinePlacementReport(line, 4)}");
+                    }
                     else if (HasSubclassData(line))
                     {
                         this.logTextDebugPlacementReport.AppendLine($"Reading line {index}: {ConvertToLinePlacementReport(line, 3)}");
                         string[] subclass = line[13].Split('_');
-                        if (subclass[2].Equals("TOP"))
+                        if(subclass.Length > 1)
                         {
-                            temp.AddMirror("NO");
+                            if (subclass[2].Equals("TOP"))
+                            {
+                                temp.AddMirror("NO");
+                            }
+                            else if (subclass[2].Equals("BOTTOM"))
+                            {
+                                temp.AddMirror("YES");
+                            }
                         }
-                        else if (subclass[2].Equals("BOTTOM"))
-                        {
-                            temp.AddMirror("YES");
-                        }
+                        
                     }
                     else if (EndOfFile(line))
                     {
@@ -485,13 +500,6 @@ namespace AllegroToVarisciteConversion
                             
                         }
                     }
-                    else if (PVCLine(line))
-                    {
-                        while (!line[1].Equals("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"))//              1 / 0
-                        {
-
-                        }
-                    }
                     else
                     {
                         this.logTextDebugPlacementReport.AppendLine($"Reading line {index}: {ConvertToLinePlacementReport(line, 0)}");
@@ -508,14 +516,19 @@ namespace AllegroToVarisciteConversion
             {
                 MessageBox.Show("You opened a wrong file or an empty one", "Attention!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
+
+            if(this.numberOfVPC > 2)
+            {
+                MessageBox.Show("You have in total more then 1 VPC element", "Attention!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
             return coords;
         }
         /// <summary>
-        /// PVCs the line.
+        /// VPCs the line.
         /// </summary>
         /// <param name="line">The line.</param>
         /// <returns></returns>
-        private bool PVCLine(string[] line)
+        private bool VPCLine(string[] line)
         {
             for (int i = 0; i < line.Length-1; i++)
             {
@@ -588,7 +601,14 @@ namespace AllegroToVarisciteConversion
                 }
                 str += "} Mirror line";
             }
-            
+            if (mode == 4)
+            {
+                for (int i = 0; i < line.Length; i++)
+                {
+                    str += line[i] + "  ";
+                }
+                str += "} VPC line";
+            }
             return str;
         }
         /// <summary>
