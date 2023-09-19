@@ -8,5 +8,6 @@ namespace AllegroToVarisciteConversion
 {
     internal class CsvManager
     {
+
     }
 }
