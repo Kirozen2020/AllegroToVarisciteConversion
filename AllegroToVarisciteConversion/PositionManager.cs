@@ -31,6 +31,7 @@ namespace AllegroToVarisciteConversion
         /// The VPC number.
         /// </value>
         public int vpc_number { get; set; }
+        public LogManager log;
 
         /// <summary>
         /// The coords
@@ -43,13 +44,14 @@ namespace AllegroToVarisciteConversion
         /// <param name="full_path_to_placement_report_file">The full path to placement report file.</param>
         /// <param name="error_counter">The error counter.</param>
         /// <param name="vpc_number">The VPC number.</param>
-        public PositionManager(string full_path_to_placement_report_file, int error_counter, int vpc_number)
+        public PositionManager(string full_path_to_placement_report_file, int error_counter, int vpc_number, LogManager log)
         {
             this.full_path_to_placement_report_file = full_path_to_placement_report_file;
             this.error_counter = error_counter;
             this.vpc_number = vpc_number;
 
             coords = InitElementCoords();
+            this.log = log;
         }
 
         /// <summary>
@@ -61,28 +63,7 @@ namespace AllegroToVarisciteConversion
             return this.coords;
         }
 
-        /// <summary>
-        /// The log text information placement report
-        /// </summary>
-        private StringBuilder logTextInfoPlacementReport = new StringBuilder();
-        /// <summary>
-        /// The log text debug placement report
-        /// </summary>
-        private StringBuilder logTextDebugPlacementReport = new StringBuilder();
-        /// <summary>
-        /// The log text error placement report
-        /// </summary>
-        private StringBuilder logTextErrorPlacementReport = new StringBuilder();
-
-        /// <summary>
-        /// Cleans the log placement report.
-        /// </summary>
-        private void CleanLogPlacementReport()
-        {
-            this.logTextDebugPlacementReport.Clear();
-            this.logTextErrorPlacementReport.Clear();
-            this.logTextInfoPlacementReport.Clear();
-        }
+        
 
 
         /// <summary>
@@ -91,13 +72,15 @@ namespace AllegroToVarisciteConversion
         /// <returns></returns>
         private List<MyDictionary> InitElementCoords()
         {
-            CleanLogPlacementReport();
+            //CleanLogPlacementReport();
+            this.log.ClearPlacementLog();
 
-            this.logTextDebugPlacementReport.AppendLine("Opening placement file " + this.full_path_to_placement_report_file);
-            this.logTextInfoPlacementReport.AppendLine("Opening placement file " + this.full_path_to_placement_report_file);
-
-            this.logTextDebugPlacementReport.AppendLine("\nStart converting placement report file");
-            this.logTextInfoPlacementReport.AppendLine("\nStart converting placement report file");
+            //this.logTextDebugPlacementReport.AppendLine("Opening placement file " + this.full_path_to_placement_report_file);
+            //this.logTextInfoPlacementReport.AppendLine("Opening placement file " + this.full_path_to_placement_report_file);
+            this.log.AddComment("Opening placement file " + this.full_path_to_placement_report_file, new List<int> { 0, 1 }, "placement");
+            //this.logTextDebugPlacementReport.AppendLine("\nStart converting placement report file");
+            //this.logTextInfoPlacementReport.AppendLine("\nStart converting placement report file");
+            this.log.AddComment("\nStart converting placement report file", new List<int> { 0, 1 }, "placement");
 
             int index = 0;
 
@@ -114,28 +97,33 @@ namespace AllegroToVarisciteConversion
                     {
                         if (coords.Count != 0)
                         {
-                            this.logTextDebugPlacementReport.AppendLine($"Refdes {temp.Key} is added with {temp.Value.Count} coordinations");
-                            this.logTextInfoPlacementReport.AppendLine($"Refdes {temp.Key} is added with {temp.Value.Count} coordinations");
+                            //this.logTextDebugPlacementReport.AppendLine($"Refdes {temp.Key} is added with {temp.Value.Count} coordinations");
+                            //this.logTextInfoPlacementReport.AppendLine($"Refdes {temp.Key} is added with {temp.Value.Count} coordinations");
+                            this.log.AddComment($"Refdes {temp.Key} is added with {temp.Value.Count} coordinations", new List<int> { 0, 1 }, "placement");
                         }
                         coords.Add(temp);
                         temp = new MyDictionary(line[12]);
-                        this.logTextDebugPlacementReport.AppendLine($"Reading line {index}: {ConvertToLinePlacementReport(line, 1)}");
+                        //this.logTextDebugPlacementReport.AppendLine($"Reading line {index}: {ConvertToLinePlacementReport(line, 1)}");
+                        this.log.AddComment($"Reading line {index}: {ConvertToLinePlacementReport(line, 1)}", new List<int> { 1 }, "placement");
                     }
                     else if (VPCLine(line))
                     {
                         if (coords.Count != 0)
                         {
-                            this.logTextDebugPlacementReport.AppendLine($"Refdes {temp.Key} is added with {temp.Value.Count} coordinations");
-                            this.logTextInfoPlacementReport.AppendLine($"Refdes {temp.Key} is added with {temp.Value.Count} coordinations");
+                            //this.logTextDebugPlacementReport.AppendLine($"Refdes {temp.Key} is added with {temp.Value.Count} coordinations");
+                            //this.logTextInfoPlacementReport.AppendLine($"Refdes {temp.Key} is added with {temp.Value.Count} coordinations");
+                            this.log.AddComment($"Refdes {temp.Key} is added with {temp.Value.Count} coordinations", new List<int> { 0, 1 }, "placement");
                         }
                         coords.Add(temp);
                         temp = new MyDictionary("VPC" + this.vpc_number);
                         this.vpc_number++;
-                        this.logTextDebugPlacementReport.AppendLine($"Reading line {index}: {ConvertToLinePlacementReport(line, 4)}");
+                        //this.logTextDebugPlacementReport.AppendLine($"Reading line {index}: {ConvertToLinePlacementReport(line, 4)}");
+                        this.log.AddComment($"Reading line {index}: {ConvertToLinePlacementReport(line, 4)}", new List<int> { 1 }, "placement");
                     }
                     else if (HasValue(line, "subclass"))
                     {
-                        this.logTextDebugPlacementReport.AppendLine($"Reading line {index}: {ConvertToLinePlacementReport(line, 3)}");
+                        //this.logTextDebugPlacementReport.AppendLine($"Reading line {index}: {ConvertToLinePlacementReport(line, 3)}");
+                        this.log.AddComment($"Reading line {index}: {ConvertToLinePlacementReport(line, 3)}", new List<int> { 1 }, "placement");
                         string[] subclass = line[13].Split('_');
                         if (subclass.Length > 1)
                         {
@@ -156,7 +144,8 @@ namespace AllegroToVarisciteConversion
                     }
                     else if (HasValue(line, "segment:xy"))
                     {
-                        this.logTextDebugPlacementReport.AppendLine($"Reading line {index}: {ConvertToLinePlacementReport(line, 2)}");
+                        //this.logTextDebugPlacementReport.AppendLine($"Reading line {index}: {ConvertToLinePlacementReport(line, 2)}");
+                        this.log.AddComment($"Reading line {index}: {ConvertToLinePlacementReport(line, 2)}", new List<int> { 1 }, "placement");
                         string t1 = null, t2 = null;
                         if (CanConvertToNumeric(line[3]))
                         {
@@ -167,10 +156,11 @@ namespace AllegroToVarisciteConversion
                         {
                             string x = line[3];
                             x = x.Substring(1);
-                            this.logTextErrorPlacementReport.AppendLine($"Error!!! Cannot convert {x} to number in refdes {temp.Key}");
-                            this.logTextDebugPlacementReport.AppendLine($"Error!!! Cannot convert {x} to number in refdes {temp.Key}");
-                            this.logTextInfoPlacementReport.AppendLine($"Error!!! Cannot convert {x} to number in refdes {temp.Key}");
-                            this.error_counter++;
+                            //this.logTextErrorPlacementReport.AppendLine($"Error!!! Cannot convert {x} to number in refdes {temp.Key}");
+                            //this.logTextDebugPlacementReport.AppendLine($"Error!!! Cannot convert {x} to number in refdes {temp.Key}");
+                            //this.logTextInfoPlacementReport.AppendLine($"Error!!! Cannot convert {x} to number in refdes {temp.Key}");
+                            //this.error_counter++;
+                            this.log.AddComment($"Error!!! Cannot convert {x} to number in refdes {temp.Key}", new List<int> { 0, 1, 2 }, "placement");
                         }
                         if (CanConvertToNumeric(line[4]))
                         {
@@ -181,21 +171,24 @@ namespace AllegroToVarisciteConversion
                         {
                             string x = line[4];
                             x = x.Substring(0, x.Length - 1);
-                            this.logTextErrorPlacementReport.AppendLine($"Error!!! Cannot convert {x} to number in refdes {temp.Key}");
-                            this.logTextDebugPlacementReport.AppendLine($"Error!!! Cannot convert {x} to number in refdes {temp.Key}");
-                            this.logTextInfoPlacementReport.AppendLine($"Error!!! Cannot convert {x} to number in refdes {temp.Key}");
-                            this.error_counter++;
+                            //this.logTextErrorPlacementReport.AppendLine($"Error!!! Cannot convert {x} to number in refdes {temp.Key}");
+                            //this.logTextDebugPlacementReport.AppendLine($"Error!!! Cannot convert {x} to number in refdes {temp.Key}");
+                            //this.logTextInfoPlacementReport.AppendLine($"Error!!! Cannot convert {x} to number in refdes {temp.Key}");
+                            //this.error_counter++;
+                            this.log.AddComment($"Error!!! Cannot convert {x} to number in refdes {temp.Key}", new List<int> { 0, 1, 2 }, "placement");
                         }
 
                         if (t1 != null && t2 != null)
                         {
                             temp.AddValue(int.Parse(t1), int.Parse(t2));
-                            this.logTextDebugPlacementReport.AppendLine($"Coordinates {t1},{t2} added to refdes {temp.Key}");
+                            //this.logTextDebugPlacementReport.AppendLine($"Coordinates {t1},{t2} added to refdes {temp.Key}");
+                            this.log.AddComment($"Coordinates {t1},{t2} added to refdes {temp.Key}", new List<int> { 1 }, "placement");
                         }
                     }
                     else if (HasValue(line, "seg:xy"))
                     {
-                        this.logTextDebugPlacementReport.AppendLine($"Reading line {index}: {ConvertToLinePlacementReport(line, 2)}");
+                        //this.logTextDebugPlacementReport.AppendLine($"Reading line {index}: {ConvertToLinePlacementReport(line, 2)}");
+                        this.log.AddComment($"Reading line {index}: {ConvertToLinePlacementReport(line, 2)}", new List<int> { 1 }, "placement");
                         string x1 = null, y1 = null, x2 = null, y2 = null, centerX = null, centerY = null, isClockwise = null;
 
                         if (CanConvertToNumeric(line[4]))
@@ -207,10 +200,11 @@ namespace AllegroToVarisciteConversion
                         {
                             string t1 = line[4];
                             t1 = t1.Substring(1);
-                            this.logTextErrorPlacementReport.AppendLine($"Error!!! Cannot convert {t1} to number in refdes {temp.Key}");
-                            this.logTextDebugPlacementReport.AppendLine($"Error!!! Cannot convert {t1} to number in refdes {temp.Key}");
-                            this.logTextInfoPlacementReport.AppendLine($"Error!!! Cannot convert {t1} to number in refdes {temp.Key}");
-                            this.error_counter++;
+                            //this.logTextErrorPlacementReport.AppendLine($"Error!!! Cannot convert {t1} to number in refdes {temp.Key}");
+                            //this.logTextDebugPlacementReport.AppendLine($"Error!!! Cannot convert {t1} to number in refdes {temp.Key}");
+                            //this.logTextInfoPlacementReport.AppendLine($"Error!!! Cannot convert {t1} to number in refdes {temp.Key}");
+                            //this.error_counter++;
+                            this.log.AddComment($"Error!!! Cannot convert {t1} to number in refdes {temp.Key}", new List<int> { 0, 1, 2 }, "placement");
                         }
 
                         if (CanConvertToNumeric(line[5]))
@@ -222,10 +216,11 @@ namespace AllegroToVarisciteConversion
                         {
                             string t1 = line[5];
                             t1 = t1.Substring(0, t1.Length - 1);
-                            this.logTextErrorPlacementReport.AppendLine($"Error!!! Cannot convert {t1} to number in refdes {temp.Key}");
-                            this.logTextDebugPlacementReport.AppendLine($"Error!!! Cannot convert {t1} to number in refdes {temp.Key}");
-                            this.logTextInfoPlacementReport.AppendLine($"Error!!! Cannot convert {t1} to number in refdes {temp.Key}");
-                            this.error_counter++;
+                            //this.logTextErrorPlacementReport.AppendLine($"Error!!! Cannot convert {t1} to number in refdes {temp.Key}");
+                            //this.logTextDebugPlacementReport.AppendLine($"Error!!! Cannot convert {t1} to number in refdes {temp.Key}");
+                            //this.logTextInfoPlacementReport.AppendLine($"Error!!! Cannot convert {t1} to number in refdes {temp.Key}");
+                            //this.error_counter++;
+                            this.log.AddComment($"Error!!! Cannot convert {t1} to number in refdes {temp.Key}", new List<int> { 0, 1, 2 }, "placement");
                         }
 
                         if (CanConvertToNumeric(line[7]))
@@ -237,10 +232,11 @@ namespace AllegroToVarisciteConversion
                         {
                             string t1 = line[7];
                             t1 = t1.Substring(1);
-                            this.logTextErrorPlacementReport.AppendLine($"Error!!! Cannot convert {t1} to number in refdes {temp.Key}");
-                            this.logTextDebugPlacementReport.AppendLine($"Error!!! Cannot convert {t1} to number in refdes {temp.Key}");
-                            this.logTextInfoPlacementReport.AppendLine($"Error!!! Cannot convert {t1} to number in refdes {temp.Key}");
-                            this.error_counter++;
+                            //this.logTextErrorPlacementReport.AppendLine($"Error!!! Cannot convert {t1} to number in refdes {temp.Key}");
+                            //this.logTextDebugPlacementReport.AppendLine($"Error!!! Cannot convert {t1} to number in refdes {temp.Key}");
+                            //this.logTextInfoPlacementReport.AppendLine($"Error!!! Cannot convert {t1} to number in refdes {temp.Key}");
+                            //this.error_counter++;
+                            this.log.AddComment($"Error!!! Cannot convert {t1} to number in refdes {temp.Key}", new List<int> { 0, 1, 2 }, "placement");
                         }
 
                         if (CanConvertToNumeric(line[8]))
@@ -252,15 +248,17 @@ namespace AllegroToVarisciteConversion
                         {
                             string t1 = line[8];
                             t1 = t1.Substring(0, t1.Length - 1);
-                            this.logTextErrorPlacementReport.AppendLine($"Error!!! Cannot convert {t1} to number in refdes {temp.Key}");
-                            this.logTextDebugPlacementReport.AppendLine($"Error!!! Cannot convert {t1} to number in refdes {temp.Key}");
-                            this.logTextInfoPlacementReport.AppendLine($"Error!!! Cannot convert {t1} to number in refdes {temp.Key}");
-                            this.error_counter++;
+                            //this.logTextErrorPlacementReport.AppendLine($"Error!!! Cannot convert {t1} to number in refdes {temp.Key}");
+                            //this.logTextDebugPlacementReport.AppendLine($"Error!!! Cannot convert {t1} to number in refdes {temp.Key}");
+                            //this.logTextInfoPlacementReport.AppendLine($"Error!!! Cannot convert {t1} to number in refdes {temp.Key}");
+                            //this.error_counter++;
+                            this.log.AddComment($"Error!!! Cannot convert {t1} to number in refdes {temp.Key}", new List<int> { 0, 1, 2 }, "placement");
                         }
 
                         line = reader.ReadLine().Split(' ');
                         index++;
-                        this.logTextDebugPlacementReport.AppendLine($"Reading line {index}: {ConvertToLinePlacementReport(line, 2)}");
+                        //this.logTextDebugPlacementReport.AppendLine($"Reading line {index}: {ConvertToLinePlacementReport(line, 2)}");
+                        this.log.AddComment($"Reading line {index}: {ConvertToLinePlacementReport(line, 2)}", new List<int> { 1 }, "placement");
                         if (CanConvertToNumeric(line[6]))
                         {
                             centerX = string.Concat(line[6].Where(char.IsDigit));
@@ -270,10 +268,11 @@ namespace AllegroToVarisciteConversion
                         {
                             string t1 = line[6];
                             t1 = t1.Substring(1);
-                            this.logTextErrorPlacementReport.AppendLine($"Error!!! Cannot convert {t1} to number in refdes {temp.Key}");
-                            this.logTextDebugPlacementReport.AppendLine($"Error!!! Cannot convert {t1} to number in refdes {temp.Key}");
-                            this.logTextInfoPlacementReport.AppendLine($"Error!!! Cannot convert {t1} to number in refdes {temp.Key}");
-                            this.error_counter++;
+                            //this.logTextErrorPlacementReport.AppendLine($"Error!!! Cannot convert {t1} to number in refdes {temp.Key}");
+                            //this.logTextDebugPlacementReport.AppendLine($"Error!!! Cannot convert {t1} to number in refdes {temp.Key}");
+                            //this.logTextInfoPlacementReport.AppendLine($"Error!!! Cannot convert {t1} to number in refdes {temp.Key}");
+                            //this.error_counter++;
+                            this.log.AddComment($"Error!!! Cannot convert {t1} to number in refdes {temp.Key}", new List<int> { 0, 1, 2 }, "placement");
                         }
 
                         if (CanConvertToNumeric(line[7]))
@@ -285,10 +284,11 @@ namespace AllegroToVarisciteConversion
                         {
                             string t1 = line[7];
                             t1 = t1.Substring(0, t1.Length - 1);
-                            this.logTextErrorPlacementReport.AppendLine($"Error!!! Cannot convert {t1} to number in refdes {temp.Key}");
-                            this.logTextDebugPlacementReport.AppendLine($"Error!!! Cannot convert {t1} to number in refdes {temp.Key}");
-                            this.logTextInfoPlacementReport.AppendLine($"Error!!! Cannot convert {t1} to number in refdes {temp.Key}");
-                            this.error_counter++;
+                            //this.logTextErrorPlacementReport.AppendLine($"Error!!! Cannot convert {t1} to number in refdes {temp.Key}");
+                            //this.logTextDebugPlacementReport.AppendLine($"Error!!! Cannot convert {t1} to number in refdes {temp.Key}");
+                            //this.logTextInfoPlacementReport.AppendLine($"Error!!! Cannot convert {t1} to number in refdes {temp.Key}");
+                            //this.error_counter++;
+                            this.log.AddComment($"Error!!! Cannot convert {t1} to number in refdes {temp.Key}", new List<int> { 0, 1, 2 }, "placement");
                         }
 
 
@@ -303,26 +303,31 @@ namespace AllegroToVarisciteConversion
                         else
                         {
                             string t1 = line[12];
-                            this.logTextErrorPlacementReport.AppendLine($"Error!!! The arc data does not have \"CCW\" or \"CW\" parametar in refdef {temp.Key}");
-                            this.logTextDebugPlacementReport.AppendLine($"Error!!! The arc data does not have \"CCW\" or \"CW\" parametar in refdes {temp.Key}");
-                            this.logTextInfoPlacementReport.AppendLine($"Error!!! The arc data does not have \"CCW\" or \"CW\" parametar in refdes {temp.Key}");
-                            this.error_counter++;
+                            //this.logTextErrorPlacementReport.AppendLine($"Error!!! The arc data does not have \"CCW\" or \"CW\" parametar in refdef {temp.Key}");
+                            //this.logTextDebugPlacementReport.AppendLine($"Error!!! The arc data does not have \"CCW\" or \"CW\" parametar in refdes {temp.Key}");
+                            //this.logTextInfoPlacementReport.AppendLine($"Error!!! The arc data does not have \"CCW\" or \"CW\" parametar in refdes {temp.Key}");
+                            //this.error_counter++;
+                            this.log.AddComment($"Error!!! Cannot convert {t1} to number in refdes {temp.Key}", new List<int> { 0, 1, 2 }, "placement");
                         }
 
                         if (x1 != null && y1 != null && x2 != null && y2 != null && centerX != null && centerY != null && isClockwise != null)
                         {
                             temp.AddValue(int.Parse(x1), int.Parse(y1));
-                            this.logTextDebugPlacementReport.AppendLine($"Start point fo arc: {x1},{y1} added to refdes {temp.Key}");
+                            //this.logTextDebugPlacementReport.AppendLine($"Start point fo arc: {x1},{y1} added to refdes {temp.Key}");
+                            this.log.AddComment($"Start point fo arc: {x1},{y1} added to refdes {temp.Key}", new List<int> { 1 }, "placement");
                             temp.AddValue(int.Parse(centerX), int.Parse(centerY), int.Parse(isClockwise));
-                            this.logTextDebugPlacementReport.AppendLine($"Center point fo arc: {centerX},{centerY} added to refdes {temp.Key}");
+                            //this.logTextDebugPlacementReport.AppendLine($"Center point fo arc: {centerX},{centerY} added to refdes {temp.Key}");
+                            this.log.AddComment($"Center point fo arc: {centerX},{centerY} added to refdes {temp.Key}", new List<int> { 1 }, "placement");
                             temp.AddValue(int.Parse(x2), int.Parse(y2));
-                            this.logTextDebugPlacementReport.AppendLine($"End point fo arc: {x2},{y2} added to refdes {temp.Key}");
+                            //this.logTextDebugPlacementReport.AppendLine($"End point fo arc: {x2},{y2} added to refdes {temp.Key}");
+                            this.log.AddComment($"End point fo arc: {x2},{y2} added to refdes {temp.Key}", new List<int> { 1 }, "placement");
 
                         }
                     }
                     else
                     {
-                        this.logTextDebugPlacementReport.AppendLine($"Reading line {index}: {ConvertToLinePlacementReport(line, 0)}");
+                        //this.logTextDebugPlacementReport.AppendLine($"Reading line {index}: {ConvertToLinePlacementReport(line, 0)}");
+                        this.log.AddComment($"Reading line {index}: {ConvertToLinePlacementReport(line, 0)}", new List<int> { 1 }, "placement");
                     }
 
                     index++;

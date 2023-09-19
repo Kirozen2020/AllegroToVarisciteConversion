@@ -32,6 +32,10 @@ namespace AllegroToVarisciteConversion
         /// The log text error placement report
         /// </summary>
         private StringBuilder logTextErrorPlacementReport;
+        /// <summary>
+        /// The error counter
+        /// </summary>
+        public int error_counter {  get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LogManager"/> class.
@@ -40,6 +44,7 @@ namespace AllegroToVarisciteConversion
         {
             ClearCoordsLog();
             ClearPlacementLog();
+            this.error_counter = 0;
         }
 
         /*
@@ -86,10 +91,12 @@ namespace AllegroToVarisciteConversion
                         if (categoty == "coords")
                         {
                             logTextErrorPlacementCoordinates.Append(comment);
+                            this.error_counter++;
                         }
                         else if (categoty == "placement")
                         {
                             logTextErrorPlacementReport.Append(comment);
+                            this.error_counter++;
                         }
                         break;
                 }
