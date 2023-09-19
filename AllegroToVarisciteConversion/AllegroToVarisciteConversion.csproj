@@ -51,6 +51,7 @@
     <Compile Include="FigureControl.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="LogManager.cs" />
     <Compile Include="MyDictionary.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
