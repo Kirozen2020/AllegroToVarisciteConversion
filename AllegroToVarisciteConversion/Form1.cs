@@ -894,7 +894,7 @@ namespace AllegroToVarisciteConversion
             if (pb == null || pointLists == null)
                 return;
 
-            using (Bitmap bmp = new Bitmap(FindMaxX() + 30, FindMaxY() + 30))
+            using (Bitmap bmp = new Bitmap(FindMaxOrMinXOrY('x',"max") + 30, FindMaxOrMinXOrY('y', "max") + 30))
             {
                 
                 using (Graphics g = Graphics.FromImage(bmp))
@@ -1033,7 +1033,7 @@ namespace AllegroToVarisciteConversion
         private List<MyDictionary> FlipImage(List<MyDictionary> list)
         {
             List<MyDictionary> result = new List<MyDictionary>();
-            int maxY = FindMaxY() + 30;
+            int maxY = FindMaxOrMinXOrY('y',"max") + 30;
 
             foreach (var dict in list)
             {
@@ -1080,44 +1080,52 @@ namespace AllegroToVarisciteConversion
             }
         }
         /// <summary>
-        /// Finds the maximum x.
+        /// Finds the maximum or minimum x or y.
         /// </summary>
+        /// <param name="xory">The xory.</param>
+        /// <param name="maxormin">The maxormin.</param>
         /// <returns></returns>
-        private int FindMaxX()
+        private int FindMaxOrMinXOrY(char xory, string maxormin)
         {
             List<MyDictionary> lst = this.coords;
-
-            int maxX = int.MinValue;
-
-            for (int i = 0; i < lst.Count; i++)
+            int num = 0;
+            if(maxormin == "max")
             {
-                for (int j = 0; j < lst[i].Value.Count; j++)
+                num = int.MinValue;
+                for (int i = 0; i < lst.Count; i++)
                 {
-                    maxX = Math.Max(maxX, int.Parse(lst[i].Value[j].X));
+                    for (int j = 0; j < lst[i].Value.Count; j++)
+                    {
+                        if(xory == 'x')
+                        {
+                            num = Math.Max(num, int.Parse(lst[i].Value[j].X));
+                        }
+                        else if(xory == 'y')
+                        {
+                            num = Math.Max(num, int.Parse(lst[i].Value[j].Y));
+                        }
+                    }
                 }
             }
-
-            return maxX;
-        }
-        /// <summary>
-        /// Finds the maximum y.
-        /// </summary>
-        /// <returns></returns>
-        private int FindMaxY()
-        {
-            List<MyDictionary> lst = this.coords;
-
-            int maxY = int.MinValue;
-
-            for (int i = 0; i < lst.Count; i++)
+            else if(maxormin == "min")
             {
-                for (int j = 0; j < lst[i].Value.Count; j++)
+                num = int.MaxValue;
+                for (int i = 0; i < lst.Count; i++)
                 {
-                    maxY = Math.Max(maxY, int.Parse(lst[i].Value[j].Y));
+                    for (int j = 0; j < lst[i].Value.Count; j++)
+                    {
+                        if (xory == 'x')
+                        {
+                            num = Math.Min(num, int.Parse(lst[i].Value[j].X));
+                        }
+                        else if (xory == 'y')
+                        {
+                            num = Math.Min(num, int.Parse(lst[i].Value[j].Y));
+                        }
+                    }
                 }
             }
-
-            return maxY;
+            return num;
         }
         /// <summary>
         /// Handles the Click event of the coordinatesReportFileToolStripMenuItem control.
@@ -1249,52 +1257,12 @@ namespace AllegroToVarisciteConversion
         }
 
         /// <summary>
-        /// Gets the minimum y coordination.
-        /// </summary>
-        /// <returns></returns>
-        private int GetMinYCoordination()
-        {
-            List<MyDictionary> lst = this.coords;
-            int num = int.MaxValue;
-            for (int i = 0; i < lst.Count; i++)
-            {
-                for (int j = 0; j < lst[i].Value.Count; j++)
-                {
-                    if (int.Parse(lst[i].Value[j].Y) < num)
-                    {
-                        num = int.Parse(lst[i].Value[j].Y);
-                    }
-                }
-            }
-            return num;
-        }
-        /// <summary>
-        /// Gets the minimum x coordination.
-        /// </summary>
-        /// <returns></returns>
-        private int GetMinXCoordination()
-        {
-            List<MyDictionary> lst = this.coords;
-            int num = int.MaxValue;
-            for (int i = 0; i < lst.Count; i++)
-            {
-                for (int j = 0; j < lst[i].Value.Count; j++)
-                {
-                    if (int.Parse(lst[i].Value[j].X) < num)
-                    {
-                        num = int.Parse(lst[i].Value[j].X);
-                    }
-                }
-            }
-            return num;
-        }
-        /// <summary>
         /// Moves all elements.
         /// </summary>
         private void MoveAllElements(ref List<MyDictionary> lst)
         {
-            int deleyY = GetMinYCoordination()-10;
-            int deleyX = GetMinXCoordination() - 10;
+            int deleyY = FindMaxOrMinXOrY('y',"min") - 10;
+            int deleyX = FindMaxOrMinXOrY('x',"min") - 10;
             for (int i = 0; i < lst.Count; i++)
             {
                 List<Point3D> coordinations = lst[i].Value;
@@ -1501,7 +1469,7 @@ namespace AllegroToVarisciteConversion
             if (pb == null || pointLists == null)
                 return;
 
-            using (Bitmap bmp = new Bitmap(FindMaxX() + 30, FindMaxY() + 30))
+            using (Bitmap bmp = new Bitmap(FindMaxOrMinXOrY('x', "max") + 30, FindMaxOrMinXOrY('y', "max") + 30))
             {
 
                 using (Graphics g = Graphics.FromImage(bmp))
