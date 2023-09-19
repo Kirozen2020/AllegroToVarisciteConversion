@@ -290,7 +290,7 @@ namespace AllegroToVarisciteConversion
                 while(reader.EndOfStream == false)
                 {
                     var line = reader.ReadLine().Split(' ');
-                    if (HasName(line))
+                    if (HasValue(line, "RefDes:"))
                     {
                         if(coords.Count != 0)
                         {
@@ -313,7 +313,7 @@ namespace AllegroToVarisciteConversion
                         this.numberOfVPC++;
                         this.logTextDebugPlacementReport.AppendLine($"Reading line {index}: {ConvertToLinePlacementReport(line, 4)}");
                     }
-                    else if (HasSubclassData(line))
+                    else if (HasValue(line, "subclass"))
                     {
                         this.logTextDebugPlacementReport.AppendLine($"Reading line {index}: {ConvertToLinePlacementReport(line, 3)}");
                         string[] subclass = line[13].Split('_');
@@ -330,11 +330,11 @@ namespace AllegroToVarisciteConversion
                         }
                         
                     }
-                    else if (EndOfFile(line))
+                    else if (HasValue(line, "~end-of-file~"))
                     {
                         coords.Add(temp);
                     }
-                    else if (HasCoords(line))
+                    else if (HasValue(line, "segment:xy"))
                     {
                         this.logTextDebugPlacementReport.AppendLine($"Reading line {index}: {ConvertToLinePlacementReport(line, 2)}");
                         string t1 = null, t2 = null;
@@ -373,7 +373,7 @@ namespace AllegroToVarisciteConversion
                             this.logTextDebugPlacementReport.AppendLine($"Coordinates {t1},{t2} added to refdes {temp.Key}");
                         }
                     }
-                    else if (HasArc(line))
+                    else if (HasValue(line, "seg:xy"))
                     {
                         this.logTextDebugPlacementReport.AppendLine($"Reading line {index}: {ConvertToLinePlacementReport(line, 2)}");
                         string x1 = null, y1 = null, x2 = null, y2 = null, centerX = null, centerY = null, isClockwise = null;
@@ -540,24 +540,6 @@ namespace AllegroToVarisciteConversion
             return false;
         }
         /// <summary>
-        /// Determines whether [has subclass data] [the specified line].
-        /// </summary>
-        /// <param name="line">The line.</param>
-        /// <returns>
-        ///   <c>true</c> if [has subclass data] [the specified line]; otherwise, <c>false</c>.
-        /// </returns>
-        private bool HasSubclassData(string[] line)
-        {
-            for (int i = 0; i < line.Length; i++)
-            {
-                if (line[i].Equals("subclass"))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-        /// <summary>
         /// Converts to line placement report.
         /// </summary>
         /// <param name="line">The line.</param>
@@ -612,82 +594,21 @@ namespace AllegroToVarisciteConversion
             return str;
         }
         /// <summary>
-        /// Ends the of file.
+        /// Determines whether the specified line has value.
         /// </summary>
         /// <param name="line">The line.</param>
-        /// <returns></returns>
-        public static bool EndOfFile(string[] line)
+        /// <param name="value">The value.</param>
+        /// <returns>
+        ///   <c>true</c> if the specified line has value; otherwise, <c>false</c>.
+        /// </returns>
+        public static bool HasValue(string[] line, string value)
         {
             for (int i = 0; i < line.Length; i++)
             {
-                if (line[i].Equals("~end-of-file~"))
+                if (line[i].Equals(value))
                 {
                     return true;
                 }
-            }
-            return false;
-        }
-        /// <summary>
-        /// Determines whether the specified line has coords.
-        /// </summary>
-        /// <param name="line">The line.</param>
-        /// <returns>
-        ///   <c>true</c> if the specified line has coords; otherwise, <c>false</c>.
-        /// </returns>
-        public static bool HasCoords(string[] line)
-        {
-            for (int i = 0; i < line.Length; i++)
-            {
-                if (line[i].Equals("segment:xy"))
-                    return true;
-            }
-            return false;
-        }
-        /// <summary>
-        /// Determines whether the specified line has name.
-        /// </summary>
-        /// <param name="line">The line.</param>
-        /// <returns>
-        ///   <c>true</c> if the specified line has name; otherwise, <c>false</c>.
-        /// </returns>
-        public static bool HasName(string[] line)
-        {
-            for (int i = 0; i < line.Length; i++)
-            {
-                if (line[i].Equals("RefDes:"))
-                    return true;
-            }
-            return false;
-        }
-        /// <summary>
-        /// Determines whether the specified line has arc.
-        /// </summary>
-        /// <param name="line">The line.</param>
-        /// <returns>
-        ///   <c>true</c> if the specified line has arc; otherwise, <c>false</c>.
-        /// </returns>
-        public static bool HasArc(string[] line)
-        {
-            for (int i = 0; i < line.Length; i++)
-            {
-                if (line[i].Equals("seg:xy"))
-                    return true;
-            }
-            return false;
-        }
-        /// <summary>
-        /// Determines whether [has centar point] [the specified line].
-        /// </summary>
-        /// <param name="line">The line.</param>
-        /// <returns>
-        ///   <c>true</c> if [has centar point] [the specified line]; otherwise, <c>false</c>.
-        /// </returns>
-        public static bool HasCentarPoint(string[] line)
-        {
-            for (int i = 0; i < line.Length; i++)
-            {
-                if (line[i].Equals("center-xy:"))
-                    return true;
             }
             return false;
         }
