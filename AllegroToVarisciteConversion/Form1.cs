@@ -679,35 +679,41 @@ namespace AllegroToVarisciteConversion
             {
                 case "error":
 
-                    this.logTextGlobal.Append(this.logTextErrorPlacementCoordinates.ToString());
-                    this.logTextGlobal.Append(this.logTextErrorPlacementReport.ToString());
-                    this.logTextGlobal.AppendLine("\nErrors count: " + this.errorCount);
-                    this.logTextGlobal.AppendLine("\nFile saved at " + outputString);
+                    //this.logTextGlobal.Append(this.logTextErrorPlacementCoordinates.ToString());
+                    //this.logTextGlobal.Append(this.logTextErrorPlacementReport.ToString());
+                    //this.logTextGlobal.AppendLine("\nErrors count: " + this.errorCount);
+                    //this.logTextGlobal.AppendLine("\nFile saved at " + outputString);
 
-                    File.WriteAllText(outputLogPath, this.logTextGlobal.ToString());
+                    //File.WriteAllText(outputLogPath, this.logTextGlobal.ToString());
+                    File.WriteAllText(outputLogPath, this.log.GetFullLogMessage(2, outputString).ToString());
                     break;
                 case "info":
-                    this.logTextGlobal.Append(this.logTextInfoPlacementCoordinates.ToString());
-                    this.logTextGlobal.AppendLine();
-                    this.logTextGlobal.Append(this.logTextInfoPlacementReport.ToString());
-                    this.logTextGlobal.AppendLine("\nErrors count: " + this.errorCount);
-                    this.logTextGlobal.AppendLine("\nFile saved at " + outputString);
+                    //this.logTextGlobal.Append(this.logTextInfoPlacementCoordinates.ToString());
+                    //this.logTextGlobal.AppendLine();
+                    //this.logTextGlobal.Append(this.logTextInfoPlacementReport.ToString());
+                    //this.logTextGlobal.AppendLine("\nErrors count: " + this.errorCount);
+                    //this.logTextGlobal.AppendLine("\nFile saved at " + outputString);
 
-                    File.WriteAllText(outputLogPath, this.logTextGlobal.ToString());
+                    //File.WriteAllText(outputLogPath, this.logTextGlobal.ToString());
+                    File.WriteAllText(outputLogPath, this.log.GetFullLogMessage(0, outputString).ToString());
                     break;
                 case "debug":
-                    this.logTextGlobal.Append(this.logTextDebugPlacementCoordinates.ToString());
-                    this.logTextGlobal.AppendLine();
-                    this.logTextGlobal.Append(this.logTextDebugPlacementReport.ToString());
-                    this.logTextGlobal.AppendLine("\nErrors count: " + this.errorCount);
-                    this.logTextGlobal.AppendLine("\nFile saved at " + outputString);
+                    //this.logTextGlobal.Append(this.logTextDebugPlacementCoordinates.ToString());
+                    //this.logTextGlobal.AppendLine();
+                    //this.logTextGlobal.Append(this.logTextDebugPlacementReport.ToString());
+                    //this.logTextGlobal.AppendLine("\nErrors count: " + this.errorCount);
+                    //this.logTextGlobal.AppendLine("\nFile saved at " + outputString);
 
-                    File.WriteAllText(outputLogPath, this.logTextGlobal.ToString());
+                    //File.WriteAllText(outputLogPath, this.logTextGlobal.ToString());
+                    File.WriteAllText(outputLogPath, this.log.GetFullLogMessage(1, outputString).ToString());
                     break;
             }
-            CleanLogPlacementCoordinates();
-            CleanLogPlacementReport();
-            this.errorCount = 0;
+            //CleanLogPlacementCoordinates();
+            //CleanLogPlacementReport();
+            this.log.ClearCoordsLog();
+            this.log.ClearPlacementLog();
+            this.log.error_counter = 0;
+            //this.errorCount = 0;
             this.filePath = null;
         }
         /// <summary>
@@ -1311,7 +1317,9 @@ namespace AllegroToVarisciteConversion
             {
                 if (this.placementCoordinatesPath != null && this.placementReportPath != null)
                 {
-                    SaveFile(savePath, ChangeFileExtension(savePath, ".log"));
+                    this.csvManager = new CsvManager(savePath, ChangeFileExtension(savePath, ".log"), this.polygonManager.GetTable(), this.positionManager.GetCoords(),this.logMode , this.log);
+                    //SaveFile(savePath, ChangeFileExtension(savePath, ".log"));
+                    this.csvManager.SaveFile();
                     MessageBox.Show("File Saved", "Congratulations", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else if (this.placementReportPath != null && this.placementCoordinatesPath == null)
