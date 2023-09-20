@@ -22,7 +22,7 @@ namespace AllegroToVarisciteConversion
 
             this.Text = "AllegroToVarisciteConversion " + Revision.revision;
 
-            this.logTextGlobal.AppendLine("Program Start");
+            //this.logTextGlobal.AppendLine("Program Start");
             infoToolStripMenuItem.CheckState = CheckState.Checked;
         }
         /*-----------------------------------*/
@@ -50,6 +50,7 @@ namespace AllegroToVarisciteConversion
         /// The scheme drawing Path
         /// </summary>
         public string schemeDrawingPath;
+        /*
         /// <summary>
         /// The coords
         /// </summary>
@@ -62,6 +63,7 @@ namespace AllegroToVarisciteConversion
         /// The mother board image
         /// </summary>
         private Bitmap motherBoardImage;
+        */
         /// <summary>
         /// The last clicked item
         /// </summary>
@@ -70,6 +72,7 @@ namespace AllegroToVarisciteConversion
         /// The log mode
         /// </summary>
         private string logMode = "info";
+        /*
         /// <summary>
         /// The error count
         /// </summary>
@@ -78,7 +81,8 @@ namespace AllegroToVarisciteConversion
         /// The number of VPC
         /// </summary>
         private int numberOfVPC = 1;
-
+        */
+        /*
         /// <summary>
         /// The log text
         /// </summary>
@@ -103,12 +107,14 @@ namespace AllegroToVarisciteConversion
         /// The log text error placement report
         /// </summary>
         private StringBuilder logTextErrorPlacementReport = new StringBuilder();
-
+        */
+        /*
         /// <summary>
         /// The log text global
         /// </summary>
         private StringBuilder logTextGlobal = new StringBuilder();
-
+        */
+        /*
         /// <summary>
         /// Initializes the tabel.
         /// </summary>
@@ -202,6 +208,8 @@ namespace AllegroToVarisciteConversion
             }
             return tabel;
         }
+        */
+        /*
         /// <summary>
         /// Cleans the log placement report.
         /// </summary>
@@ -273,6 +281,7 @@ namespace AllegroToVarisciteConversion
         {
             return new string(line.ToCharArray().Where(c => !Char.IsWhiteSpace(c)).ToArray());
         }
+        /*
         /// <summary>
         /// Initializes the element coords.
         /// </summary>
@@ -531,6 +540,8 @@ namespace AllegroToVarisciteConversion
             }
             return coords;
         }
+        */
+        /*
         /// <summary>
         /// VPCs the line.
         /// </summary>
@@ -601,6 +612,7 @@ namespace AllegroToVarisciteConversion
             }
             return str;
         }
+        */
         /// <summary>
         /// Determines whether the specified line has value.
         /// </summary>
@@ -628,11 +640,11 @@ namespace AllegroToVarisciteConversion
         private string GetCoords(string name)
         {
             string line = "";
-            for (int i = 0; i < this.coords.Count; i++)
+            for (int i = 0; i < this.positionManager.GetCoords().Count; i++)
             {
-                if (coords[i].Key.Equals(name))
+                if (this.positionManager.GetCoords()[i].Key.Equals(name))
                 {
-                    MyDictionary x = coords[i];
+                    MyDictionary x = this.positionManager.GetCoords()[i];
                     line += ":";
                     for (int j = 0; j < x.Value.Count; j++)
                     {
@@ -649,6 +661,7 @@ namespace AllegroToVarisciteConversion
             }
             return line;
         }
+        /*
         /// <summary>
         /// Saves the file.
         /// </summary>
@@ -772,6 +785,7 @@ namespace AllegroToVarisciteConversion
             this.errorCount = 0;
             this.filePath = null;
         }
+        */
         /// <summary>
         /// Handles the Click event of the placementReportFileToolStripMenuItem control.
         /// </summary>
@@ -827,10 +841,12 @@ namespace AllegroToVarisciteConversion
 
                     //DrawPoints(pbSketch, lst);
                     this.imageManager = new ImageManager(this.positionManager.GetCoords(), this.log, lst);
+                    pbSketch.Image = Image.FromHbitmap(this.imageManager.motherBoardImage.GetHbitmap());
                 }
             }
 
         }
+        /*
         /// <summary>
         /// Deletes the unnecessary coords.
         /// </summary>
@@ -855,6 +871,7 @@ namespace AllegroToVarisciteConversion
 
             return temp;
         }
+        */
         /// <summary>
         /// Gets the empty reference deses.
         /// </summary>
@@ -862,7 +879,8 @@ namespace AllegroToVarisciteConversion
         private string GetEmptyRefDeses()
         {
             List<string> names = new List<string>();
-            List<string[]> allnames = this.table;
+            //List<string[]> allnames = this.table;
+            List<string[]> allnames = this.polygonManager.GetTable();
             string result = "RefDeses that are not visible on the diagram:\n";
 
             for (int i = 1; i < allnames.Count; i++)
@@ -896,13 +914,16 @@ namespace AllegroToVarisciteConversion
         {
             List<List<Point3D>> lst = new List<List<Point3D>>();
 
-            for (int i = 0; i < this.coords.Count; i++)
+            //for (int i = 0; i < this.coords.Count; i++)
+            for (int i = 0; i < this.positionManager.GetCoords().Count; i++)
             {
-                lst.Add(this.coords[i].Value);
+                //lst.Add(this.coords[i].Value);
+                lst.Add(this.positionManager.GetCoords()[i].Value);
             }
 
             return lst;
         }
+        /*
         /// <summary>
         /// Draws the points.
         /// </summary>
@@ -1019,6 +1040,8 @@ namespace AllegroToVarisciteConversion
                 listBox1.SelectionMode = SelectionMode.MultiExtended;
             }
         }
+        */
+        /*
         /// <summary>
         /// Customs the string comparer.
         /// </summary>
@@ -1078,6 +1101,8 @@ namespace AllegroToVarisciteConversion
             }
             return result;
         }
+        */
+        /*
         /// <summary>
         /// Determines whether [is bitmap format compatible] [the specified bitmap].
         /// </summary>
@@ -1109,7 +1134,8 @@ namespace AllegroToVarisciteConversion
         /// <returns></returns>
         private int FindMaxOrMinXOrY(char xory, string maxormin)
         {
-            List<MyDictionary> lst = this.coords;
+            //List<MyDictionary> lst = this.coords;
+            List<MyDictionary> lst = this.positionManager.GetCoords();
             int num = 0;
             if(maxormin == "max")
             {
@@ -1149,6 +1175,7 @@ namespace AllegroToVarisciteConversion
             }
             return num;
         }
+        */
         /// <summary>
         /// Handles the Click event of the coordinatesReportFileToolStripMenuItem control.
         /// </summary>
@@ -1177,12 +1204,15 @@ namespace AllegroToVarisciteConversion
 
             if(this.placementCoordinatesPath != null)
             {
-                this.table = InitTabel();
+                this.polygonManager = new PolygonManager(this.placementCoordinatesPath, this.log);
+                //this.table = InitTabel();
             }
 
-            if (this.coords != null && this.table != null)
+            //if (this.coords != null && this.table != null)
+            if (this.polygonManager.GetTable() != null && this.positionManager.GetCoords() != null)
             {
-                if (this.coords.Count > 0 && this.table.Count > 0)
+                //if (this.coords.Count > 0 && this.table.Count > 0)
+                if (this.polygonManager.GetTable().Count > 0 && this.positionManager.GetCoords().Count > 0)
                 {
                     MessageBox.Show(GetEmptyRefDeses(), "Empty RefDeses", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
@@ -1216,11 +1246,11 @@ namespace AllegroToVarisciteConversion
             DialogResult ans = MessageBox.Show("Close Program?","Exit", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (ans == DialogResult.Yes)
             {
-                this.logTextGlobal.AppendLine("Exit program");
+                //this.logTextGlobal.AppendLine("Exit program");
                 System.Environment.Exit(1);
             }
         }
-        
+        /*
         /// <summary>
         /// Adds the text.
         /// </summary>
@@ -1252,6 +1282,8 @@ namespace AllegroToVarisciteConversion
                 this.errorCount++;
             }
         }
+        */
+        /*
         /// <summary>
         /// Sums the points.
         /// </summary>
@@ -1277,7 +1309,8 @@ namespace AllegroToVarisciteConversion
             }
             return sum;
         }
-
+        */
+        /*
         /// <summary>
         /// Moves all elements.
         /// </summary>
@@ -1298,6 +1331,7 @@ namespace AllegroToVarisciteConversion
             }
             this.coords = lst;
         }
+        */
         /// <summary>
         /// Handles the Click event of the saveAsToolStripMenuItem control.
         /// </summary>
@@ -1455,11 +1489,11 @@ namespace AllegroToVarisciteConversion
         {
             List<List<Point3D>> lst = new List<List<Point3D>>();
 
-            for (int i = 0; i < this.coords.Count; i++)
+            for (int i = 0; i < this.positionManager.GetCoords().Count; i++)
             {
-                if (NameInList(this.coords[i].Key, names))
+                if (NameInList(this.positionManager.GetCoords()[i].Key, names))
                 {
-                    lst.Add(this.coords[i].Value);
+                    lst.Add(this.positionManager.GetCoords()[i].Value);
                 }
             }
             return lst;
@@ -1481,6 +1515,7 @@ namespace AllegroToVarisciteConversion
             }
             return false;
         }
+        /*
         /// <summary>
         /// Draws the points.
         /// </summary>
@@ -1655,6 +1690,7 @@ namespace AllegroToVarisciteConversion
                 pbSketch.Image = image;
             }
         }
+        */
         /// <summary>
         /// Handles the Resize event of the Form1 control.
         /// </summary>
@@ -1675,11 +1711,11 @@ namespace AllegroToVarisciteConversion
         {
             List<string> allNames = new List<string>();
 
-            if (this.coords.Count > 1)
+            if (this.positionManager.GetCoords().Count > 1)
             {
-                for (int i = 0; i < this.coords.Count; i++)
+                for (int i = 0; i < this.positionManager.GetCoords().Count; i++)
                 {
-                    allNames.Add(this.coords[i].Key);
+                    allNames.Add(this.positionManager.GetCoords()[i].Key);
                 }
             }
 
@@ -1694,7 +1730,7 @@ namespace AllegroToVarisciteConversion
             List<List<Point3D>> redElements = ConvertToListOfListOfPointsRED(checkedCheckBoxNames);
             //DrawPoints(pbSketch, lst, redElements);
 
-            ImageManager img = new ImageManager(this.coords, this.log, lst, redElements);
+            ImageManager img = new ImageManager(this.positionManager.GetCoords(), this.log, lst, redElements);
             pbSketch.Image = Image.FromHbitmap(img.motherBoardImage.GetHbitmap());
         }
     }
