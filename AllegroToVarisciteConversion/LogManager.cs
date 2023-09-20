@@ -38,6 +38,15 @@ namespace AllegroToVarisciteConversion
         public int error_counter {  get; set; }
 
         /// <summary>
+        /// Gets or sets the global log.
+        /// </summary>
+        /// <value>
+        /// The global log.
+        /// </value>
+        private StringBuilder global_log {  get; set; }
+
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="LogManager"/> class.
         /// </summary>
         public LogManager()
@@ -45,6 +54,41 @@ namespace AllegroToVarisciteConversion
             ClearCoordsLog();
             ClearPlacementLog();
             this.error_counter = 0;
+        }
+
+        /// <summary>
+        /// Gets the full log message.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <param name="outputString">The output string.</param>
+        /// <returns></returns>
+        public StringBuilder GetFullLogMessage(int id, string outputString)
+        {
+            this.global_log = new StringBuilder();
+            switch (id)
+            {
+                case 0:
+                    this.global_log.Append(this.logTextInfoPlacementCoordinates.ToString());
+                    this.global_log.AppendLine();
+                    this.global_log.Append(this.logTextInfoPlacementReport.ToString());
+                    this.global_log.AppendLine("\nErrors count: " + this.error_counter);
+                    this.global_log.AppendLine("\nFile saved at " + outputString);
+                    break;
+                case 1:
+                    this.global_log.Append(this.logTextDebugPlacementCoordinates.ToString());
+                    this.global_log.AppendLine();
+                    this.global_log.Append(this.logTextDebugPlacementReport.ToString());
+                    this.global_log.AppendLine("\nErrors count: " + this.error_counter);
+                    this.global_log.AppendLine("\nFile saved at " + outputString);
+                    break;
+                case 2:
+                    this.global_log.Append(this.logTextErrorPlacementCoordinates.ToString());
+                    this.global_log.Append(this.logTextErrorPlacementReport.ToString());
+                    this.global_log.AppendLine("\nErrors count: " + this.error_counter);
+                    this.global_log.AppendLine("\nFile saved at " + outputString);
+                    break;
+            }
+            return this.global_log;
         }
 
         /*

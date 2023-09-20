@@ -25,7 +25,14 @@ namespace AllegroToVarisciteConversion
             this.logTextGlobal.AppendLine("Program Start");
             infoToolStripMenuItem.CheckState = CheckState.Checked;
         }
+        /*-----------------------------------*/
 
+        private LogManager log { get; set; }
+        private PositionManager positionManager { get; set; }
+        private PolygonManager polygonManager { get; set; }
+        private CsvManager csvManager { get; set; }
+
+        /*-----------------------------------*/
         /// <summary>
         /// The file Path
         /// </summary>
@@ -1666,7 +1673,10 @@ namespace AllegroToVarisciteConversion
 
             List<List<Point3D>> lst = ConvertToListOfListOfPoints();
             List<List<Point3D>> redElements = ConvertToListOfListOfPointsRED(checkedCheckBoxNames);
-            DrawPoints(pbSketch, lst, redElements);
+            //DrawPoints(pbSketch, lst, redElements);
+
+            ImageManager img = new ImageManager(this.coords, this.log, lst, redElements);
+            pbSketch.Image = Image.FromHbitmap(img.motherBoardImage.GetHbitmap());
         }
     }
 }
