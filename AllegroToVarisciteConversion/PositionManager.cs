@@ -18,25 +18,21 @@ namespace AllegroToVarisciteConversion
         /// </value>
         public string full_path_to_placement_report_file {  get; set; }
         /// <summary>
-        /// Gets or sets the error counter.
-        /// </summary>
-        /// <value>
-        /// The error counter.
-        /// </value>
-        public int error_counter { get; set; }
-        /// <summary>
         /// Gets or sets the VPC number.
         /// </summary>
         /// <value>
         /// The VPC number.
         /// </value>
         public int vpc_number { get; set; }
+        /// <summary>
+        /// The log
+        /// </summary>
         public LogManager log;
 
         /// <summary>
         /// The coords
         /// </summary>
-        List<MyDictionary> coords;
+        private List<MyDictionary> coords {  get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PositionManager"/> class.
@@ -44,14 +40,13 @@ namespace AllegroToVarisciteConversion
         /// <param name="full_path_to_placement_report_file">The full path to placement report file.</param>
         /// <param name="error_counter">The error counter.</param>
         /// <param name="vpc_number">The VPC number.</param>
-        public PositionManager(string full_path_to_placement_report_file, int error_counter, int vpc_number, LogManager log)
+        public PositionManager(string full_path_to_placement_report_file, LogManager log)
         {
             this.full_path_to_placement_report_file = full_path_to_placement_report_file;
-            this.error_counter = error_counter;
-            this.vpc_number = vpc_number;
+            this.vpc_number = 0;
+            this.log = log;
 
             coords = InitElementCoords();
-            this.log = log;
         }
 
         /// <summary>
@@ -63,9 +58,132 @@ namespace AllegroToVarisciteConversion
             return this.coords;
         }
 
-        
 
+        /// <summary>
+        /// Moves all elements.
+        /// </summary>
+        public void MoveAllElements()
+        {
+            List<MyDictionary> lst = this.coords;
+            int deleyY = FindMaxOrMinXOrY('y', "min") - 10;
+            int deleyX = FindMaxOrMinXOrY('x', "min") - 10;
+            for (int i = 0; i < lst.Count; i++)
+            {
+                List<Point3D> coordinations = lst[i].Value;
+                for (int j = 0; j < coordinations.Count; j++)
+                {
+                    Point3D point = coordinations[j];
+                    point.Y = (int.Parse(point.Y) - deleyY + 20).ToString();
+                    point.X = (int.Parse(point.X) - deleyX + 50).ToString();
+                    coordinations[j] = point;
+                }
+            }
+            this.coords = lst;
+        }
+        /// <summary>
+        /// Flips the image.
+        /// </summary>
+        /// <param name="list">The list.</param>
+        /// <returns></returns>
+        public void FlipImage()
+        {
+            List<MyDictionary> list = this.coords;
+            List<MyDictionary> result = new List<MyDictionary>();
+            int maxY = FindMaxOrMinXOrY('y', "max") + 30;
 
+            foreach (var dict in list)
+            {
+                MyDictionary newDict = new MyDictionary(dict.Key);
+                newDict.AddMirror(dict.Mirror);
+
+                foreach (var point in dict.Value)
+                {
+                    int newY = maxY - int.Parse(point.Y);
+                    if (point.Z != "Empty")
+                    {
+                        newDict.Value.Add(new Point3D(int.Parse(point.X), newY, int.Parse(point.Z)));
+                    }
+                    else
+                    {
+                        newDict.Value.Add(new Point3D(int.Parse(point.X), newY));
+                    }
+                }
+                result.Add(newDict);
+            }
+            this.coords = result;
+        }
+        /// <summary>
+        /// Deletes the unnecessary coords.
+        /// </summary>
+        /// <returns></returns>
+        public void DeleteUnnecessaryCoords()
+        {
+            List<MyDictionary> result = this.coords;
+            List<MyDictionary> temp = this.coords;
+            int count = 0;
+
+            for (int i = 0; i < result.Count; i++)
+            {
+                for (int j = 0; j < result[i].Value.Count - 1; j++)
+                {
+                    if (result[i].Value[j].GetRegularPoint().Equals(result[i].Value[j + 1].GetRegularPoint()))
+                    {
+                        temp[i].Value.Remove(result[i].Value[j]);
+                        count++;
+                    }
+                }
+            }
+
+            this.coords = temp;
+        }
+        /// <summary>
+        /// Finds the maximum or minimum x or y.
+        /// </summary>
+        /// <param name="xory">The xory.</param>
+        /// <param name="maxormin">The maxormin.</param>
+        /// <returns></returns>
+        private int FindMaxOrMinXOrY(char xory, string maxormin)
+        {
+            List<MyDictionary> lst = this.coords;
+            int num = 0;
+            if (maxormin == "max")
+            {
+                num = int.MinValue;
+                for (int i = 0; i < lst.Count; i++)
+                {
+                    for (int j = 0; j < lst[i].Value.Count; j++)
+                    {
+                        if (xory == 'x')
+                        {
+                            num = Math.Max(num, int.Parse(lst[i].Value[j].X));
+                        }
+                        else if (xory == 'y')
+                        {
+                            num = Math.Max(num, int.Parse(lst[i].Value[j].Y));
+                        }
+                    }
+                }
+            }
+            else if (maxormin == "min")
+            {
+                num = int.MaxValue;
+                for (int i = 0; i < lst.Count; i++)
+                {
+                    for (int j = 0; j < lst[i].Value.Count; j++)
+                    {
+                        if (xory == 'x')
+                        {
+                            num = Math.Min(num, int.Parse(lst[i].Value[j].X));
+                        }
+                        else if (xory == 'y')
+                        {
+                            num = Math.Min(num, int.Parse(lst[i].Value[j].Y));
+                        }
+                    }
+                }
+            }
+            return num;
+        }
         /// <summary>
         /// Initializes the element coords.
         /// </summary>

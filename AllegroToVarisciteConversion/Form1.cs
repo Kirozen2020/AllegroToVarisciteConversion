@@ -31,6 +31,7 @@ namespace AllegroToVarisciteConversion
         private PositionManager positionManager { get; set; }
         private PolygonManager polygonManager { get; set; }
         private CsvManager csvManager { get; set; }
+        private ImageManager imageManager { get; set; }
 
         /*-----------------------------------*/
         /// <summary>
@@ -798,26 +799,34 @@ namespace AllegroToVarisciteConversion
 
             if(this.placementReportPath != null)
             {
-                this.coords = InitElementCoords();
+                this.positionManager = new PositionManager(this.placementReportPath, this.log);
+                //this.coords = InitElementCoords();
             }
 
-            if (this.coords != null)
+            //if (this.coords != null)
+            if (this.positionManager.GetCoords() != null)
             {
-                if (this.coords.Count > 0)
+                //if (this.coords.Count > 0)
+                if (this.positionManager.GetCoords().Count > 0)
                 {
-                    if(this.table!= null)
+                    //if(this.table!= null)
+                    if (this.polygonManager.GetTable() != null) 
                     {
                         MessageBox.Show(GetEmptyRefDeses(), "Empty RefDeses", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
-                    MoveAllElements(ref this.coords);
+                    //MoveAllElements(ref this.coords);
+                    this.positionManager.MoveAllElements();
 
-                    this.coords = DeleteUnnecessaryCoords();
+                    //this.coords = DeleteUnnecessaryCoords();
+                    this.positionManager.DeleteUnnecessaryCoords();
 
-                    this.coords = FlipImage(this.coords);
+                    //this.coords = FlipImage(this.coords);
+                    this.positionManager.FlipImage();
                     
                     List<List<Point3D>> lst = ConvertToListOfListOfPoints();
 
-                    DrawPoints(pbSketch, lst);
+                    //DrawPoints(pbSketch, lst);
+                    this.imageManager = new ImageManager(this.positionManager.GetCoords(), this.log, lst);
                 }
             }
 
@@ -1327,7 +1336,9 @@ namespace AllegroToVarisciteConversion
                     DialogResult ans = MessageBox.Show("You want to create output file using only Placement Report file?", "Saving process", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
                     if(ans == DialogResult.OK)
                     {
-                        SaveFileUsingOneFile(savePath, ChangeFileExtension(savePath, ".log"));
+                        this.csvManager = new CsvManager(savePath, ChangeFileExtension(savePath, ".log"), this.positionManager.GetCoords(), this.logMode, this.log);
+                        this.csvManager.SaveFileUsingOneFile();
+                        //SaveFileUsingOneFile(savePath, ChangeFileExtension(savePath, ".log"));
                         MessageBox.Show("File saved", "Congratulations", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                 }

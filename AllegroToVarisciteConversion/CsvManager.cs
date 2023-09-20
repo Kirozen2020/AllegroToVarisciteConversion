@@ -70,6 +70,16 @@ namespace AllegroToVarisciteConversion
             this.log = log;
         }
 
+        public CsvManager(string csv_path, string log_path, List<MyDictionary> coords, string logMode, LogManager log)
+        {
+            this.csv_path = csv_path;
+            this.log_path = log_path;
+            this.coords = coords;
+            this.logMode = logMode;
+            this.log = log;
+        }
+
+
 
         /// <summary>
         /// Saves the file.
