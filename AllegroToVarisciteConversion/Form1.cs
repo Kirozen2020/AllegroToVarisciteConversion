@@ -24,6 +24,7 @@ namespace AllegroToVarisciteConversion
 
             //this.logTextGlobal.AppendLine("Program Start");
             infoToolStripMenuItem.CheckState = CheckState.Checked;
+            this.log = new LogManager();
         }
         /*-----------------------------------*/
 
@@ -31,7 +32,6 @@ namespace AllegroToVarisciteConversion
         private PositionManager positionManager { get; set; }
         private PolygonManager polygonManager { get; set; }
         private CsvManager csvManager { get; set; }
-        private ImageManager imageManager { get; set; }
 
         /*-----------------------------------*/
         /// <summary>
@@ -613,6 +613,7 @@ namespace AllegroToVarisciteConversion
             return str;
         }
         */
+        /*
         /// <summary>
         /// Determines whether the specified line has value.
         /// </summary>
@@ -632,6 +633,8 @@ namespace AllegroToVarisciteConversion
             }
             return false;
         }
+        */
+        
         /// <summary>
         /// Gets the coords.
         /// </summary>
@@ -661,6 +664,7 @@ namespace AllegroToVarisciteConversion
             }
             return line;
         }
+        
         /*
         /// <summary>
         /// Saves the file.
@@ -824,9 +828,12 @@ namespace AllegroToVarisciteConversion
                 if (this.positionManager.GetCoords().Count > 0)
                 {
                     //if(this.table!= null)
-                    if (this.polygonManager.GetTable() != null) 
+                    if (this.polygonManager != null)
                     {
-                        MessageBox.Show(GetEmptyRefDeses(), "Empty RefDeses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        if (this.polygonManager.GetTable() != null)
+                        {
+                            MessageBox.Show(GetEmptyRefDeses(), "Empty RefDeses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
                     }
                     //MoveAllElements(ref this.coords);
                     this.positionManager.MoveAllElements();
@@ -840,8 +847,8 @@ namespace AllegroToVarisciteConversion
                     List<List<Point3D>> lst = ConvertToListOfListOfPoints();
 
                     //DrawPoints(pbSketch, lst);
-                    this.imageManager = new ImageManager(this.positionManager.GetCoords(), this.log, lst);
-                    pbSketch.Image = Image.FromHbitmap(this.imageManager.motherBoardImage.GetHbitmap());
+                    ImageManager img = new ImageManager(this.positionManager.GetCoords(), this.log, lst);
+                    pbSketch.Image = img.image;
                 }
             }
 
@@ -1217,7 +1224,18 @@ namespace AllegroToVarisciteConversion
                     MessageBox.Show(GetEmptyRefDeses(), "Empty RefDeses", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
+
+            FillListBoxWithNames();
+            
         }
+
+        private void FillListBoxWithNames()
+        {
+            listBox1.DataSource = this.positionManager.GetNames();
+            listBox1.Refresh();
+            listBox1.SelectionMode = SelectionMode.MultiExtended;
+        }
+
         /// <summary>
         /// Gets the last file Path.
         /// </summary>
@@ -1702,6 +1720,7 @@ namespace AllegroToVarisciteConversion
             pbSketch.Height = this.Height - 70;
             pbSketch.Width = this.Width - listBox1.Width - 30;
         }
+
         /// <summary>
         /// Handles the SelectedIndexChanged event of the listBox1 control.
         /// </summary>
@@ -1731,7 +1750,7 @@ namespace AllegroToVarisciteConversion
             //DrawPoints(pbSketch, lst, redElements);
 
             ImageManager img = new ImageManager(this.positionManager.GetCoords(), this.log, lst, redElements);
-            pbSketch.Image = Image.FromHbitmap(img.motherBoardImage.GetHbitmap());
+            pbSketch.Image = img.image;
         }
     }
 }

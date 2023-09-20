@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -34,6 +35,8 @@ namespace AllegroToVarisciteConversion
         /// </summary>
         private List<MyDictionary> coords {  get; set; }
 
+        private List<string> names { get; set; }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="PositionManager"/> class.
         /// </summary>
@@ -46,7 +49,27 @@ namespace AllegroToVarisciteConversion
             this.vpc_number = 0;
             this.log = log;
 
-            coords = InitElementCoords();
+            this.coords = InitElementCoords();
+            this.names = InitNames();
+        }
+
+        private List<string> InitNames()
+        {
+            List<string> names = new List<string>();
+
+            for (int i = 0; i < this.coords.Count; i++)
+            {
+                names.Add(this.coords[i].Key);
+            }
+
+            names.Sort(CustomStringComparer);
+
+            return names;
+        }
+
+        public List<string> GetNames()
+        {
+            return this.names;
         }
 
         /// <summary>
@@ -58,7 +81,34 @@ namespace AllegroToVarisciteConversion
             return this.coords;
         }
 
+        /// <summary>
+        /// Customs the string comparer.
+        /// </summary>
+        /// <param name="x">The x.</param>
+        /// <param name="y">The y.</param>
+        /// <returns></returns>
+        static int CustomStringComparer(string x, string y)
+        {
+            IEnumerable<string> xParts = Regex.Split(x, "([0-9]+)");
+            IEnumerable<string> yParts = Regex.Split(y, "([0-9]+)");
 
+            using (IEnumerator<string> xEnum = xParts.GetEnumerator(), yEnum = yParts.GetEnumerator())
+            {
+                while (xEnum.MoveNext() && yEnum.MoveNext())
+                {
+                    if (xEnum.Current != yEnum.Current)
+                    {
+                        if (int.TryParse(xEnum.Current, out int xNum) && int.TryParse(yEnum.Current, out int yNum))
+                        {
+                            return xNum.CompareTo(yNum);
+                        }
+                        return xEnum.Current.CompareTo(yEnum.Current);
+                    }
+                }
+
+                return xParts.Count().CompareTo(yParts.Count());
+            }
+        }
         /// <summary>
         /// Moves all elements.
         /// </summary>
