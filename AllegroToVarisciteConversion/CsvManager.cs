@@ -69,7 +69,14 @@ namespace AllegroToVarisciteConversion
             this.logMode = logMode;
             this.log = log;
         }
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CsvManager"/> class.
+        /// </summary>
+        /// <param name="csv_path">The CSV path.</param>
+        /// <param name="log_path">The log path.</param>
+        /// <param name="coords">The coords.</param>
+        /// <param name="logMode">The log mode.</param>
+        /// <param name="log">The log.</param>
         public CsvManager(string csv_path, string log_path, List<MyDictionary> coords, string logMode, LogManager log)
         {
             this.csv_path = csv_path;
@@ -111,43 +118,18 @@ namespace AllegroToVarisciteConversion
             switch (logMode)
             {
                 case "error":
-
-                    //this.logTextGlobal.Append(this.logTextErrorPlacementCoordinates.ToString());
-                    //this.logTextGlobal.Append(this.logTextErrorPlacementReport.ToString());
-                    //this.logTextGlobal.AppendLine("\nErrors count: " + this.errorCount);
-                    //this.logTextGlobal.AppendLine("\nFile saved at " + outputString);
-
-                    //File.WriteAllText(outputLogPath, this.logTextGlobal.ToString());
                     File.WriteAllText(log_path, this.log.GetFullLogMessage(2, log_path).ToString());
                     break;
                 case "info":
-                    //this.logTextGlobal.Append(this.logTextInfoPlacementCoordinates.ToString());
-                    //this.logTextGlobal.AppendLine();
-                    //this.logTextGlobal.Append(this.logTextInfoPlacementReport.ToString());
-                    //this.logTextGlobal.AppendLine("\nErrors count: " + this.errorCount);
-                    //this.logTextGlobal.AppendLine("\nFile saved at " + outputString);
-
-                    //File.WriteAllText(outputLogPath, this.logTextGlobal.ToString());
                     File.WriteAllText(log_path, this.log.GetFullLogMessage(0, log_path).ToString());
                     break;
                 case "debug":
-                    //this.logTextGlobal.Append(this.logTextDebugPlacementCoordinates.ToString());
-                    //this.logTextGlobal.AppendLine();
-                    //this.logTextGlobal.Append(this.logTextDebugPlacementReport.ToString());
-                    //this.logTextGlobal.AppendLine("\nErrors count: " + this.errorCount);
-                    //this.logTextGlobal.AppendLine("\nFile saved at " + outputString);
-
-                    //File.WriteAllText(outputLogPath, this.logTextGlobal.ToString());
                     File.WriteAllText(log_path, this.log.GetFullLogMessage(1, log_path).ToString());
                     break;
             }
-            //CleanLogPlacementCoordinates();
-            //CleanLogPlacementReport();
             this.log.ClearCoordsLog();
             this.log.ClearPlacementLog();
             this.log.error_counter = 0;
-            //this.errorCount = 0;
-            //this.filePath = null;
         }
         /// <summary>
         /// Saves the file using one file.
@@ -172,43 +154,18 @@ namespace AllegroToVarisciteConversion
             switch (logMode)
             {
                 case "error":
-
-                    //this.logTextGlobal.Append(this.logTextErrorPlacementCoordinates.ToString());
-                    //this.logTextGlobal.Append(this.logTextErrorPlacementReport.ToString());
-                    //this.logTextGlobal.AppendLine("\nErrors count: " + this.errorCount);
-                    //this.logTextGlobal.AppendLine("\nFile saved at " + outputString);
-
-                    //File.WriteAllText(outputLogPath, this.logTextGlobal.ToString());
                     File.WriteAllText(log_path, this.log.GetFullLogMessage(2, log_path).ToString());
                     break;
                 case "info":
-                    //this.logTextGlobal.Append(this.logTextInfoPlacementCoordinates.ToString());
-                    //this.logTextGlobal.AppendLine();
-                    //this.logTextGlobal.Append(this.logTextInfoPlacementReport.ToString());
-                    //this.logTextGlobal.AppendLine("\nErrors count: " + this.errorCount);
-                    //this.logTextGlobal.AppendLine("\nFile saved at " + outputString);
-
-                    //File.WriteAllText(outputLogPath, this.logTextGlobal.ToString());
                     File.WriteAllText(log_path, this.log.GetFullLogMessage(0, log_path).ToString());
                     break;
                 case "debug":
-                    //this.logTextGlobal.Append(this.logTextDebugPlacementCoordinates.ToString());
-                    //this.logTextGlobal.AppendLine();
-                    //this.logTextGlobal.Append(this.logTextDebugPlacementReport.ToString());
-                    //this.logTextGlobal.AppendLine("\nErrors count: " + this.errorCount);
-                    //this.logTextGlobal.AppendLine("\nFile saved at " + outputString);
-
-                    //File.WriteAllText(outputLogPath, this.logTextGlobal.ToString());
                     File.WriteAllText(log_path, this.log.GetFullLogMessage(1, log_path).ToString());
                     break;
             }
-            //CleanLogPlacementCoordinates();
-            //CleanLogPlacementReport();
             this.log.ClearCoordsLog();
             this.log.ClearPlacementLog();
             this.log.error_counter = 0;
-            //this.errorCount = 0;
-            //this.filePath = null;
         }
         /// <summary>
         /// Gets the coords.

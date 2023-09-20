@@ -57,15 +57,8 @@ namespace AllegroToVarisciteConversion
         /// <returns></returns>
         private List<string[]> InitTabel()
         {
-            //CleanLogPlacementCoordinates();
             this.log.ClearCoordsLog();
-            //Add lines to log file
-            //this.logTextDebugPlacementCoordinates.AppendLine($"Opening coordinates file {this.full_path_to_placement_coordinates_file}");
-            //this.logTextInfoPlacementCoordinates.AppendLine($"Opening coordinates file {this.full_path_to_placement_coordinates_file}");
             this.log.AddComment($"Opening coordinates file {this.full_path_to_placement_coordinates_file}", new List<int> { 0, 1 }, "coords");
-
-            //this.logTextDebugPlacementCoordinates.AppendLine($"\nStart converting coordinates file to List<string[]> format\n");
-            //this.logTextInfoPlacementCoordinates.AppendLine($"\nStart converting coordinates file to List<string[]> format\n");
             this.log.AddComment($"\nStart converting coordinates file to List<string[]> format\n", new List<int> { 0, 1 }, "coords");
 
             List<string[]> tabel = new List<string[]>();
@@ -88,46 +81,30 @@ namespace AllegroToVarisciteConversion
                             case 1:
                             case 2:
                             case 3:
-                                //this.logTextDebugPlacementCoordinates.AppendLine("Reading line " + index + ": {" + ConvertListToString(line, index) + "} Dumping line");
                                 this.log.AddComment("Reading line " + index + ": {" + ConvertListToString(line, index) + "} Dumping line", new List<int> { 1 }, "coords");
                                 break;
                             case 4:
-                                //this.logTextDebugPlacementCoordinates.AppendLine("Reading line " + index + ": {" + ConvertListToString(line, index) + "}");
                                 this.log.AddComment("Reading line " + index + ": {" + ConvertListToString(line, index) + "}", new List<int> { 1 }, "coords");
-                                //this.logTextDebugPlacementCoordinates.AppendLine("Getting Refdes is in column 0, X coordinate in column 1, Y coordinate in column 2");
-                                //this.logTextInfoPlacementCoordinates.AppendLine("Getting Refdes is in column 0, X coordinate in column 1, Y coordinate in column 2");
                                 this.log.AddComment("Getting Refdes is in column 0, X coordinate in column 1, Y coordinate in column 2", new List<int> { 0, 1 }, "coords");
                                 break;
                             case 5:
-                                //this.logTextDebugPlacementCoordinates.AppendLine("Reading line " + index + ": {" + ConvertListToString(line, index) + "} Dumping line");
                                 this.log.AddComment("Reading line " + index + ": {" + ConvertListToString(line, index) + "} Dumping line", new List<int> { 1 }, "coords");
                                 break;
                         }
                         if (index >= 6)
                         {
-                            //this.logTextDebugPlacementCoordinates.AppendLine("Reading line " + index + ": {" + ConvertListToString(line, index) + "}");
                             this.log.AddComment("Reading line " + index + ": {" + ConvertListToString(line, index) + "}", new List<int> { 1 }, "coords");
                             if (CanConvertToNumeric(line[1]) == false)//error
                             {
-                                //this.error_counter++;
-                                //this.logTextDebugPlacementCoordinates.AppendLine($"ERROR!!! Cannot parse line {index} Refdes {line[0]} coordinate X has incorrect string value {line[1]} that cannot be parsed");
-                                //this.logTextErrorPlacementCoordinates.AppendLine($"ERROR!!! Cannot parse line {index} Refdes {line[0]} coordinate X has incorrect string value {line[1]} that cannot be parsed");
-                                //this.logTextInfoPlacementCoordinates.AppendLine($"ERROR!!! Cannot parse line {index} Refdes {line[0]} coordinate X has incorrect string value {line[1]} that cannot be parsed");
                                 this.log.AddComment($"ERROR!!! Cannot parse line {index} Refdes {line[0]} coordinate X has incorrect string value {line[1]} that cannot be parsed", new List<int> { 0, 1, 2 }, "coords");
                             }
                             else if (CanConvertToNumeric(line[2]) == false)//error
                             {
-                                //this.error_counter++;
-                                //this.logTextDebugPlacementCoordinates.AppendLine($"ERROR!!! Cannot parse line {index} Refdes {line[0]} coordinate Y has incorrect string value {line[2]} that cannot be parsed");
-                                //this.logTextErrorPlacementCoordinates.AppendLine($"ERROR!!! Cannot parse line {index} Refdes {line[0]} coordinate Y has incorrect string value {line[2]} that cannot be parsed");
-                                //this.logTextInfoPlacementCoordinates.AppendLine($"ERROR!!! Cannot parse line {index} Refdes {line[0]} coordinate Y has incorrect string value {line[2]} that cannot be parsed");
                                 this.log.AddComment($"ERROR!!! Cannot parse line {index} Refdes {line[0]} coordinate Y has incorrect string value {line[2]} that cannot be parsed", new List<int> { 0, 1, 2 }, "coords");
 
                             }
                             else
                             {
-                                //this.logTextDebugPlacementCoordinates.AppendLine($"Refdes {line[0]} is located at {line[1]},{line[2]}");
-                                //this.logTextInfoPlacementCoordinates.AppendLine($"Refdes {line[0]} is located at {line[1]},{line[2]}");
                                 this.log.AddComment($"Refdes {line[0]} is located at {line[1]},{line[2]}", new List<int> { 0, 1 }, "coords");
                             }
                         }

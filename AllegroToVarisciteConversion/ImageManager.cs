@@ -108,8 +108,6 @@ namespace AllegroToVarisciteConversion
         /// <param name="pointLists">The point lists.</param>
         private void DrawPoints(List<List<Point3D>> pointLists, List<List<Point3D>> redElements)
         {
-            //this.logTextDebugPlacementReport.AppendLine("Start drawing scheme\n");
-            //this.logTextInfoPlacementReport.AppendLine("Start drawing scheme\n");
             log.AddComment("Start drawing scheme\n", new List<int> { 0, 1 }, "placement"); 
 
             if (pointLists == null)
@@ -262,17 +260,12 @@ namespace AllegroToVarisciteConversion
                 // Assign the updated bitmap to the PictureBox
                 if (!IsBitmapFormatCompatible(bmp))
                 {
-                    //this.logTextErrorPlacementReport.AppendLine("Error!!! Bitmap format is wrong, cannot convert bitmap to image");
-                    //this.logTextDebugPlacementReport.AppendLine("Error!!! Bitmap format is wrong, cannot convert bitmap to image");
-                    //this.logTextInfoPlacementReport.AppendLine("Error!!! Bitmap format is wrong, cannot convert bitmap to image");
-                    //this.errorCount++;
                     log.AddComment("Error!!! Bitmap format is wrong, cannot convert bitmap to image", new List<int> { 0, 1, 2 }, "placement");
                     MessageBox.Show("BitMap format error", "Attention!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 this.motherBoardImage = bmp;
                 this.motherBoardImage = AddText(this.motherBoardImage);
                 this.image = Image.FromHbitmap(this.motherBoardImage.GetHbitmap());
-                //pbSketch.Image = image;
 
                 this.names = new List<string>();
                 foreach (var item in this.coords)
@@ -282,8 +275,6 @@ namespace AllegroToVarisciteConversion
 
                 this.names.Sort(CustomStringComparer);
 
-                //listBox1.DataSource = names;
-                //listBox1.SelectionMode = SelectionMode.MultiExtended;
             }
         }
 
@@ -363,7 +354,6 @@ namespace AllegroToVarisciteConversion
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message + "\nCannot add text to scheme", "Error Text", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                //this.errorCount++;
                 log.error_counter++;
             }
             return bitmap;
