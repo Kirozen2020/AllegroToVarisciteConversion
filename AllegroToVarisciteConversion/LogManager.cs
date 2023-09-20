@@ -114,32 +114,32 @@ namespace AllegroToVarisciteConversion
                     case 0:
                         if(categoty == "coords")
                         {
-                            logTextInfoPlacementCoordinates.Append(comment);
+                            logTextInfoPlacementCoordinates.AppendLine(comment);
                         }
                         else if(categoty == "placement")
                         {
-                            logTextInfoPlacementCoordinates.Append(comment);
+                            logTextInfoPlacementReport.AppendLine(comment);
                         }
                         break;
                     case 1:
                         if (categoty == "coords")
                         {
-                            logTextDebugPlacementCoordinates.Append(comment);
+                            logTextDebugPlacementCoordinates.AppendLine(comment);
                         }
                         else if (categoty == "placement")
                         {
-                            logTextDebugPlacementReport.Append(comment);
+                            logTextDebugPlacementReport.AppendLine(comment);
                         }
                         break;
                     case 2:
                         if (categoty == "coords")
                         {
-                            logTextErrorPlacementCoordinates.Append(comment);
+                            logTextErrorPlacementCoordinates.AppendLine(comment);
                             this.error_counter++;
                         }
                         else if (categoty == "placement")
                         {
-                            logTextErrorPlacementReport.Append(comment);
+                            logTextErrorPlacementReport.AppendLine(comment);
                             this.error_counter++;
                         }
                         break;
