@@ -19,18 +19,85 @@ namespace AllegroToVarisciteConversion
         /// The bitmap.
         /// </value>
         public Bitmap motherBoardImage { get; set; }
+        /// <summary>
+        /// Gets or sets the coords.
+        /// </summary>
+        /// <value>
+        /// The coords.
+        /// </value>
         public List<MyDictionary> coords { get; set; }
+        /// <summary>
+        /// Gets or sets the names.
+        /// </summary>
+        /// <value>
+        /// The names.
+        /// </value>
         public List<string> names { get; set; }
+        /// <summary>
+        /// Gets or sets the image.
+        /// </summary>
+        /// <value>
+        /// The image.
+        /// </value>
         public Image image { get; set; }
-
+        /// <summary>
+        /// Gets or sets the log.
+        /// </summary>
+        /// <value>
+        /// The log.
+        /// </value>
         public LogManager log { get; set; }
-
+        /// <summary>
+        /// Gets or sets all points.
+        /// </summary>
+        /// <value>
+        /// All points.
+        /// </value>
+        public List<List<Point3D>> all_points { get; set; }
+        /// <summary>
+        /// Gets or sets the red points.
+        /// </summary>
+        /// <value>
+        /// The red points.
+        /// </value>
+        public List<List<Point3D>> red_points { get; set; }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ImageManager"/> class.
+        /// </summary>
+        /// <param name="coords">The coords.</param>
+        /// <param name="log">The log.</param>
         public ImageManager(List<MyDictionary> coords, LogManager log)
         {
             this.coords = coords;
             this.log = log;
         }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ImageManager"/> class.
+        /// </summary>
+        /// <param name="coords">The coords.</param>
+        /// <param name="log">The log.</param>
+        /// <param name="all_points">All points.</param>
+        /// <param name="red_points">The red points.</param>
+        public ImageManager(List<MyDictionary> coords, LogManager log, List<List<Point3D>> all_points, List<List<Point3D>> red_points) : this(coords, log)
+        {
+            this.all_points = all_points;
+            this.red_points = red_points;
 
+            DrawPoints(all_points, red_points);
+        }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ImageManager"/> class.
+        /// </summary>
+        /// <param name="coords">The coords.</param>
+        /// <param name="log">The log.</param>
+        /// <param name="all_points">All points.</param>
+        public ImageManager(List<MyDictionary> coords, LogManager log, List<List<Point3D>> all_points) : this(coords, log)
+        {
+            this.all_points = all_points;
+            this.red_points = new List<List<Point3D>>();
+
+            DrawPoints(all_points, red_points);
+        }
 
 
 
@@ -39,13 +106,13 @@ namespace AllegroToVarisciteConversion
         /// </summary>
         /// <param name="pb">The pb.</param>
         /// <param name="pointLists">The point lists.</param>
-        private void DrawPoints(PictureBox pb, List<List<Point3D>> pointLists)
+        private void DrawPoints(List<List<Point3D>> pointLists, List<List<Point3D>> redElements)
         {
             //this.logTextDebugPlacementReport.AppendLine("Start drawing scheme\n");
             //this.logTextInfoPlacementReport.AppendLine("Start drawing scheme\n");
             log.AddComment("Start drawing scheme\n", new List<int> { 0, 1 }, "placement"); 
 
-            if (pb == null || pointLists == null)
+            if (pointLists == null)
                 return;
 
             using (Bitmap bmp = new Bitmap(FindMaxOrMinXOrY('x', "max") + 30, FindMaxOrMinXOrY('y', "max") + 30))
@@ -60,6 +127,73 @@ namespace AllegroToVarisciteConversion
                     using (Pen pen = new Pen(Color.Black, 2))
                     {
                         foreach (List<Point3D> points in pointLists)
+                        {
+                            // Draw lines connecting the points
+                            if (points.Count > 1)
+                            {
+                                for (int i = 0; i < points.Count - 1; i++)
+                                {
+                                    if (i + 1 < points.Count - 1)
+                                    {
+
+                                        if (!points[i + 1].IsRegularPoint())
+                                        {
+                                            Point start = points[i].GetRegularPoint();
+                                            Point center = points[i + 1].GetRegularPoint();
+                                            bool isClockwise = false;
+                                            if (!points[i + 1].Z.Equals("0"))
+                                            {
+                                                isClockwise = true;
+                                            }
+                                            Point end = points[i + 2].GetRegularPoint();
+
+                                            int radius = (int)Math.Sqrt(Math.Pow(center.X - start.X, 2) + Math.Pow(center.Y - start.Y, 2));
+                                            int x = center.X - radius;
+                                            int y = center.Y - radius;
+                                            int wigth = 2 * radius;
+                                            int height = 2 * radius;
+
+                                            float startAngle = (float)Math.Atan2(start.Y - center.Y, start.X - center.X) * 180 / (float)Math.PI;
+                                            float endAngle = (float)Math.Atan2(end.Y - center.Y, end.X - center.X) * 180 / (float)Math.PI;
+                                            float sweepAngle = endAngle - startAngle;
+
+                                            if (Math.Abs(sweepAngle) == 0)
+                                            {
+                                                g.DrawEllipse(pen, x, y, wigth, height);
+                                            }
+                                            else
+                                            {
+                                                if (isClockwise && sweepAngle < 0)
+                                                {
+                                                    sweepAngle += 360;
+                                                }
+                                                else if (!isClockwise && sweepAngle > 0)
+                                                {
+                                                    sweepAngle -= 360;
+                                                }
+
+                                                g.DrawArc(pen, x, y, wigth, height, startAngle, sweepAngle);
+                                            }
+                                            g.DrawLine(pen, start.X, start.Y, end.X, end.Y);
+                                        }
+
+                                    }
+                                    else
+                                    {
+                                        g.DrawLine(pen, points[i].GetRegularPoint(), points[i + 1].GetRegularPoint());
+                                    }
+                                    g.DrawLine(pen, points[i].GetRegularPoint(), points[i + 1].GetRegularPoint());
+                                }
+
+                                // Connect the last point with the first point to complete the figure
+                                g.DrawLine(pen, points[points.Count - 1].GetRegularPoint(), points[0].GetRegularPoint());
+                            }
+                        }
+                    }
+
+                    using (Pen pen = new Pen(Color.Red, 5))
+                    {
+                        foreach (List<Point3D> points in redElements)
                         {
                             // Draw lines connecting the points
                             if (points.Count > 1)
