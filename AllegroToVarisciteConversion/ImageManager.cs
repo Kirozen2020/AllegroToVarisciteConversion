@@ -12,6 +12,7 @@ namespace AllegroToVarisciteConversion
 {
     internal class ImageManager
     {
+        /*----------------- Variables ------------------*/
         /// <summary>
         /// Gets or sets the bitmap.
         /// </summary>
@@ -61,6 +62,9 @@ namespace AllegroToVarisciteConversion
         /// The red points.
         /// </value>
         public List<List<Point3D>> red_points { get; set; }
+
+        /*----------------- Class constructor ------------------*/
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ImageManager"/> class.
         /// </summary>
@@ -99,7 +103,7 @@ namespace AllegroToVarisciteConversion
             DrawPoints(all_points, red_points);
         }
 
-
+        /*----------------- Main functions ------------------*/
 
         /// <summary>
         /// Draws the points.
@@ -277,6 +281,8 @@ namespace AllegroToVarisciteConversion
 
             }
         }
+
+        /*----------------- Help functions ------------------*/
 
         /// <summary>
         /// Finds the maximum or minimum x or y.

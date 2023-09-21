@@ -9,6 +9,8 @@ namespace AllegroToVarisciteConversion
 {
     internal class CsvManager
     {
+        /*----------------- Variables ------------------*/
+
         /// <summary>
         /// Gets or sets the CSV path.
         /// </summary>
@@ -51,6 +53,9 @@ namespace AllegroToVarisciteConversion
         /// The log.
         /// </value>
         private LogManager log {  get; set; }
+
+        /*----------------- Class constructor ------------------*/
+
         /// <summary>
         /// Initializes a new instance of the <see cref="CsvManager"/> class.
         /// </summary>
@@ -86,7 +91,7 @@ namespace AllegroToVarisciteConversion
             this.log = log;
         }
 
-
+        /*----------------- Main functions ------------------*/
 
         /// <summary>
         /// Saves the file.
@@ -167,6 +172,9 @@ namespace AllegroToVarisciteConversion
             this.log.ClearPlacementLog();
             this.log.error_counter = 0;
         }
+
+        /*----------------- Help functions ------------------*/
+
         /// <summary>
         /// Gets the coords.
         /// </summary>

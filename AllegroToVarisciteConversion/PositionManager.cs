@@ -11,6 +11,8 @@ namespace AllegroToVarisciteConversion
 {
     internal class PositionManager
     {
+        /*----------------- Variables ------------------*/
+
         /// <summary>
         /// Gets or sets the full path to placement report file.
         /// </summary>
@@ -29,7 +31,6 @@ namespace AllegroToVarisciteConversion
         /// The log
         /// </summary>
         public LogManager log;
-
         /// <summary>
         /// The coords
         /// </summary>
@@ -41,6 +42,8 @@ namespace AllegroToVarisciteConversion
         /// The names.
         /// </value>
         private List<string> names { get; set; }
+
+        /*----------------- Class constructor ------------------*/
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PositionManager"/> class.
@@ -57,194 +60,9 @@ namespace AllegroToVarisciteConversion
             this.coords = InitElementCoords();
             this.names = InitNames();
         }
-        /// <summary>
-        /// Initializes the names.
-        /// </summary>
-        /// <returns></returns>
-        private List<string> InitNames()
-        {
-            List<string> names = new List<string>();
 
-            for (int i = 0; i < this.coords.Count; i++)
-            {
-                names.Add(this.coords[i].Key);
-            }
+        /*----------------- Main functions ------------------*/
 
-            names.Sort(CustomStringComparer);
-
-            return names;
-        }
-        /// <summary>
-        /// Gets the names.
-        /// </summary>
-        /// <returns></returns>
-        public List<string> GetNames()
-        {
-            return this.names;
-        }
-
-        /// <summary>
-        /// Gets the coords.
-        /// </summary>
-        /// <returns></returns>
-        public List<MyDictionary> GetCoords()
-        {
-            return this.coords;
-        }
-
-        /// <summary>
-        /// Customs the string comparer.
-        /// </summary>
-        /// <param name="x">The x.</param>
-        /// <param name="y">The y.</param>
-        /// <returns></returns>
-        static int CustomStringComparer(string x, string y)
-        {
-            IEnumerable<string> xParts = Regex.Split(x, "([0-9]+)");
-            IEnumerable<string> yParts = Regex.Split(y, "([0-9]+)");
-
-            using (IEnumerator<string> xEnum = xParts.GetEnumerator(), yEnum = yParts.GetEnumerator())
-            {
-                while (xEnum.MoveNext() && yEnum.MoveNext())
-                {
-                    if (xEnum.Current != yEnum.Current)
-                    {
-                        if (int.TryParse(xEnum.Current, out int xNum) && int.TryParse(yEnum.Current, out int yNum))
-                        {
-                            return xNum.CompareTo(yNum);
-                        }
-                        return xEnum.Current.CompareTo(yEnum.Current);
-                    }
-                }
-
-                return xParts.Count().CompareTo(yParts.Count());
-            }
-        }
-        /// <summary>
-        /// Moves all elements.
-        /// </summary>
-        public void MoveAllElements()
-        {
-            List<MyDictionary> lst = this.coords;
-            int deleyY = FindMaxOrMinXOrY('y', "min") - 10;
-            int deleyX = FindMaxOrMinXOrY('x', "min") - 10;
-            for (int i = 0; i < lst.Count; i++)
-            {
-                List<Point3D> coordinations = lst[i].Value;
-                for (int j = 0; j < coordinations.Count; j++)
-                {
-                    Point3D point = coordinations[j];
-                    point.Y = (int.Parse(point.Y) - deleyY + 20).ToString();
-                    point.X = (int.Parse(point.X) - deleyX + 50).ToString();
-                    coordinations[j] = point;
-                }
-            }
-            this.coords = lst;
-        }
-        /// <summary>
-        /// Flips the image.
-        /// </summary>
-        /// <param name="list">The list.</param>
-        /// <returns></returns>
-        public void FlipImage()
-        {
-            List<MyDictionary> list = this.coords;
-            List<MyDictionary> result = new List<MyDictionary>();
-            int maxY = FindMaxOrMinXOrY('y', "max") + 30;
-
-            foreach (var dict in list)
-            {
-                MyDictionary newDict = new MyDictionary(dict.Key);
-                newDict.AddMirror(dict.Mirror);
-
-                foreach (var point in dict.Value)
-                {
-                    int newY = maxY - int.Parse(point.Y);
-                    if (point.Z != "Empty")
-                    {
-                        newDict.Value.Add(new Point3D(int.Parse(point.X), newY, int.Parse(point.Z)));
-                    }
-                    else
-                    {
-                        newDict.Value.Add(new Point3D(int.Parse(point.X), newY));
-                    }
-                }
-                result.Add(newDict);
-            }
-            this.coords = result;
-        }
-        /// <summary>
-        /// Deletes the unnecessary coords.
-        /// </summary>
-        /// <returns></returns>
-        public void DeleteUnnecessaryCoords()
-        {
-            List<MyDictionary> result = this.coords;
-            List<MyDictionary> temp = this.coords;
-            int count = 0;
-
-            for (int i = 0; i < result.Count; i++)
-            {
-                for (int j = 0; j < result[i].Value.Count - 1; j++)
-                {
-                    if (result[i].Value[j].GetRegularPoint().Equals(result[i].Value[j + 1].GetRegularPoint()))
-                    {
-                        temp[i].Value.Remove(result[i].Value[j]);
-                        count++;
-                    }
-                }
-            }
-
-            this.coords = temp;
-        }
-        /// <summary>
-        /// Finds the maximum or minimum x or y.
-        /// </summary>
-        /// <param name="xory">The xory.</param>
-        /// <param name="maxormin">The maxormin.</param>
-        /// <returns></returns>
-        private int FindMaxOrMinXOrY(char xory, string maxormin)
-        {
-            List<MyDictionary> lst = this.coords;
-            int num = 0;
-            if (maxormin == "max")
-            {
-                num = int.MinValue;
-                for (int i = 0; i < lst.Count; i++)
-                {
-                    for (int j = 0; j < lst[i].Value.Count; j++)
-                    {
-                        if (xory == 'x')
-                        {
-                            num = Math.Max(num, int.Parse(lst[i].Value[j].X));
-                        }
-                        else if (xory == 'y')
-                        {
-                            num = Math.Max(num, int.Parse(lst[i].Value[j].Y));
-                        }
-                    }
-                }
-            }
-            else if (maxormin == "min")
-            {
-                num = int.MaxValue;
-                for (int i = 0; i < lst.Count; i++)
-                {
-                    for (int j = 0; j < lst[i].Value.Count; j++)
-                    {
-                        if (xory == 'x')
-                        {
-                            num = Math.Min(num, int.Parse(lst[i].Value[j].X));
-                        }
-                        else if (xory == 'y')
-                        {
-                            num = Math.Min(num, int.Parse(lst[i].Value[j].Y));
-                        }
-                    }
-                }
-            }
-            return num;
-        }
         /// <summary>
         /// Initializes the element coords.
         /// </summary>
@@ -470,6 +288,195 @@ namespace AllegroToVarisciteConversion
                 MessageBox.Show("You have in total more then 1 VPC element", "Attention!", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             return coords;
+        }
+
+        /*----------------- Help functions ------------------*/
+
+        /// <summary>
+        /// Initializes the names.
+        /// </summary>
+        /// <returns></returns>
+        private List<string> InitNames()
+        {
+            List<string> names = new List<string>();
+
+            for (int i = 0; i < this.coords.Count; i++)
+            {
+                names.Add(this.coords[i].Key);
+            }
+
+            names.Sort(CustomStringComparer);
+
+            return names;
+        }
+        /// <summary>
+        /// Gets the names.
+        /// </summary>
+        /// <returns></returns>
+        public List<string> GetNames()
+        {
+            return this.names;
+        }
+        /// <summary>
+        /// Gets the coords.
+        /// </summary>
+        /// <returns></returns>
+        public List<MyDictionary> GetCoords()
+        {
+            return this.coords;
+        }
+        /// <summary>
+        /// Customs the string comparer.
+        /// </summary>
+        /// <param name="x">The x.</param>
+        /// <param name="y">The y.</param>
+        /// <returns></returns>
+        static int CustomStringComparer(string x, string y)
+        {
+            IEnumerable<string> xParts = Regex.Split(x, "([0-9]+)");
+            IEnumerable<string> yParts = Regex.Split(y, "([0-9]+)");
+
+            using (IEnumerator<string> xEnum = xParts.GetEnumerator(), yEnum = yParts.GetEnumerator())
+            {
+                while (xEnum.MoveNext() && yEnum.MoveNext())
+                {
+                    if (xEnum.Current != yEnum.Current)
+                    {
+                        if (int.TryParse(xEnum.Current, out int xNum) && int.TryParse(yEnum.Current, out int yNum))
+                        {
+                            return xNum.CompareTo(yNum);
+                        }
+                        return xEnum.Current.CompareTo(yEnum.Current);
+                    }
+                }
+
+                return xParts.Count().CompareTo(yParts.Count());
+            }
+        }
+        /// <summary>
+        /// Moves all elements.
+        /// </summary>
+        public void MoveAllElements()
+        {
+            List<MyDictionary> lst = this.coords;
+            int deleyY = FindMaxOrMinXOrY('y', "min") - 10;
+            int deleyX = FindMaxOrMinXOrY('x', "min") - 10;
+            for (int i = 0; i < lst.Count; i++)
+            {
+                List<Point3D> coordinations = lst[i].Value;
+                for (int j = 0; j < coordinations.Count; j++)
+                {
+                    Point3D point = coordinations[j];
+                    point.Y = (int.Parse(point.Y) - deleyY + 20).ToString();
+                    point.X = (int.Parse(point.X) - deleyX + 50).ToString();
+                    coordinations[j] = point;
+                }
+            }
+            this.coords = lst;
+        }
+        /// <summary>
+        /// Flips the image.
+        /// </summary>
+        /// <param name="list">The list.</param>
+        /// <returns></returns>
+        public void FlipImage()
+        {
+            List<MyDictionary> list = this.coords;
+            List<MyDictionary> result = new List<MyDictionary>();
+            int maxY = FindMaxOrMinXOrY('y', "max") + 30;
+
+            foreach (var dict in list)
+            {
+                MyDictionary newDict = new MyDictionary(dict.Key);
+                newDict.AddMirror(dict.Mirror);
+
+                foreach (var point in dict.Value)
+                {
+                    int newY = maxY - int.Parse(point.Y);
+                    if (point.Z != "Empty")
+                    {
+                        newDict.Value.Add(new Point3D(int.Parse(point.X), newY, int.Parse(point.Z)));
+                    }
+                    else
+                    {
+                        newDict.Value.Add(new Point3D(int.Parse(point.X), newY));
+                    }
+                }
+                result.Add(newDict);
+            }
+            this.coords = result;
+        }
+        /// <summary>
+        /// Deletes the unnecessary coords.
+        /// </summary>
+        /// <returns></returns>
+        public void DeleteUnnecessaryCoords()
+        {
+            List<MyDictionary> result = this.coords;
+            List<MyDictionary> temp = this.coords;
+            int count = 0;
+
+            for (int i = 0; i < result.Count; i++)
+            {
+                for (int j = 0; j < result[i].Value.Count - 1; j++)
+                {
+                    if (result[i].Value[j].GetRegularPoint().Equals(result[i].Value[j + 1].GetRegularPoint()))
+                    {
+                        temp[i].Value.Remove(result[i].Value[j]);
+                        count++;
+                    }
+                }
+            }
+
+            this.coords = temp;
+        }
+        /// <summary>
+        /// Finds the maximum or minimum x or y.
+        /// </summary>
+        /// <param name="xory">The xory.</param>
+        /// <param name="maxormin">The maxormin.</param>
+        /// <returns></returns>
+        private int FindMaxOrMinXOrY(char xory, string maxormin)
+        {
+            List<MyDictionary> lst = this.coords;
+            int num = 0;
+            if (maxormin == "max")
+            {
+                num = int.MinValue;
+                for (int i = 0; i < lst.Count; i++)
+                {
+                    for (int j = 0; j < lst[i].Value.Count; j++)
+                    {
+                        if (xory == 'x')
+                        {
+                            num = Math.Max(num, int.Parse(lst[i].Value[j].X));
+                        }
+                        else if (xory == 'y')
+                        {
+                            num = Math.Max(num, int.Parse(lst[i].Value[j].Y));
+                        }
+                    }
+                }
+            }
+            else if (maxormin == "min")
+            {
+                num = int.MaxValue;
+                for (int i = 0; i < lst.Count; i++)
+                {
+                    for (int j = 0; j < lst[i].Value.Count; j++)
+                    {
+                        if (xory == 'x')
+                        {
+                            num = Math.Min(num, int.Parse(lst[i].Value[j].X));
+                        }
+                        else if (xory == 'y')
+                        {
+                            num = Math.Min(num, int.Parse(lst[i].Value[j].Y));
+                        }
+                    }
+                }
+            }
+            return num;
         }
         /// <summary>
         /// VPCs the line.

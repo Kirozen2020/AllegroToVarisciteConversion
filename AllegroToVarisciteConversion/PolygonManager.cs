@@ -10,6 +10,8 @@ namespace AllegroToVarisciteConversion
 {
     internal class PolygonManager
     {
+        /*----------------- Variables ------------------*/
+
         /// <summary>
         /// Gets or sets the full path to placement coordinates file.
         /// </summary>
@@ -24,11 +26,12 @@ namespace AllegroToVarisciteConversion
         /// The log.
         /// </value>
         public LogManager log {  get; set; }
-
         /// <summary>
         /// The table
         /// </summary>
         List<string[]> table;
+
+        /*----------------- Class constructor ------------------*/
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PolygonManager"/> class.
@@ -42,14 +45,7 @@ namespace AllegroToVarisciteConversion
             this.table = InitTabel();
         }
 
-        /// <summary>
-        /// Gets the table.
-        /// </summary>
-        /// <returns></returns>
-        public List<string[]> GetTable()
-        {
-            return this.table;
-        }
+        /*----------------- Main functions ------------------*/
 
         /// <summary>
         /// Initializes the tabel.
@@ -133,6 +129,16 @@ namespace AllegroToVarisciteConversion
             return tabel;
         }
 
+        /*----------------- Help functions ------------------*/
+
+        /// <summary>
+        /// Gets the table.
+        /// </summary>
+        /// <returns></returns>
+        public List<string[]> GetTable()
+        {
+            return this.table;
+        }
         /// <summary>
         /// Removes the white spaces.
         /// </summary>
