@@ -25,6 +25,7 @@ namespace AllegroToVarisciteConversion
             infoToolStripMenuItem.CheckState = CheckState.Checked;
             this.log = new LogManager();
         }
+
         /*----------------- Variables ------------------*/
 
         /// <summary>

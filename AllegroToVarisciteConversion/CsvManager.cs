@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace AllegroToVarisciteConversion
@@ -107,6 +108,9 @@ namespace AllegroToVarisciteConversion
                 line += this.table[0][i].ToString() + ",";
             }
             csv.AppendLine(line + "DXF");
+
+            this.table.Sort((x,y) => CompareByFirstElement(x,y));
+
             for (int i = 1; i < this.table.Count; i++)
             {
                 line = "";
@@ -146,6 +150,8 @@ namespace AllegroToVarisciteConversion
             StringBuilder csv = new StringBuilder();
             csv.AppendLine("REFDES,SYM_X,SYM_Y,SYM_ROTATE,SYM_MIRROR,DFX");//Top line
             string line = "";
+
+            this.coords.Sort((x, y) => CompareKeys(x.Key, y.Key));
 
             for (int i = 0; i < this.coords.Count; i++)
             {
@@ -203,6 +209,64 @@ namespace AllegroToVarisciteConversion
                 }
             }
             return line;
+        }
+        /// <summary>
+        /// Compares the by first element.
+        /// </summary>
+        /// <param name="x">The x.</param>
+        /// <param name="y">The y.</param>
+        /// <returns></returns>
+        private int CompareByFirstElement(string[] x, string[] y)
+        {
+            return NaturalCompare(x[0], y[0]);
+        }
+        /// <summary>
+        /// Compares the keys.
+        /// </summary>
+        /// <param name="x">The x.</param>
+        /// <param name="y">The y.</param>
+        /// <returns></returns>
+        private int CompareKeys(string x, string y)
+        {
+            return NaturalCompare(x, y);
+        }
+        /// <summary>
+        /// Naturals the compare.
+        /// </summary>
+        /// <param name="x">The x.</param>
+        /// <param name="y">The y.</param>
+        /// <returns></returns>
+        static int NaturalCompare(string x, string y)
+        {
+            string[] xParts = Regex.Split(x, @"(\d+)");
+            string[] yParts = Regex.Split(y, @"(\d+)");
+
+            for (int i = 0; i < Math.Min(xParts.Length, yParts.Length); i++)
+            {
+                if (i % 2 != 0)
+                {
+                    int xValue = int.Parse(xParts[i]);
+                    int yValue = int.Parse(yParts[i]);
+
+                    int result = xValue.CompareTo(yValue);
+
+                    if (result != 0)
+                    {
+                        return result;
+                    }
+                }
+                else
+                {
+                    int result = xParts[i].CompareTo(yParts[i]);
+
+                    if (result != 0)
+                    {
+                        return result;
+                    }
+                }
+            }
+
+            return xParts.Length.CompareTo(yParts.Length);
         }
     }
 }

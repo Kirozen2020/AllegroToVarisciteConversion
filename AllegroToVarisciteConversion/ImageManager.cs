@@ -13,6 +13,7 @@ namespace AllegroToVarisciteConversion
     internal class ImageManager
     {
         /*----------------- Variables ------------------*/
+
         /// <summary>
         /// Gets or sets the bitmap.
         /// </summary>
