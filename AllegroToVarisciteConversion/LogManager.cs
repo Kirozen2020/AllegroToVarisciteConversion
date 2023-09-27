@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace AllegroToVarisciteConversion
 {
-    internal class LogManager
+    static class LogManager
     {
         /*----------------- Variables ------------------*/
-
+        /*
         /// <summary>
         /// The log text
         /// </summary>
@@ -44,10 +45,15 @@ namespace AllegroToVarisciteConversion
         /// <summary>
         /// The error counter
         /// </summary>
-        public int error_counter {  get; set; }
+        /// 
+        public static int error_counter {  get; set; }
+        */
+        public static int errorCounter = 0;
+        public static StringBuilder currentLogMessage = new StringBuilder();
 
         /*----------------- Class constructor ------------------*/
 
+        /*
         /// <summary>
         /// Initializes a new instance of the <see cref="LogManager"/> class.
         /// </summary>
@@ -57,16 +63,39 @@ namespace AllegroToVarisciteConversion
             ClearPlacementLog();
             this.error_counter = 0;
         }
+        */
 
         /*----------------- Help functions ------------------*/
 
+        public static void AddComent(string line)
+        {
+            currentLogMessage.AppendLine(line);
+        }
+
+        public static void ErrorDetection()
+        {
+            errorCounter++;
+        }
+
+        public static StringBuilder GetString(string fileNameRead)
+        {
+            currentLogMessage.AppendLine($"\nIn {fileNameRead} reading was {errorCounter} error detections.\n");
+            return currentLogMessage;
+        }
+
+        public static void ClearLog()
+        {
+            currentLogMessage = new StringBuilder();
+        }
+
+        /*
         /// <summary>
         /// Adds the comment.
         /// </summary>
         /// <param name="comment">The comment.</param>
         /// <param name="id">The identifier.</param>
         /// <param name="categoty">The categoty.</param>
-        public void AddComment(string comment, List<int> id, string categoty)
+        public static void AddComment(string comment, List<int> id, string categoty)
         {
             for (int i = 0; i < id.Count; i++)
             {
@@ -113,7 +142,7 @@ namespace AllegroToVarisciteConversion
         /// <param name="id">The identifier.</param>
         /// <param name="outputString">The output string.</param>
         /// <returns></returns>
-        public StringBuilder GetFullLogMessage(int id, string outputString)
+        public static StringBuilder GetFullLogMessage(int id, string outputString)
         {
             this.global_log = new StringBuilder();
             switch (id)
@@ -144,7 +173,7 @@ namespace AllegroToVarisciteConversion
         /// <summary>
         /// Clears the placement log.
         /// </summary>
-        public void ClearPlacementLog()
+        public static void ClearPlacementLog()
         {
             this.logTextInfoPlacementReport = new StringBuilder();
             this.logTextDebugPlacementReport = new StringBuilder();
@@ -153,11 +182,12 @@ namespace AllegroToVarisciteConversion
         /// <summary>
         /// Clears the coords log.
         /// </summary>
-        public void ClearCoordsLog()
+        public static void ClearCoordsLog()
         {
             this.logTextInfoPlacementCoordinates = new StringBuilder();
             this.logTextErrorPlacementCoordinates = new StringBuilder();
             this.logTextDebugPlacementCoordinates = new StringBuilder();
         }
+        */
     }
 }
