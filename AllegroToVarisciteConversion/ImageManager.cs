@@ -43,13 +43,6 @@ namespace AllegroToVarisciteConversion
         /// </value>
         public Image image { get; set; }
         /// <summary>
-        /// Gets or sets the log.
-        /// </summary>
-        /// <value>
-        /// The log.
-        /// </value>
-        public LogManager log { get; set; }
-        /// <summary>
         /// Gets or sets all points.
         /// </summary>
         /// <value>
@@ -70,20 +63,17 @@ namespace AllegroToVarisciteConversion
         /// Initializes a new instance of the <see cref="ImageManager"/> class.
         /// </summary>
         /// <param name="coords">The coords.</param>
-        /// <param name="log">The log.</param>
-        public ImageManager(List<MyDictionary> coords, LogManager log)
+        public ImageManager(List<MyDictionary> coords)
         {
             this.coords = coords;
-            this.log = log;
         }
         /// <summary>
         /// Initializes a new instance of the <see cref="ImageManager"/> class.
         /// </summary>
         /// <param name="coords">The coords.</param>
-        /// <param name="log">The log.</param>
         /// <param name="all_points">All points.</param>
         /// <param name="red_points">The red points.</param>
-        public ImageManager(List<MyDictionary> coords, LogManager log, List<List<Point3D>> all_points, List<List<Point3D>> red_points) : this(coords, log)
+        public ImageManager(List<MyDictionary> coords, List<List<Point3D>> all_points, List<List<Point3D>> red_points) : this(coords)
         {
             this.all_points = all_points;
             this.red_points = red_points;
@@ -96,7 +86,7 @@ namespace AllegroToVarisciteConversion
         /// <param name="coords">The coords.</param>
         /// <param name="log">The log.</param>
         /// <param name="all_points">All points.</param>
-        public ImageManager(List<MyDictionary> coords, LogManager log, List<List<Point3D>> all_points) : this(coords, log)
+        public ImageManager(List<MyDictionary> coords, List<List<Point3D>> all_points) : this(coords)
         {
             this.all_points = all_points;
             this.red_points = new List<List<Point3D>>();
@@ -113,7 +103,7 @@ namespace AllegroToVarisciteConversion
         /// <param name="pointLists">The point lists.</param>
         private void DrawPoints(List<List<Point3D>> pointLists, List<List<Point3D>> redElements)
         {
-            log.AddComment("Start drawing scheme\n", new List<int> { 0, 1 }, "placement"); 
+            LogManager.AddCommentLine(LogManager.LogLevel.Informational, "Start drawing scheme");
 
             if (pointLists == null)
                 return;
@@ -265,7 +255,8 @@ namespace AllegroToVarisciteConversion
                 // Assign the updated bitmap to the PictureBox
                 if (!IsBitmapFormatCompatible(bmp))
                 {
-                    log.AddComment("Error!!! Bitmap format is wrong, cannot convert bitmap to image", new List<int> { 0, 1, 2 }, "placement");
+                    LogManager.AddCommentLine(LogManager.LogLevel.Error,
+                        "Error!!! Bitmap format is wrong, cannot convert bitmap to image");
                     MessageBox.Show("BitMap format error", "Attention!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 this.motherBoardImage = bmp;
@@ -361,7 +352,6 @@ namespace AllegroToVarisciteConversion
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message + "\nCannot add text to scheme", "Error Text", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                log.error_counter++;
             }
             return bitmap;
         }

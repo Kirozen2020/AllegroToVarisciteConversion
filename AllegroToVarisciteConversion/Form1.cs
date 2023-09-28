@@ -23,18 +23,11 @@ namespace AllegroToVarisciteConversion
             this.Text = "AllegroToVarisciteConversion " + Revision.revision;
 
             infoToolStripMenuItem.CheckState = CheckState.Checked;
-            this.log = new LogManager();
+            LogManager.Init(LogManager.LogLevel.Informational,LogManager.LogLevel.Error);
         }
 
         /*----------------- Variables ------------------*/
 
-        /// <summary>
-        /// Gets or sets the log.
-        /// </summary>
-        /// <value>
-        /// The log.
-        /// </value>
-        private LogManager log { get; set; }
         /// <summary>
         /// Gets or sets the position manager.
         /// </summary>
@@ -76,10 +69,7 @@ namespace AllegroToVarisciteConversion
         /// The last clicked item
         /// </summary>
         private ToolStripMenuItem lastClickedItem;
-        /// <summary>
-        /// The log mode
-        /// </summary>
-        private string logMode = "info";
+
 
         /*----------------- Click events ------------------*/
 
@@ -110,7 +100,7 @@ namespace AllegroToVarisciteConversion
 
             if (this.placementReportPath != null)
             {
-                this.positionManager = new PositionManager(this.placementReportPath, this.log);
+                this.positionManager = new PositionManager(this.placementReportPath);
             }
 
             if (this.positionManager.GetCoords() != null)
@@ -132,7 +122,7 @@ namespace AllegroToVarisciteConversion
 
                     List<List<Point3D>> lst = ConvertToListOfListOfPoints();
 
-                    ImageManager img = new ImageManager(this.positionManager.GetCoords(), this.log, lst);
+                    ImageManager img = new ImageManager(this.positionManager.GetCoords(), lst);
                     pbSketch.Image = img.image;
                 }
                 FillListBoxWithNames();
@@ -167,7 +157,7 @@ namespace AllegroToVarisciteConversion
 
             if (this.placementCoordinatesPath != null)
             {
-                this.polygonManager = new PolygonManager(this.placementCoordinatesPath, this.log);
+                this.polygonManager = new PolygonManager(this.placementCoordinatesPath);
             }
 
             if (this.polygonManager.GetTable() != null && this.positionManager.GetCoords() != null)
@@ -222,7 +212,7 @@ namespace AllegroToVarisciteConversion
             {
                 if (this.placementCoordinatesPath != null && this.placementReportPath != null)
                 {
-                    this.csvManager = new CsvManager(savePath, ChangeFileExtension(savePath, ".log"), this.polygonManager.GetTable(), this.positionManager.GetCoords(), this.logMode, this.log);
+                    this.csvManager = new CsvManager(savePath, ChangeFileExtension(savePath, ".log"), this.polygonManager.GetTable(), this.positionManager.GetCoords());
                     this.csvManager.SaveFile();
                     MessageBox.Show("File Saved", "Congratulations", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
@@ -231,7 +221,7 @@ namespace AllegroToVarisciteConversion
                     DialogResult ans = MessageBox.Show("You want to create output file using only Placement Report file?", "Saving process", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
                     if (ans == DialogResult.OK)
                     {
-                        this.csvManager = new CsvManager(savePath, ChangeFileExtension(savePath, ".log"), this.positionManager.GetCoords(), this.logMode, this.log);
+                        this.csvManager = new CsvManager(savePath, ChangeFileExtension(savePath, ".log"), this.positionManager.GetCoords());
                         this.csvManager.SaveFileUsingOneFile();
                         MessageBox.Show("File saved", "Congratulations", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
@@ -264,7 +254,7 @@ namespace AllegroToVarisciteConversion
                 lastClickedItem.CheckState = CheckState.Unchecked;
             }
             lastClickedItem = item;
-            logMode = "error";
+            LogManager.Init(LogManager.LogLevel.Error, LogManager.LogLevel.Error);
         }
         /// <summary>
         /// Handles the Click event of the infoToolStripMenuItem control.
@@ -286,7 +276,7 @@ namespace AllegroToVarisciteConversion
                 lastClickedItem.CheckState = CheckState.Unchecked;
             }
             lastClickedItem = item;
-            logMode = "info";
+            LogManager.Init(LogManager.LogLevel.Informational, LogManager.LogLevel.Error);
         }
         /// <summary>
         /// Handles the Click event of the debugToolStripMenuItem control.
@@ -309,7 +299,7 @@ namespace AllegroToVarisciteConversion
                 lastClickedItem.CheckState = CheckState.Unchecked;
             }
             lastClickedItem = item;
-            logMode = "debug";
+            LogManager.Init(LogManager.LogLevel.Debug, LogManager.LogLevel.Error);
         }
         /// <summary>
         /// Handles the Resize event of the Form1 control.
@@ -349,7 +339,7 @@ namespace AllegroToVarisciteConversion
             List<List<Point3D>> lst = ConvertToListOfListOfPoints();
             List<List<Point3D>> redElements = ConvertToListOfListOfPointsRED(checkedCheckBoxNames);
 
-            ImageManager img = new ImageManager(this.positionManager.GetCoords(), this.log, lst, redElements);
+            ImageManager img = new ImageManager(this.positionManager.GetCoords(), lst, redElements);
             pbSketch.Image = img.image;
         }
 

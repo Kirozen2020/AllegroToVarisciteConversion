@@ -4,190 +4,80 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace AllegroToVarisciteConversion
 {
     static class LogManager
     {
-        /*----------------- Variables ------------------*/
-        /*
-        /// <summary>
-        /// The log text
-        /// </summary>
-        private StringBuilder logTextInfoPlacementCoordinates;
-        /// <summary>
-        /// The log text information placement report
-        /// </summary>
-        private StringBuilder logTextInfoPlacementReport;
-        /// <summary>
-        /// The log text debug
-        /// </summary>
-        private StringBuilder logTextDebugPlacementCoordinates;
-        /// <summary>
-        /// The log text debug placement report
-        /// </summary>
-        private StringBuilder logTextDebugPlacementReport;
-        /// <summary>
-        /// The log text error
-        /// </summary>
-        private StringBuilder logTextErrorPlacementCoordinates;
-        /// <summary>
-        /// The log text error placement report
-        /// </summary>
-        private StringBuilder logTextErrorPlacementReport;
-        /// <summary>
-        /// Gets or sets the global log.
-        /// </summary>
-        /// <value>
-        /// The global log.
-        /// </value>
-        private StringBuilder global_log { get; set; }
-        /// <summary>
-        /// The error counter
-        /// </summary>
-        /// 
-        public static int error_counter {  get; set; }
-        */
-        public static int errorCounter = 0;
-        public static StringBuilder currentLogMessage = new StringBuilder();
+        public enum LogLevel : int
+        {
+            Emergency = 0,      //System is unusable
+            Alert = 1,          //Action must be taken immediately
+            Critical = 2,       //Critical conditions
+            Error = 3,          //Error conditions
+            Warning = 4,        //Warning conditions
+            Notice = 5,         //Normal but significant condition
+            Informational = 6,  //Informational messages
+            Debug = 7,          //Debug-level messages
+        }
+
+        private static StringBuilder logBody;
+        private static int currentLogLevel;
+        private static int currentErrorLevel;
+        private static int errorCount;
 
         /*----------------- Class constructor ------------------*/
 
-        /*
         /// <summary>
         /// Initializes a new instance of the <see cref="LogManager"/> class.
         /// </summary>
-        public LogManager()
+        /// <param name="requestedLogLevel">Minimal Log Level to be traced.</param>
+        /// <param name="requestedErrorLevel">Minimal Log Level that counts as error.</param>
+        public static void Init(LogLevel requestedLogLevel, LogLevel requestedErrorLevel)
         {
-            ClearCoordsLog();
-            ClearPlacementLog();
-            this.error_counter = 0;
+            logBody = new StringBuilder();
+            currentLogLevel = (int)requestedLogLevel;
+            currentErrorLevel = (int)requestedErrorLevel;
+            errorCount = 0;
         }
-        */
 
         /*----------------- Help functions ------------------*/
 
-        public static void AddComent(string line)
+        public static void AddComment(LogLevel eventLogLevel, string line)
         {
-            currentLogMessage.AppendLine(line);
+            if ((int)eventLogLevel <= currentLogLevel)
+                logBody.Append(line);
+            if ((int)eventLogLevel <= currentErrorLevel)
+                errorCount++;
+        }
+        public static void AddCommentLine(LogLevel eventLogLevel, string line)
+        {
+            if ((int)eventLogLevel <= currentLogLevel)
+                logBody.AppendLine(line);
+            if ((int)eventLogLevel <= currentErrorLevel)
+                errorCount++;
         }
 
-        public static void ErrorDetection()
+        public static bool SaveLogToFile(string filename)
         {
-            errorCounter++;
-        }
-
-        public static StringBuilder GetString(string fileNameRead)
-        {
-            currentLogMessage.AppendLine($"\nIn {fileNameRead} reading was {errorCounter} error detections.\n");
-            return currentLogMessage;
-        }
-
-        public static void ClearLog()
-        {
-            currentLogMessage = new StringBuilder();
-        }
-
-        /*
-        /// <summary>
-        /// Adds the comment.
-        /// </summary>
-        /// <param name="comment">The comment.</param>
-        /// <param name="id">The identifier.</param>
-        /// <param name="categoty">The categoty.</param>
-        public static void AddComment(string comment, List<int> id, string categoty)
-        {
-            for (int i = 0; i < id.Count; i++)
+            AddCommentLine(LogLevel.Emergency, "Errors count: " + errorCount.ToString());
+            try
             {
-                switch (id[i])
-                {
-                    case 0:
-                        if(categoty == "coords")
-                        {
-                            logTextInfoPlacementCoordinates.AppendLine(comment);
-                        }
-                        else if(categoty == "placement")
-                        {
-                            logTextInfoPlacementReport.AppendLine(comment);
-                        }
-                        break;
-                    case 1:
-                        if (categoty == "coords")
-                        {
-                            logTextDebugPlacementCoordinates.AppendLine(comment);
-                        }
-                        else if (categoty == "placement")
-                        {
-                            logTextDebugPlacementReport.AppendLine(comment);
-                        }
-                        break;
-                    case 2:
-                        if (categoty == "coords")
-                        {
-                            logTextErrorPlacementCoordinates.AppendLine(comment);
-                            this.error_counter++;
-                        }
-                        else if (categoty == "placement")
-                        {
-                            logTextErrorPlacementReport.AppendLine(comment);
-                            this.error_counter++;
-                        }
-                        break;
-                }
+                System.IO.File.WriteAllText(filename, logBody.ToString());
+                AddCommentLine(LogLevel.Emergency, "File saved at: " + filename);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+                return false;
             }
         }
-        /// <summary>
-        /// Gets the full log message.
-        /// </summary>
-        /// <param name="id">The identifier.</param>
-        /// <param name="outputString">The output string.</param>
-        /// <returns></returns>
-        public static StringBuilder GetFullLogMessage(int id, string outputString)
+
+        public static int GetCurrentErrorCount()
         {
-            this.global_log = new StringBuilder();
-            switch (id)
-            {
-                case 0:
-                    this.global_log.Append(this.logTextInfoPlacementCoordinates.ToString());
-                    this.global_log.AppendLine();
-                    this.global_log.Append(this.logTextInfoPlacementReport.ToString());
-                    this.global_log.AppendLine("\nErrors count: " + this.error_counter);
-                    this.global_log.AppendLine("\nFile saved at " + outputString);
-                    break;
-                case 1:
-                    this.global_log.Append(this.logTextDebugPlacementCoordinates.ToString());
-                    this.global_log.AppendLine();
-                    this.global_log.Append(this.logTextDebugPlacementReport.ToString());
-                    this.global_log.AppendLine("\nErrors count: " + this.error_counter);
-                    this.global_log.AppendLine("\nFile saved at " + outputString);
-                    break;
-                case 2:
-                    this.global_log.Append(this.logTextErrorPlacementCoordinates.ToString());
-                    this.global_log.Append(this.logTextErrorPlacementReport.ToString());
-                    this.global_log.AppendLine("\nErrors count: " + this.error_counter);
-                    this.global_log.AppendLine("\nFile saved at " + outputString);
-                    break;
-            }
-            return this.global_log;
+            return errorCount;
         }
-        /// <summary>
-        /// Clears the placement log.
-        /// </summary>
-        public static void ClearPlacementLog()
-        {
-            this.logTextInfoPlacementReport = new StringBuilder();
-            this.logTextDebugPlacementReport = new StringBuilder();
-            this.logTextErrorPlacementReport = new StringBuilder();
-        }
-        /// <summary>
-        /// Clears the coords log.
-        /// </summary>
-        public static void ClearCoordsLog()
-        {
-            this.logTextInfoPlacementCoordinates = new StringBuilder();
-            this.logTextErrorPlacementCoordinates = new StringBuilder();
-            this.logTextDebugPlacementCoordinates = new StringBuilder();
-        }
-        */
     }
 }

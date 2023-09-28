@@ -40,20 +40,6 @@ namespace AllegroToVarisciteConversion
         /// The coords.
         /// </value>
         private List<MyDictionary> coords { get; set; }
-        /// <summary>
-        /// Gets or sets the log mode.
-        /// </summary>
-        /// <value>
-        /// The log mode.
-        /// </value>
-        private string logMode { get; set; }
-        /// <summary>
-        /// Gets or sets the log.
-        /// </summary>
-        /// <value>
-        /// The log.
-        /// </value>
-        private LogManager log {  get; set; }
 
         /*----------------- Class constructor ------------------*/
 
@@ -64,16 +50,13 @@ namespace AllegroToVarisciteConversion
         /// <param name="log_path">The log path.</param>
         /// <param name="table">The table.</param>
         /// <param name="coords">The coords.</param>
-        /// <param name="logMode">The log mode.</param>
         /// <param name="log">The log.</param>
-        public CsvManager(string csv_path, string log_path, List<string[]> table, List<MyDictionary> coords, string logMode, LogManager log)
+        public CsvManager(string csv_path, string log_path, List<string[]> table, List<MyDictionary> coords)
         {
             this.csv_path = csv_path;
             this.log_path = log_path;
             this.table = table;
             this.coords = coords;
-            this.logMode = logMode;
-            this.log = log;
         }
         /// <summary>
         /// Initializes a new instance of the <see cref="CsvManager"/> class.
@@ -81,15 +64,12 @@ namespace AllegroToVarisciteConversion
         /// <param name="csv_path">The CSV path.</param>
         /// <param name="log_path">The log path.</param>
         /// <param name="coords">The coords.</param>
-        /// <param name="logMode">The log mode.</param>
         /// <param name="log">The log.</param>
-        public CsvManager(string csv_path, string log_path, List<MyDictionary> coords, string logMode, LogManager log)
+        public CsvManager(string csv_path, string log_path, List<MyDictionary> coords)
         {
             this.csv_path = csv_path;
             this.log_path = log_path;
             this.coords = coords;
-            this.logMode = logMode;
-            this.log = log;
         }
 
         /*----------------- Main functions ------------------*/
@@ -124,21 +104,7 @@ namespace AllegroToVarisciteConversion
 
             File.AppendAllText(csv_path, csv.ToString());
 
-            switch (logMode)
-            {
-                case "error":
-                    File.WriteAllText(log_path, this.log.GetFullLogMessage(2, log_path).ToString());
-                    break;
-                case "info":
-                    File.WriteAllText(log_path, this.log.GetFullLogMessage(0, log_path).ToString());
-                    break;
-                case "debug":
-                    File.WriteAllText(log_path, this.log.GetFullLogMessage(1, log_path).ToString());
-                    break;
-            }
-            this.log.ClearCoordsLog();
-            this.log.ClearPlacementLog();
-            this.log.error_counter = 0;
+            LogManager.SaveLogToFile(log_path);
         }
         /// <summary>
         /// Saves the file using one file.
@@ -161,22 +127,7 @@ namespace AllegroToVarisciteConversion
             }
 
             File.AppendAllText(csv_path, csv.ToString());//Save file to pc
-
-            switch (logMode)
-            {
-                case "error":
-                    File.WriteAllText(log_path, this.log.GetFullLogMessage(2, log_path).ToString());
-                    break;
-                case "info":
-                    File.WriteAllText(log_path, this.log.GetFullLogMessage(0, log_path).ToString());
-                    break;
-                case "debug":
-                    File.WriteAllText(log_path, this.log.GetFullLogMessage(1, log_path).ToString());
-                    break;
-            }
-            this.log.ClearCoordsLog();
-            this.log.ClearPlacementLog();
-            this.log.error_counter = 0;
+            LogManager.SaveLogToFile(log_path);
         }
 
         /*----------------- Help functions ------------------*/

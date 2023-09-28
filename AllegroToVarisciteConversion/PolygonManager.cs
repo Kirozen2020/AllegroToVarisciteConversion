@@ -20,13 +20,6 @@ namespace AllegroToVarisciteConversion
         /// </value>
         public string full_path_to_placement_coordinates_file {  get; set; }
         /// <summary>
-        /// Gets or sets the log.
-        /// </summary>
-        /// <value>
-        /// The log.
-        /// </value>
-        public LogManager log {  get; set; }
-        /// <summary>
         /// The table
         /// </summary>
         List<string[]> table;
@@ -37,11 +30,9 @@ namespace AllegroToVarisciteConversion
         /// Initializes a new instance of the <see cref="PolygonManager"/> class.
         /// </summary>
         /// <param name="full_path_to_placement_coordinates_file">The full path to placement coordinates file.</param>
-        public PolygonManager(string full_path_to_placement_coordinates_file, LogManager log)
+        public PolygonManager(string full_path_to_placement_coordinates_file)
         {
             this.full_path_to_placement_coordinates_file = full_path_to_placement_coordinates_file;
-            this.log = log;
-
             this.table = InitTabel();
         }
 
@@ -53,9 +44,8 @@ namespace AllegroToVarisciteConversion
         /// <returns></returns>
         private List<string[]> InitTabel()
         {
-            this.log.ClearCoordsLog();
-            this.log.AddComment($"Opening coordinates file {this.full_path_to_placement_coordinates_file}", new List<int> { 0, 1 }, "coords");
-            this.log.AddComment($"\nStart converting coordinates file to List<string[]> format\n", new List<int> { 0, 1 }, "coords");
+            LogManager.AddCommentLine(LogManager.LogLevel.Informational, "Opening coordinates file: "+ full_path_to_placement_coordinates_file);
+            LogManager.AddCommentLine(LogManager.LogLevel.Informational, "Start converting coordinates file to List<string[]> format");
 
             List<string[]> tabel = new List<string[]>();
             int index = 0;
@@ -64,6 +54,10 @@ namespace AllegroToVarisciteConversion
                 while (reader.EndOfStream == false)
                 {
                     var line = reader.ReadLine().Split('!');
+
+                    LogManager.AddComment(LogManager.LogLevel.Informational,
+                        "Reading line " + index + ": {" + ConvertListToString(line, index) + "} ");
+
                     for (int i = 0; i < line.Length; i++)
                     {
                         line[i] = RemoveWhiteSpaces(line[i]);
@@ -77,31 +71,36 @@ namespace AllegroToVarisciteConversion
                             case 1:
                             case 2:
                             case 3:
-                                this.log.AddComment("Reading line " + index + ": {" + ConvertListToString(line, index) + "} Dumping line", new List<int> { 1 }, "coords");
+                                LogManager.AddCommentLine(LogManager.LogLevel.Informational, " Dumping line");
                                 break;
                             case 4:
-                                this.log.AddComment("Reading line " + index + ": {" + ConvertListToString(line, index) + "}", new List<int> { 1 }, "coords");
-                                this.log.AddComment("Getting Refdes is in column 0, X coordinate in column 1, Y coordinate in column 2", new List<int> { 0, 1 }, "coords");
+                                LogManager.AddCommentLine(LogManager.LogLevel.Informational, 
+                                    "Getting Refdes is in column 0, X coordinate in column 1, Y coordinate in column 2");
                                 break;
                             case 5:
-                                this.log.AddComment("Reading line " + index + ": {" + ConvertListToString(line, index) + "} Dumping line", new List<int> { 1 }, "coords");
+                                LogManager.AddCommentLine(LogManager.LogLevel.Informational, " Dumping line");
                                 break;
                         }
                         if (index >= 6)
                         {
-                            this.log.AddComment("Reading line " + index + ": {" + ConvertListToString(line, index) + "}", new List<int> { 1 }, "coords");
                             if (CanConvertToNumeric(line[1]) == false)//error
                             {
-                                this.log.AddComment($"ERROR!!! Cannot parse line {index} Refdes {line[0]} coordinate X has incorrect string value {line[1]} that cannot be parsed", new List<int> { 0, 1, 2 }, "coords");
+                                LogManager.AddCommentLine(LogManager.LogLevel.Error, 
+                                    "ERROR!!! Cannot parse line " + index.ToString() + 
+                                    "Refdes " + line[0] + 
+                                    " coordinate X has incorrect string value {" + line[1] + "}");
                             }
                             else if (CanConvertToNumeric(line[2]) == false)//error
                             {
-                                this.log.AddComment($"ERROR!!! Cannot parse line {index} Refdes {line[0]} coordinate Y has incorrect string value {line[2]} that cannot be parsed", new List<int> { 0, 1, 2 }, "coords");
-
+                                LogManager.AddCommentLine(LogManager.LogLevel.Error,
+                                    "ERROR!!! Cannot parse line " + index.ToString() +
+                                    "Refdes " + line[0] +
+                                    " coordinate Y has incorrect string value {" + line[2] + "}");
                             }
                             else
                             {
-                                this.log.AddComment($"Refdes {line[0]} is located at {line[1]},{line[2]}", new List<int> { 0, 1 }, "coords");
+                                LogManager.AddCommentLine(LogManager.LogLevel.Informational, 
+                                    $"Refdes {line[0]} is located at {line[1]},{line[2]}");
                             }
                         }
                     }
@@ -124,7 +123,6 @@ namespace AllegroToVarisciteConversion
             else
             {
                 MessageBox.Show("The file you opening is invalid or empty\nPlease choose another file", "Attention!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-
             }
             return tabel;
         }
