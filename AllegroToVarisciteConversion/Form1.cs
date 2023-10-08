@@ -234,11 +234,11 @@ namespace AllegroToVarisciteConversion
 
         }
         /// <summary>
-        /// Handles the Click event of the errorToolStripMenuItem control.
+        /// Logs the mode click event.
         /// </summary>
-        /// <param name="sender">The source of the event.</param>
+        /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void errorToolStripMenuItem_Click(object sender, EventArgs e)
+        private void LogModeClickEvent(object sender, EventArgs e)
         {
             ToolStripMenuItem item = (ToolStripMenuItem)sender;
             UncheckAllMenuItems(menuStrip1.Items);
@@ -254,52 +254,34 @@ namespace AllegroToVarisciteConversion
                 lastClickedItem.CheckState = CheckState.Unchecked;
             }
             lastClickedItem = item;
-            LogManager.Init(LogManager.LogLevel.Error, LogManager.LogLevel.Error);
-        }
-        /// <summary>
-        /// Handles the Click event of the infoToolStripMenuItem control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void infoToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            ToolStripMenuItem item = (ToolStripMenuItem)sender;
-            item.Checked = !item.Checked;
 
-            if (item.Checked)
+            switch (item.Text)
             {
-                item.CheckState = CheckState.Checked;
+                case "Emergency":
+                    LogManager.Init(LogManager.LogLevel.Emergency, LogManager.LogLevel.Error);
+                    break;
+                case "Alert":
+                    LogManager.Init(LogManager.LogLevel.Alert, LogManager.LogLevel.Error);
+                    break;
+                case "Critical":
+                    LogManager.Init(LogManager.LogLevel.Critical, LogManager.LogLevel.Error);
+                    break;
+                case "Error":
+                    LogManager.Init(LogManager.LogLevel.Error, LogManager.LogLevel.Error);
+                    break;
+                case "Warning":
+                    LogManager.Init(LogManager.LogLevel.Warning, LogManager.LogLevel.Error);
+                    break;
+                case "Notice":
+                    LogManager.Init(LogManager.LogLevel.Notice, LogManager.LogLevel.Error);
+                    break;
+                case "Informational":
+                    LogManager.Init(LogManager.LogLevel.Informational, LogManager.LogLevel.Error);
+                    break;
+                case "Debug":
+                    LogManager.Init(LogManager.LogLevel.Debug, LogManager.LogLevel.Error);
+                    break;
             }
-            if (lastClickedItem != null && lastClickedItem != item)
-            {
-                lastClickedItem.Checked = false;
-                lastClickedItem.CheckState = CheckState.Unchecked;
-            }
-            lastClickedItem = item;
-            LogManager.Init(LogManager.LogLevel.Informational, LogManager.LogLevel.Error);
-        }
-        /// <summary>
-        /// Handles the Click event of the debugToolStripMenuItem control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void debugToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            ToolStripMenuItem item = (ToolStripMenuItem)sender;
-            UncheckAllMenuItems(menuStrip1.Items);
-            item.Checked = !item.Checked;
-
-            if (item.Checked)
-            {
-                item.CheckState = CheckState.Checked;
-            }
-            if (lastClickedItem != null && lastClickedItem != item)
-            {
-                lastClickedItem.Checked = false;
-                lastClickedItem.CheckState = CheckState.Unchecked;
-            }
-            lastClickedItem = item;
-            LogManager.Init(LogManager.LogLevel.Debug, LogManager.LogLevel.Error);
         }
         /// <summary>
         /// Handles the Resize event of the Form1 control.
@@ -508,7 +490,5 @@ namespace AllegroToVarisciteConversion
                 }
             }
             return false;
-        }
-        
-    }
+        }    }
 }

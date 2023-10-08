@@ -43,6 +43,11 @@
             this.debugToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pbSketch = new System.Windows.Forms.PictureBox();
             this.listBox1 = new System.Windows.Forms.ListBox();
+            this.emergencyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.alertToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.criticalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.warningToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.noticeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbSketch)).BeginInit();
             this.SuspendLayout();
@@ -121,33 +126,38 @@
             // logLevelToolStripMenuItem
             // 
             this.logLevelToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.emergencyToolStripMenuItem,
+            this.alertToolStripMenuItem,
+            this.criticalToolStripMenuItem,
             this.errorToolStripMenuItem,
+            this.warningToolStripMenuItem,
+            this.noticeToolStripMenuItem,
             this.infoToolStripMenuItem,
             this.debugToolStripMenuItem});
             this.logLevelToolStripMenuItem.Name = "logLevelToolStripMenuItem";
-            this.logLevelToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.logLevelToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.logLevelToolStripMenuItem.Text = "Log Level";
             // 
             // errorToolStripMenuItem
             // 
             this.errorToolStripMenuItem.Name = "errorToolStripMenuItem";
-            this.errorToolStripMenuItem.Size = new System.Drawing.Size(109, 22);
+            this.errorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.errorToolStripMenuItem.Text = "Error";
-            this.errorToolStripMenuItem.Click += new System.EventHandler(this.errorToolStripMenuItem_Click);
+            this.errorToolStripMenuItem.Click += new System.EventHandler(this.LogModeClickEvent);
             // 
             // infoToolStripMenuItem
             // 
             this.infoToolStripMenuItem.Name = "infoToolStripMenuItem";
-            this.infoToolStripMenuItem.Size = new System.Drawing.Size(109, 22);
-            this.infoToolStripMenuItem.Text = "Info";
-            this.infoToolStripMenuItem.Click += new System.EventHandler(this.infoToolStripMenuItem_Click);
+            this.infoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.infoToolStripMenuItem.Text = "Informational";
+            this.infoToolStripMenuItem.Click += new System.EventHandler(this.LogModeClickEvent);
             // 
             // debugToolStripMenuItem
             // 
             this.debugToolStripMenuItem.Name = "debugToolStripMenuItem";
-            this.debugToolStripMenuItem.Size = new System.Drawing.Size(109, 22);
+            this.debugToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.debugToolStripMenuItem.Text = "Debug";
-            this.debugToolStripMenuItem.Click += new System.EventHandler(this.debugToolStripMenuItem_Click);
+            this.debugToolStripMenuItem.Click += new System.EventHandler(this.LogModeClickEvent);
             // 
             // pbSketch
             // 
@@ -167,6 +177,41 @@
             this.listBox1.Size = new System.Drawing.Size(162, 459);
             this.listBox1.TabIndex = 5;
             this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
+            // 
+            // emergencyToolStripMenuItem
+            // 
+            this.emergencyToolStripMenuItem.Name = "emergencyToolStripMenuItem";
+            this.emergencyToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.emergencyToolStripMenuItem.Text = "Emergency";
+            this.emergencyToolStripMenuItem.Click += new System.EventHandler(this.LogModeClickEvent);
+            // 
+            // alertToolStripMenuItem
+            // 
+            this.alertToolStripMenuItem.Name = "alertToolStripMenuItem";
+            this.alertToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.alertToolStripMenuItem.Text = "Alert";
+            this.alertToolStripMenuItem.Click += new System.EventHandler(this.LogModeClickEvent);
+            // 
+            // criticalToolStripMenuItem
+            // 
+            this.criticalToolStripMenuItem.Name = "criticalToolStripMenuItem";
+            this.criticalToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.criticalToolStripMenuItem.Text = "Critical";
+            this.criticalToolStripMenuItem.Click += new System.EventHandler(this.LogModeClickEvent);
+            // 
+            // warningToolStripMenuItem
+            // 
+            this.warningToolStripMenuItem.Name = "warningToolStripMenuItem";
+            this.warningToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.warningToolStripMenuItem.Text = "Warning";
+            this.warningToolStripMenuItem.Click += new System.EventHandler(this.LogModeClickEvent);
+            // 
+            // noticeToolStripMenuItem
+            // 
+            this.noticeToolStripMenuItem.Name = "noticeToolStripMenuItem";
+            this.noticeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.noticeToolStripMenuItem.Text = "Notice";
+            this.noticeToolStripMenuItem.Click += new System.EventHandler(this.LogModeClickEvent);
             // 
             // Form1
             // 
@@ -205,6 +250,11 @@
         private System.Windows.Forms.ToolStripMenuItem coordinatesReportFileToolStripMenuItem;
         private System.Windows.Forms.PictureBox pbSketch;
         private System.Windows.Forms.ListBox listBox1;
+        private System.Windows.Forms.ToolStripMenuItem emergencyToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem alertToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem criticalToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem warningToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem noticeToolStripMenuItem;
     }
 }
 
