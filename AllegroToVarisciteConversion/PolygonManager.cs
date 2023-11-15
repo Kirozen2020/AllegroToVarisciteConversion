@@ -104,7 +104,7 @@ namespace AllegroToVarisciteConversion
                             }
                         }
                     }
-                    catch (Exception e)
+                    catch
                     {
                         MessageBox.Show("The file you opening is invalid or empty\nPlease choose another file", "Attention!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         break;

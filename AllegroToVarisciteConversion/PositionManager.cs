@@ -265,7 +265,7 @@ namespace AllegroToVarisciteConversion
                                 $"Error!!! Cannot convert {t1} to number in refdes {temp.Key}");
                         }
 
-
+                        int radius = int.Parse(line[9].Split('.')[0].Trim('(', ')'));
                         if (line[12].Equals("CCW"))
                         {
                             isClockwise = "0";
@@ -280,8 +280,16 @@ namespace AllegroToVarisciteConversion
                             LogManager.AddCommentLine(LogManager.LogLevel.Error,
                                 $"Error!!! Cannot convert {t1} to number in refdes {temp.Key}");
                         }
-
-                        if (x1 != null && y1 != null && x2 != null && y2 != null && centerX != null && centerY != null && isClockwise != null)
+                        if(radius == 0)
+                        {
+                            temp.AddValue(int.Parse(x1), int.Parse(y1));
+                            LogManager.AddCommentLine(LogManager.LogLevel.Debug,
+                                $"Start point of an arc: {x1},{y1} added to refdes {temp.Key}");
+                            temp.AddValue(int.Parse(x2), int.Parse(y2));
+                            LogManager.AddCommentLine(LogManager.LogLevel.Debug,
+                                $"End point of an arc: {x2},{y2} added to refdes {temp.Key}");
+                        }
+                        else if (x1 != null && y1 != null && x2 != null && y2 != null && centerX != null && centerY != null && isClockwise != null)
                         {
                             temp.AddValue(int.Parse(x1), int.Parse(y1));
                             LogManager.AddCommentLine(LogManager.LogLevel.Debug,

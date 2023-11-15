@@ -101,6 +101,8 @@ namespace AllegroToVarisciteConversion
         /// </summary>
         /// <param name="pb">The pb.</param>
         /// <param name="pointLists">The point lists.</param>
+        /// 
+
         private void DrawPoints(List<List<Point3D>> pointLists, List<List<Point3D>> redElements)
         {
             LogManager.AddCommentLine(LogManager.LogLevel.Informational, "Start drawing scheme");
@@ -124,60 +126,7 @@ namespace AllegroToVarisciteConversion
                             // Draw lines connecting the points
                             if (points.Count > 1)
                             {
-                                for (int i = 0; i < points.Count - 1; i++)
-                                {
-                                    if (i + 1 < points.Count - 1)
-                                    {
-
-                                        if (!points[i + 1].IsRegularPoint())
-                                        {
-                                            Point start = points[i].GetRegularPoint();
-                                            Point center = points[i + 1].GetRegularPoint();
-                                            bool isClockwise = false;
-                                            if (!points[i + 1].Z.Equals("0"))
-                                            {
-                                                isClockwise = true;
-                                            }
-                                            Point end = points[i + 2].GetRegularPoint();
-
-                                            int radius = (int)Math.Sqrt(Math.Pow(center.X - start.X, 2) + Math.Pow(center.Y - start.Y, 2));
-                                            int x = center.X - radius;
-                                            int y = center.Y - radius;
-                                            int wigth = 2 * radius;
-                                            int height = 2 * radius;
-
-                                            float startAngle = (float)Math.Atan2(start.Y - center.Y, start.X - center.X) * 180 / (float)Math.PI;
-                                            float endAngle = (float)Math.Atan2(end.Y - center.Y, end.X - center.X) * 180 / (float)Math.PI;
-                                            float sweepAngle = endAngle - startAngle;
-
-                                            if (Math.Abs(sweepAngle) == 0)
-                                            {
-                                                g.DrawEllipse(pen, x, y, wigth, height);
-                                            }
-                                            else
-                                            {
-                                                if (isClockwise && sweepAngle < 0)
-                                                {
-                                                    sweepAngle += 360;
-                                                }
-                                                else if (!isClockwise && sweepAngle > 0)
-                                                {
-                                                    sweepAngle -= 360;
-                                                }
-
-                                                g.DrawArc(pen, x, y, wigth, height, startAngle, sweepAngle);
-                                            }
-                                            g.DrawLine(pen, start.X, start.Y, end.X, end.Y);
-                                        }
-
-                                    }
-                                    else
-                                    {
-                                        g.DrawLine(pen, points[i].GetRegularPoint(), points[i + 1].GetRegularPoint());
-                                    }
-                                    g.DrawLine(pen, points[i].GetRegularPoint(), points[i + 1].GetRegularPoint());
-                                }
-
+                                DrawArcs(g, pen, points);
                                 // Connect the last point with the first point to complete the figure
                                 g.DrawLine(pen, points[points.Count - 1].GetRegularPoint(), points[0].GetRegularPoint());
                             }
@@ -191,60 +140,7 @@ namespace AllegroToVarisciteConversion
                             // Draw lines connecting the points
                             if (points.Count > 1)
                             {
-                                for (int i = 0; i < points.Count - 1; i++)
-                                {
-                                    if (i + 1 < points.Count - 1)
-                                    {
-
-                                        if (!points[i + 1].IsRegularPoint())
-                                        {
-                                            Point start = points[i].GetRegularPoint();
-                                            Point center = points[i + 1].GetRegularPoint();
-                                            bool isClockwise = false;
-                                            if (!points[i + 1].Z.Equals("0"))
-                                            {
-                                                isClockwise = true;
-                                            }
-                                            Point end = points[i + 2].GetRegularPoint();
-
-                                            int radius = (int)Math.Sqrt(Math.Pow(center.X - start.X, 2) + Math.Pow(center.Y - start.Y, 2));
-                                            int x = center.X - radius;
-                                            int y = center.Y - radius;
-                                            int wigth = 2 * radius;
-                                            int height = 2 * radius;
-
-                                            float startAngle = (float)Math.Atan2(start.Y - center.Y, start.X - center.X) * 180 / (float)Math.PI;
-                                            float endAngle = (float)Math.Atan2(end.Y - center.Y, end.X - center.X) * 180 / (float)Math.PI;
-                                            float sweepAngle = endAngle - startAngle;
-
-                                            if (Math.Abs(sweepAngle) == 0)
-                                            {
-                                                g.DrawEllipse(pen, x, y, wigth, height);
-                                            }
-                                            else
-                                            {
-                                                if (isClockwise && sweepAngle < 0)
-                                                {
-                                                    sweepAngle += 360;
-                                                }
-                                                else if (!isClockwise && sweepAngle > 0)
-                                                {
-                                                    sweepAngle -= 360;
-                                                }
-
-                                                g.DrawArc(pen, x, y, wigth, height, startAngle, sweepAngle);
-                                            }
-                                            g.DrawLine(pen, start.X, start.Y, end.X, end.Y);
-                                        }
-
-                                    }
-                                    else
-                                    {
-                                        g.DrawLine(pen, points[i].GetRegularPoint(), points[i + 1].GetRegularPoint());
-                                    }
-                                    g.DrawLine(pen, points[i].GetRegularPoint(), points[i + 1].GetRegularPoint());
-                                }
-
+                                DrawArcs(g, pen, points);
                                 // Connect the last point with the first point to complete the figure
                                 g.DrawLine(pen, points[points.Count - 1].GetRegularPoint(), points[0].GetRegularPoint());
                             }
@@ -271,6 +167,69 @@ namespace AllegroToVarisciteConversion
 
                 this.names.Sort(CustomStringComparer);
 
+            }
+        }
+
+        /// <summary>
+        /// Draws the arcs.
+        /// </summary>
+        /// <param name="g">The g.</param>
+        /// <param name="pen">The pen.</param>
+        /// <param name="points">The points.</param>
+        private void DrawArcs(Graphics g, Pen pen, List<Point3D> points)
+        {
+            for (int i = 0; i < points.Count - 1; i++)
+            {
+                if (i + 1 < points.Count - 1)
+                {
+
+                    if (!points[i + 1].IsRegularPoint())
+                    {
+                        Point start = points[i].GetRegularPoint();
+                        Point center = points[i + 1].GetRegularPoint();
+                        bool isClockwise = false;
+                        if (!points[i + 1].Z.Equals("0"))
+                        {
+                            isClockwise = true;
+                        }
+                        Point end = points[i + 2].GetRegularPoint();
+
+                        int radius = (int)Math.Sqrt(Math.Pow(center.X - start.X, 2) + Math.Pow(center.Y - start.Y, 2));
+                        int x = center.X - radius;
+                        int y = center.Y - radius;
+                        int wigth = 2 * radius;
+                        int height = 2 * radius;
+
+                        float startAngle = (float)Math.Atan2(start.Y - center.Y, start.X - center.X) * 180 / (float)Math.PI;
+                        float endAngle = (float)Math.Atan2(end.Y - center.Y, end.X - center.X) * 180 / (float)Math.PI;
+                        float sweepAngle = endAngle - startAngle;
+
+                        if (Math.Abs(sweepAngle) == 0)
+                        {
+                            g.DrawEllipse(pen, x, y, wigth, height);
+                        }
+                        else
+                        {
+                            if (isClockwise && sweepAngle < 0)
+                            {
+                                sweepAngle += 360;
+                            }
+                            else if (!isClockwise && sweepAngle > 0)
+                            {
+                                sweepAngle -= 360;
+                            }
+
+                            g.DrawArc(pen, x, y, wigth, height, startAngle, sweepAngle);
+                        }
+                        g.DrawLine(pen, start.X, start.Y, end.X, end.Y);
+                    }
+
+                }
+                else
+                {
+                    g.DrawLine(pen, points[i].GetRegularPoint(), points[i + 1].GetRegularPoint());
+                }
+                g.DrawLine(pen, points[i].GetRegularPoint(), points[i + 1].GetRegularPoint());
             }
         }
 
@@ -329,6 +288,7 @@ namespace AllegroToVarisciteConversion
         /// </summary>
         private Bitmap AddText(Bitmap bitmap)
         {
+            /*
             try
             {
                 List<MyDictionary> lst = this.coords;
@@ -346,6 +306,28 @@ namespace AllegroToVarisciteConversion
                         Brush brush = new SolidBrush(Color.Black);
 
                         graphics.DrawString(item.Key, font, brush, x, y);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message + "\nCannot add text to scheme", "Error Text", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }*/
+            try
+            {
+                List<MyDictionary> lst = this.coords;
+                using (Graphics graphics = Graphics.FromImage(bitmap))
+                using (Font font = new Font("Arial", 15))
+                using (Brush brush = new SolidBrush(Color.Black))
+                {
+                    foreach (MyDictionary item in lst)
+                    {
+                        if (item != null && item.Value.Count > 0)
+                        {
+                            int x = (SumPoints(item.Value, 'x') / item.Value.Count) - 20;
+                            int y = (SumPoints(item.Value, 'y') / item.Value.Count) - 5;
+                            graphics.DrawString(item.Key, font, brush, x, y);
+                        }
                     }
                 }
             }
