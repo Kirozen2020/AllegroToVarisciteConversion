@@ -115,19 +115,12 @@ namespace AllegroToVarisciteConversion
                             "Reading line " + index.ToString() + " \"" +
                             string.Join(" ", line) +
                             "\" - Mirror line");
-                        string[] subclass = line[13].Split('_');
-                        if (subclass.Length > 1)
-                        {
-                            if (subclass[2].Equals("TOP"))
-                            {
-                                temp.AddMirror("NO");
-                            }
-                            else if (subclass[2].Equals("BOTTOM"))
-                            {
-                                temp.AddMirror("YES");
-                            }
-                        }
 
+                        string[] subclass = line[13].Split('_');
+                        if (subclass.Length > 2 && (subclass[2].Equals("TOP") || subclass[2].Equals("BOTTOM")))
+                        {
+                            temp.AddMirror(subclass[2].Equals("TOP") ? "NO" : "YES");
+                        }
                     }
                     else if (HasValue(line, "~end-of-file~"))
                     {
@@ -139,38 +132,17 @@ namespace AllegroToVarisciteConversion
                             "Reading line " + index.ToString() + " \"" +
                             string.Join(" ", line) +
                             "\" - Coordinates line");
-                        string t1 = null, t2 = null;
-                        if (CanConvertToNumeric(line[3]))
-                        {
-                            t1 = string.Concat(line[3].Where(Char.IsDigit));
-                            t1 = t1.Substring(0, t1.Length - 2);
-                        }
-                        else
-                        {
-                            string x = line[3];
-                            x = x.Substring(1);
-                            LogManager.AddCommentLine(LogManager.LogLevel.Error,
-                                $"Error!!! Cannot convert {x} to number in refdes {temp.Key}");
-                        }
-                        if (CanConvertToNumeric(line[4]))
-                        {
-                            t2 = string.Concat(line[4].Where(Char.IsDigit));
-                            t2 = t2.Substring(0, t2.Length - 2);
-                        }
-                        else
-                        {
-                            string x = line[4];
-                            x = x.Substring(0, x.Length - 1);
-                            LogManager.AddCommentLine(LogManager.LogLevel.Error,
-                                $"Error!!! Cannot convert {x} to number in refdes {temp.Key}");
-                        }
 
-                        if (t1 != null && t2 != null)
+                        string xCoordinate = ExtractNumericValue(line,3, temp);
+                        string yCoordinate = ExtractNumericValue(line, 4, temp);
+
+                        if (xCoordinate != null && yCoordinate != null)
                         {
-                            temp.AddValue(int.Parse(t1), int.Parse(t2));
+                            temp.AddValue(int.Parse(xCoordinate), int.Parse(yCoordinate));
                             LogManager.AddCommentLine(LogManager.LogLevel.Debug,
-                                $"Coordinates {t1},{t2} added to refdes {temp.Key}");
+                                $"Coordinates {xCoordinate},{yCoordinate} added to refdes {temp.Key}");
                         }
+                        
                     }
                     else if (HasValue(line, "seg:xy"))
                     {
@@ -178,108 +150,27 @@ namespace AllegroToVarisciteConversion
                             "Reading line " + index.ToString() + " \"" +
                             string.Join(" ", line) +
                             "\" - Coordinates line");
-                        string x1 = null, y1 = null, x2 = null, y2 = null, centerX = null, centerY = null, isClockwise = null;
 
-                        if (CanConvertToNumeric(line[4]))
-                        {
-                            x1 = string.Concat(line[4].Where(char.IsDigit));
-                            x1 = x1.Substring(0, x1.Length - 2);
-                        }
-                        else
-                        {
-                            string t1 = line[4];
-                            t1 = t1.Substring(1);
-                            LogManager.AddCommentLine(LogManager.LogLevel.Error,
-                                $"Error!!! Cannot convert {t1} to number in refdes {temp.Key}");
-                        }
-
-                        if (CanConvertToNumeric(line[5]))
-                        {
-                            y1 = string.Concat(line[5].Where(char.IsDigit));
-                            y1 = y1.Substring(0, y1.Length - 2);
-                        }
-                        else
-                        {
-                            string t1 = line[5];
-                            t1 = t1.Substring(0, t1.Length - 1);
-                            LogManager.AddCommentLine(LogManager.LogLevel.Error,
-                                $"Error!!! Cannot convert {t1} to number in refdes {temp.Key}");
-                        }
-
-                        if (CanConvertToNumeric(line[7]))
-                        {
-                            x2 = string.Concat(line[7].Where(char.IsDigit));
-                            x2 = x2.Substring(0, x2.Length - 2);
-                        }
-                        else
-                        {
-                            string t1 = line[7];
-                            t1 = t1.Substring(1);
-                            LogManager.AddCommentLine(LogManager.LogLevel.Error,
-                                $"Error!!! Cannot convert {t1} to number in refdes {temp.Key}");
-                        }
-
-                        if (CanConvertToNumeric(line[8]))
-                        {
-                            y2 = string.Concat(line[8].Where(char.IsDigit));
-                            y2 = y2.Substring(0, y2.Length - 2);
-                        }
-                        else
-                        {
-                            string t1 = line[8];
-                            t1 = t1.Substring(0, t1.Length - 1);
-                            LogManager.AddCommentLine(LogManager.LogLevel.Error,
-                                $"Error!!! Cannot convert {t1} to number in refdes {temp.Key}");
-                        }
+                        string x1 = ConvertLineToCoordinate(line, 4, temp, 2);
+                        string y1 = ConvertLineToCoordinate(line, 5, temp, 2);
+                        string x2 = ConvertLineToCoordinate(line, 7, temp, 2);
+                        string y2 = ConvertLineToCoordinate(line, 8, temp, 2);
 
                         line = reader.ReadLine().Split(' ');
                         index++;
+
                         LogManager.AddCommentLine(LogManager.LogLevel.Debug,
                             "Reading line " + index.ToString() + " \"" +
                             string.Join(" ", line) +
                             "\" - Coordinates line");
 
-                        if (CanConvertToNumeric(line[6]))
-                        {
-                            centerX = string.Concat(line[6].Where(char.IsDigit));
-                            centerX = centerX.Substring(0, centerX.Length - 2);
-                        }
-                        else
-                        {
-                            string t1 = line[6];
-                            t1 = t1.Substring(1);
-                            LogManager.AddCommentLine(LogManager.LogLevel.Error,
-                                $"Error!!! Cannot convert {t1} to number in refdes {temp.Key}");
-                        }
-
-                        if (CanConvertToNumeric(line[7]))
-                        {
-                            centerY = string.Concat(line[7].Where(char.IsDigit));
-                            centerY = centerY.Substring(0, centerY.Length - 2);
-                        }
-                        else
-                        {
-                            string t1 = line[7];
-                            t1 = t1.Substring(0, t1.Length - 1);
-                            LogManager.AddCommentLine(LogManager.LogLevel.Error,
-                                $"Error!!! Cannot convert {t1} to number in refdes {temp.Key}");
-                        }
+                        string centerX = ConvertLineToCoordinate(line, 6, temp, 2);
+                        string centerY = ConvertLineToCoordinate(line, 7, temp, 2);
 
                         int radius = int.Parse(line[9].Split('.')[0].Trim('(', ')'));
-                        if (line[12].Equals("CCW"))
-                        {
-                            isClockwise = "0";
-                        }
-                        else if (line[12].Equals("CW"))
-                        {
-                            isClockwise = "1";
-                        }
-                        else
-                        {
-                            string t1 = line[12];
-                            LogManager.AddCommentLine(LogManager.LogLevel.Error,
-                                $"Error!!! Cannot convert {t1} to number in refdes {temp.Key}");
-                        }
+
+                        string isClockwise = ConvertDirectionToClockwise(line[12], temp.Key);
+                        
                         if(radius == 0)
                         {
                             temp.AddValue(int.Parse(x1), int.Parse(y1));
@@ -331,6 +222,71 @@ namespace AllegroToVarisciteConversion
 
         /*----------------- Help functions ------------------*/
 
+        /// <summary>
+        /// Extracts the numeric value.
+        /// </summary>
+        /// <param name="line">The line.</param>
+        /// <param name="index">The index.</param>
+        /// <param name="temp">The temporary.</param>
+        /// <returns></returns>
+        private string ExtractNumericValue(string[] line, int index, MyDictionary temp)
+        {
+            if (CanConvertToNumeric(line[index]))
+            {
+                string value = string.Concat(line[index].Where(char.IsDigit));
+                return value.Substring(0, value.Length - 2);
+            }
+            else
+            {
+                string errorMessage = $"Error!!! Cannot convert {line[index].Substring(1)} to number in refdes {temp.Key}";
+                LogManager.AddCommentLine(LogManager.LogLevel.Error, errorMessage);
+                return null;
+            }
+        }
+        /// <summary>
+        /// Converts the direction to clockwise.
+        /// </summary>
+        /// <param name="direction">The direction.</param>
+        /// <param name="refDes">The reference DES.</param>
+        /// <returns></returns>
+        private static string ConvertDirectionToClockwise(string direction, string refDes)
+        {
+            switch (direction)
+            {
+                case "CCW":
+                    return "0";
+                case "CW":
+                    return "1";
+                default:
+                    LogManager.AddCommentLine(LogManager.LogLevel.Error,
+                        $"Error!!! Cannot convert {direction} to number in refdes {refDes}");
+                    return null;
+            }
+        }
+        /// <summary>
+        /// Converts the line to coordinate.
+        /// </summary>
+        /// <param name="line">The line.</param>
+        /// <param name="index">The index.</param>
+        /// <param name="temp">The temporary.</param>
+        /// <param name="offset">The offset.</param>
+        /// <returns></returns>
+        private string ConvertLineToCoordinate(string[] line, int index, MyDictionary temp, int offset)
+        {
+            if (CanConvertToNumeric(line[index]))
+            {
+                string coordinate = string.Concat(line[index].Where(char.IsDigit));
+                return coordinate.Substring(0, coordinate.Length - offset);
+            }
+            else
+            {
+                string t = line[index];
+                t = t.Substring(offset == 1 ? 1 : 0);
+                LogManager.AddCommentLine(LogManager.LogLevel.Error,
+                    $"Error!!! Cannot convert {t} to number in refdes {temp.Key}");
+                return null;
+            }
+        }
         /// <summary>
         /// Initializes the names.
         /// </summary>
