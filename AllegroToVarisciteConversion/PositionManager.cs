@@ -171,7 +171,7 @@ namespace AllegroToVarisciteConversion
 
                         string isClockwise = ConvertDirectionToClockwise(line[12], temp.Key);
                         
-                        if(radius == 0)
+                        if(radius == 0 && IfAllNotNull(new List<string>() { x1, y1, x2, y2, centerX, centerY, isClockwise }))
                         {
                             temp.AddValue(int.Parse(x1), int.Parse(y1));
                             LogManager.AddCommentLine(LogManager.LogLevel.Debug,
@@ -180,7 +180,7 @@ namespace AllegroToVarisciteConversion
                             LogManager.AddCommentLine(LogManager.LogLevel.Debug,
                                 $"End point of an arc: {x2},{y2} added to refdes {temp.Key}");
                         }
-                        else if (x1 != null && y1 != null && x2 != null && y2 != null && centerX != null && centerY != null && isClockwise != null)
+                        else if (IfAllNotNull(new List<string>() { x1, y1, x2, y2, centerX, centerY, isClockwise }))
                         {
                             temp.AddValue(int.Parse(x1), int.Parse(y1));
                             LogManager.AddCommentLine(LogManager.LogLevel.Debug,
@@ -222,6 +222,22 @@ namespace AllegroToVarisciteConversion
 
         /*----------------- Help functions ------------------*/
 
+        /// <summary>Ifs all not null.</summary>
+        /// <param name="values">The values.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        private bool IfAllNotNull(List<string> values)
+        {
+            foreach (string value in values)
+            {
+                if(value == null)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
         /// <summary>
         /// Extracts the numeric value.
         /// </summary>

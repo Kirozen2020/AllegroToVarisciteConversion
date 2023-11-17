@@ -101,8 +101,7 @@ namespace AllegroToVarisciteConversion
         /// </summary>
         /// <param name="pb">The pb.</param>
         /// <param name="pointLists">The point lists.</param>
-        /// 
-
+        ///
         private void DrawPoints(List<List<Point3D>> pointLists, List<List<Point3D>> redElements)
         {
             LogManager.AddCommentLine(LogManager.LogLevel.Informational, "Start drawing scheme");
