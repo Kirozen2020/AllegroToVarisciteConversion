@@ -19,40 +19,38 @@ namespace AllegroToVarisciteConversion
         /// <value>
         /// The full path to placement report file.
         /// </value>
-        public string full_path_to_placement_report_file {  get; set; }
+        public string FullPathToPlacementReportFile {  get; set; }
         /// <summary>
         /// Gets or sets the VPC number.
         /// </summary>
         /// <value>
         /// The VPC number.
         /// </value>
-        public int vpc_number { get; set; }
+        public int VpcNumber { get; set; }
         /// <summary>
         /// The coords
         /// </summary>
-        private List<MyDictionary> coords {  get; set; }
+        private List<MyDictionary> Coords {  get; set; }
         /// <summary>
         /// Gets or sets the names.
         /// </summary>
         /// <value>
         /// The names.
         /// </value>
-        private List<string> names { get; set; }
+        private List<string> Names { get; set; }
 
         /*----------------- Class constructor ------------------*/
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PositionManager"/> class.
         /// </summary>
-        /// <param name="full_path_to_placement_report_file">The full path to placement report file.</param>
-        /// <param name="error_counter">The error counter.</param>
-        /// <param name="vpc_number">The VPC number.</param>
-        public PositionManager(string full_path_to_placement_report_file)
+        /// <param name="fullPathToPlacementReportFile">The full path to placement report file.</param>
+        public PositionManager(string fullPathToPlacementReportFile)
         {
-            this.full_path_to_placement_report_file = full_path_to_placement_report_file;
-            this.vpc_number = 0;
-            this.coords = InitElementCoords();
-            this.names = InitNames();
+            this.FullPathToPlacementReportFile = fullPathToPlacementReportFile;
+            this.VpcNumber = 0;
+            this.Coords = InitElementCoords();
+            this.Names = InitNames();
         }
 
         /*----------------- Main functions ------------------*/
@@ -64,22 +62,22 @@ namespace AllegroToVarisciteConversion
         private List<MyDictionary> InitElementCoords()
         {
             LogManager.AddCommentLine(LogManager.LogLevel.Informational,
-                "Opening placement file " + this.full_path_to_placement_report_file);
+                "Opening placement file " + this.FullPathToPlacementReportFile);
 
             LogManager.AddCommentLine(LogManager.LogLevel.Informational,
                 "Start converting placement report file");
 
-            int index = 0;
+            var index = 0;
 
-            List<MyDictionary> coords = new List<MyDictionary>();
+            var coords = new List<MyDictionary>();
 
-            MyDictionary temp = new MyDictionary("First element -> delete");
+            var temp = new MyDictionary("First element -> delete");
 
-            using (var reader = new StreamReader(this.full_path_to_placement_report_file))
+            using (var reader = new StreamReader(this.FullPathToPlacementReportFile))
             {
                 while (reader.EndOfStream == false)
                 {
-                    var line = reader.ReadLine().Split(' ');
+                    var line = reader.ReadLine()?.Split(' ');
                     if (HasValue(line, "RefDes:"))
                     {
                         if (coords.Count != 0)
@@ -94,7 +92,7 @@ namespace AllegroToVarisciteConversion
                             string.Join(" ", line) +
                             "\" - Name line");
                     }
-                    else if (VPCLine(line))
+                    else if (VpcLine(line))
                     {
                         if (coords.Count != 0)
                         {
@@ -102,8 +100,8 @@ namespace AllegroToVarisciteConversion
                                 $"Refdes {temp.Key} is added with {temp.Value.Count} coordinates");
                         }
                         coords.Add(temp);
-                        temp = new MyDictionary("VPC" + this.vpc_number);
-                        this.vpc_number++;
+                        temp = new MyDictionary("VPC" + this.VpcNumber);
+                        this.VpcNumber++;
                         LogManager.AddCommentLine(LogManager.LogLevel.Debug,
                             "Reading line " + index.ToString() + " \"" +
                             string.Join(" ", line) +
@@ -146,59 +144,68 @@ namespace AllegroToVarisciteConversion
                     }
                     else if (HasValue(line, "seg:xy"))
                     {
-                        LogManager.AddCommentLine(LogManager.LogLevel.Debug,
-                            "Reading line " + index.ToString() + " \"" +
-                            string.Join(" ", line) +
-                            "\" - Coordinates line");
-
-                        string x1 = ConvertLineToCoordinate(line, 4, temp, 2);
-                        string y1 = ConvertLineToCoordinate(line, 5, temp, 2);
-                        string x2 = ConvertLineToCoordinate(line, 7, temp, 2);
-                        string y2 = ConvertLineToCoordinate(line, 8, temp, 2);
-
-                        line = reader.ReadLine().Split(' ');
-                        index++;
-
-                        LogManager.AddCommentLine(LogManager.LogLevel.Debug,
-                            "Reading line " + index.ToString() + " \"" +
-                            string.Join(" ", line) +
-                            "\" - Coordinates line");
-
-                        string centerX = ConvertLineToCoordinate(line, 6, temp, 2);
-                        string centerY = ConvertLineToCoordinate(line, 7, temp, 2);
-
-                        int radius = int.Parse(line[9].Split('.')[0].Trim('(', ')'));
-
-                        string isClockwise = ConvertDirectionToClockwise(line[12], temp.Key);
-                        
-                        if(radius == 0 && IfAllNotNull(new List<string>() { x1, y1, x2, y2, centerX, centerY, isClockwise }))
+                        if (line != null)
                         {
-                            temp.AddValue(int.Parse(x1), int.Parse(y1));
                             LogManager.AddCommentLine(LogManager.LogLevel.Debug,
-                                $"Start point of an arc: {x1},{y1} added to refdes {temp.Key}");
-                            temp.AddValue(int.Parse(x2), int.Parse(y2));
-                            LogManager.AddCommentLine(LogManager.LogLevel.Debug,
-                                $"End point of an arc: {x2},{y2} added to refdes {temp.Key}");
-                        }
-                        else if (IfAllNotNull(new List<string>() { x1, y1, x2, y2, centerX, centerY, isClockwise }))
-                        {
-                            temp.AddValue(int.Parse(x1), int.Parse(y1));
-                            LogManager.AddCommentLine(LogManager.LogLevel.Debug,
-                                $"Start point of an arc: {x1},{y1} added to refdes {temp.Key}");
-                            temp.AddValue(int.Parse(centerX), int.Parse(centerY), int.Parse(isClockwise));
-                            LogManager.AddCommentLine(LogManager.LogLevel.Debug,
-                                $"Center point of an arc: {centerX},{centerY} added to refdes {temp.Key}");
-                            temp.AddValue(int.Parse(x2), int.Parse(y2));
-                            LogManager.AddCommentLine(LogManager.LogLevel.Debug,
-                                $"End point of an arc: {x2},{y2} added to refdes {temp.Key}");
+                                "Reading line " + index.ToString() + " \"" +
+                                string.Join(" ", line) +
+                                "\" - Coordinates line");
+
+                            var x1 = ConvertLineToCoordinate(line, 4, temp, 2);
+                            var y1 = ConvertLineToCoordinate(line, 5, temp, 2);
+                            var x2 = ConvertLineToCoordinate(line, 7, temp, 2);
+                            var y2 = ConvertLineToCoordinate(line, 8, temp, 2);
+
+                            line = reader.ReadLine()?.Split(' ');
+                            index++;
+
+                            if (line != null)
+                            {
+                                LogManager.AddCommentLine(LogManager.LogLevel.Debug,
+                                    "Reading line " + index.ToString() + " \"" +
+                                    string.Join(" ", line) +
+                                    "\" - Coordinates line");
+
+                                var centerX = ConvertLineToCoordinate(line, 6, temp, 2);
+                                var centerY = ConvertLineToCoordinate(line, 7, temp, 2);
+
+                                var radius = int.Parse(line[9].Split('.')[0].Trim('(', ')'));
+
+                                var isClockwise = ConvertDirectionToClockwise(line[12], temp.Key);
+
+                                if (radius == 0 && IfAllNotNull(new List<string>()
+                                        { x1, y1, x2, y2, centerX, centerY, isClockwise }))
+                                {
+                                    temp.AddValue(int.Parse(x1), int.Parse(y1));
+                                    LogManager.AddCommentLine(LogManager.LogLevel.Debug,
+                                        $"Start point of an arc: {x1},{y1} added to refdes {temp.Key}");
+                                    temp.AddValue(int.Parse(x2), int.Parse(y2));
+                                    LogManager.AddCommentLine(LogManager.LogLevel.Debug,
+                                        $"End point of an arc: {x2},{y2} added to refdes {temp.Key}");
+                                }
+                                else if (IfAllNotNull(new List<string>()
+                                             { x1, y1, x2, y2, centerX, centerY, isClockwise }))
+                                {
+                                    temp.AddValue(int.Parse(x1), int.Parse(y1));
+                                    LogManager.AddCommentLine(LogManager.LogLevel.Debug,
+                                        $"Start point of an arc: {x1},{y1} added to refdes {temp.Key}");
+                                    temp.AddValue(int.Parse(centerX), int.Parse(centerY), int.Parse(isClockwise));
+                                    LogManager.AddCommentLine(LogManager.LogLevel.Debug,
+                                        $"Center point of an arc: {centerX},{centerY} added to refdes {temp.Key}");
+                                    temp.AddValue(int.Parse(x2), int.Parse(y2));
+                                    LogManager.AddCommentLine(LogManager.LogLevel.Debug,
+                                        $"End point of an arc: {x2},{y2} added to refdes {temp.Key}");
+                                }
+                            }
                         }
                     }
                     else
                     {
-                        LogManager.AddCommentLine(LogManager.LogLevel.Debug,
-                            "Reading line " + index.ToString() + " \"" +
-                            string.Join(" ", line) +
-                            "\" - Dumping line");
+                        if (line != null)
+                            LogManager.AddCommentLine(LogManager.LogLevel.Debug,
+                                "Reading line " + index + " \"" +
+                                string.Join(" ", line) +
+                                "\" - Dumping line");
                     }
 
                     index++;
@@ -210,12 +217,12 @@ namespace AllegroToVarisciteConversion
             }
             else
             {
-                MessageBox.Show("You opened a wrong file or an empty one", "Attention!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(@"You opened a wrong file or an empty one", @"Attention!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
 
-            if (this.vpc_number > 2)
+            if (this.VpcNumber > 2)
             {
-                MessageBox.Show("You have in total more then 1 VPC element", "Attention!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(@"You have in total more then 1 VPC element", @"Attention!", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             return coords;
         }
@@ -227,16 +234,9 @@ namespace AllegroToVarisciteConversion
         /// <returns>
         ///   <br />
         /// </returns>
-        private bool IfAllNotNull(List<string> values)
+        private static bool IfAllNotNull(IEnumerable<string> values)
         {
-            foreach (string value in values)
-            {
-                if(value == null)
-                {
-                    return false;
-                }
-            }
-            return true;
+            return values.All(value => value != null);
         }
         /// <summary>
         /// Extracts the numeric value.
@@ -245,16 +245,16 @@ namespace AllegroToVarisciteConversion
         /// <param name="index">The index.</param>
         /// <param name="temp">The temporary.</param>
         /// <returns></returns>
-        private string ExtractNumericValue(string[] line, int index, MyDictionary temp)
+        private static string ExtractNumericValue(IReadOnlyList<string> line, int index, MyDictionary temp)
         {
             if (CanConvertToNumeric(line[index]))
             {
-                string value = string.Concat(line[index].Where(char.IsDigit));
+                var value = string.Concat(line[index].Where(char.IsDigit));
                 return value.Substring(0, value.Length - 2);
             }
             else
             {
-                string errorMessage = $"Error!!! Cannot convert {line[index].Substring(1)} to number in refdes {temp.Key}";
+                var errorMessage = $"Error!!! Cannot convert {line[index].Substring(1)} to number in refdes {temp.Key}";
                 LogManager.AddCommentLine(LogManager.LogLevel.Error, errorMessage);
                 return null;
             }
@@ -287,16 +287,16 @@ namespace AllegroToVarisciteConversion
         /// <param name="temp">The temporary.</param>
         /// <param name="offset">The offset.</param>
         /// <returns></returns>
-        private string ConvertLineToCoordinate(string[] line, int index, MyDictionary temp, int offset)
+        private static string ConvertLineToCoordinate(IReadOnlyList<string> line, int index, MyDictionary temp, int offset)
         {
             if (CanConvertToNumeric(line[index]))
             {
-                string coordinate = string.Concat(line[index].Where(char.IsDigit));
+                var coordinate = string.Concat(line[index].Where(char.IsDigit));
                 return coordinate.Substring(0, coordinate.Length - offset);
             }
             else
             {
-                string t = line[index];
+                var t = line[index];
                 t = t.Substring(offset == 1 ? 1 : 0);
                 LogManager.AddCommentLine(LogManager.LogLevel.Error,
                     $"Error!!! Cannot convert {t} to number in refdes {temp.Key}");
@@ -309,12 +309,7 @@ namespace AllegroToVarisciteConversion
         /// <returns></returns>
         private List<string> InitNames()
         {
-            List<string> names = new List<string>();
-
-            for (int i = 0; i < this.coords.Count; i++)
-            {
-                names.Add(this.coords[i].Key);
-            }
+            var names = this.Coords.Select(t => t.Key).ToList();
 
             names.Sort(CustomStringComparer);
 
@@ -326,7 +321,7 @@ namespace AllegroToVarisciteConversion
         /// <returns></returns>
         public List<string> GetNames()
         {
-            return this.names;
+            return Names;
         }
         /// <summary>
         /// Gets the coords.
@@ -334,7 +329,7 @@ namespace AllegroToVarisciteConversion
         /// <returns></returns>
         public List<MyDictionary> GetCoords()
         {
-            return this.coords;
+            return Coords;
         }
         /// <summary>
         /// Customs the string comparer.
@@ -342,7 +337,7 @@ namespace AllegroToVarisciteConversion
         /// <param name="x">The x.</param>
         /// <param name="y">The y.</param>
         /// <returns></returns>
-        static int CustomStringComparer(string x, string y)
+        private static int CustomStringComparer(string x, string y)
         {
             IEnumerable<string> xParts = Regex.Split(x, "([0-9]+)");
             IEnumerable<string> yParts = Regex.Split(y, "([0-9]+)");
@@ -351,14 +346,13 @@ namespace AllegroToVarisciteConversion
             {
                 while (xEnum.MoveNext() && yEnum.MoveNext())
                 {
-                    if (xEnum.Current != yEnum.Current)
+                    if (xEnum.Current == yEnum.Current) continue;
+                    if (int.TryParse(xEnum.Current, out var xNum) && int.TryParse(yEnum.Current, out var yNum))
                     {
-                        if (int.TryParse(xEnum.Current, out int xNum) && int.TryParse(yEnum.Current, out int yNum))
-                        {
-                            return xNum.CompareTo(yNum);
-                        }
-                        return xEnum.Current.CompareTo(yEnum.Current);
+                        return xNum.CompareTo(yNum);
                     }
+
+                    if (xEnum.Current != null) return string.Compare(xEnum.Current, yEnum.Current, StringComparison.Ordinal);
                 }
 
                 return xParts.Count().CompareTo(yParts.Count());
@@ -369,21 +363,20 @@ namespace AllegroToVarisciteConversion
         /// </summary>
         public void MoveAllElements()
         {
-            List<MyDictionary> lst = this.coords;
-            int deleyY = FindMaxOrMinXOrY('y', "min") - 10;
-            int deleyX = FindMaxOrMinXOrY('x', "min") - 10;
-            for (int i = 0; i < lst.Count; i++)
+            var lst = this.Coords;
+            var delayY = FindMaxOrMinXOrY('y', "min") - 10;
+            var delayX = FindMaxOrMinXOrY('x', "min") - 10;
+            foreach (var coordination in lst.Select(dict => dict.Value))
             {
-                List<Point3D> coordinations = lst[i].Value;
-                for (int j = 0; j < coordinations.Count; j++)
+                for (var j = 0; j < coordination.Count; j++)
                 {
-                    Point3D point = coordinations[j];
-                    point.Y = (int.Parse(point.Y) - deleyY + 20).ToString();
-                    point.X = (int.Parse(point.X) - deleyX + 50).ToString();
-                    coordinations[j] = point;
+                    var point = coordination[j];
+                    point.Y = (int.Parse(point.Y) - delayY + 20).ToString();
+                    point.X = (int.Parse(point.X) - delayX + 50).ToString();
+                    coordination[j] = point;
                 }
             }
-            this.coords = lst;
+            this.Coords = lst;
         }
         /// <summary>
         /// Flips the image.
@@ -392,30 +385,25 @@ namespace AllegroToVarisciteConversion
         /// <returns></returns>
         public void FlipImage()
         {
-            List<MyDictionary> list = this.coords;
-            List<MyDictionary> result = new List<MyDictionary>();
-            int maxY = FindMaxOrMinXOrY('y', "max") + 30;
+            var list = this.Coords;
+            var result = new List<MyDictionary>();
+            var maxY = FindMaxOrMinXOrY('y', "max") + 30;
 
             foreach (var dict in list)
             {
-                MyDictionary newDict = new MyDictionary(dict.Key);
+                var newDict = new MyDictionary(dict.Key);
                 newDict.AddMirror(dict.Mirror);
 
                 foreach (var point in dict.Value)
                 {
-                    int newY = maxY - int.Parse(point.Y);
-                    if (point.Z != "Empty")
-                    {
-                        newDict.Value.Add(new Point3D(int.Parse(point.X), newY, int.Parse(point.Z)));
-                    }
-                    else
-                    {
-                        newDict.Value.Add(new Point3D(int.Parse(point.X), newY));
-                    }
+                    var newY = maxY - int.Parse(point.Y);
+                    newDict.Value.Add(point.Z != "Empty"
+                        ? new Point3D(int.Parse(point.X), newY, int.Parse(point.Z))
+                        : new Point3D(int.Parse(point.X), newY));
                 }
                 result.Add(newDict);
             }
-            this.coords = result;
+            this.Coords = result;
         }
         /// <summary>
         /// Deletes the unnecessary coords.
@@ -423,68 +411,68 @@ namespace AllegroToVarisciteConversion
         /// <returns></returns>
         public void DeleteUnnecessaryCoords()
         {
-            List<MyDictionary> result = this.coords;
-            List<MyDictionary> temp = this.coords;
-            int count = 0;
+            var result = this.Coords;
+            var temp = this.Coords;
 
-            for (int i = 0; i < result.Count; i++)
+            for (var i = 0; i < result.Count; i++)
             {
-                for (int j = 0; j < result[i].Value.Count - 1; j++)
+                for (var j = 0; j < result[i].Value.Count - 1; j++)
                 {
-                    if (result[i].Value[j].GetRegularPoint().Equals(result[i].Value[j + 1].GetRegularPoint()))
-                    {
-                        temp[i].Value.Remove(result[i].Value[j]);
-                        count++;
-                    }
+                    if (!result[i].Value[j].GetRegularPoint().Equals(result[i].Value[j + 1].GetRegularPoint()))
+                        continue;
+                    temp[i].Value.Remove(result[i].Value[j]);
                 }
             }
 
-            this.coords = temp;
+            this.Coords = temp;
         }
         /// <summary>
         /// Finds the maximum or minimum x or y.
         /// </summary>
-        /// <param name="xory">The xory.</param>
-        /// <param name="maxormin">The maxormin.</param>
+        /// <param name="XorY">The XorY.</param>
+        /// <param name="MaxOrMin">The MaxOrMin.</param>
         /// <returns></returns>
-        private int FindMaxOrMinXOrY(char xory, string maxormin)
+        private int FindMaxOrMinXOrY(char XorY, string MaxOrMin)
         {
-            List<MyDictionary> lst = this.coords;
-            int num = 0;
-            if (maxormin == "max")
+            var lst = this.Coords;
+            var num = 0;
+            switch (MaxOrMin)
             {
-                num = int.MinValue;
-                for (int i = 0; i < lst.Count; i++)
+                case "max":
                 {
-                    for (int j = 0; j < lst[i].Value.Count; j++)
+                    num = int.MinValue;
+                    foreach (var point in lst.SelectMany(myDict => myDict.Value))
                     {
-                        if (xory == 'x')
+                        switch (XorY)
                         {
-                            num = Math.Max(num, int.Parse(lst[i].Value[j].X));
-                        }
-                        else if (xory == 'y')
-                        {
-                            num = Math.Max(num, int.Parse(lst[i].Value[j].Y));
+                            case 'x':
+                                num = Math.Max(num, int.Parse(point.X));
+                                break;
+                            case 'y':
+                                num = Math.Max(num, int.Parse(point.Y));
+                                break;
                         }
                     }
+
+                    break;
                 }
-            }
-            else if (maxormin == "min")
-            {
-                num = int.MaxValue;
-                for (int i = 0; i < lst.Count; i++)
+                case "min":
                 {
-                    for (int j = 0; j < lst[i].Value.Count; j++)
+                    num = int.MaxValue;
+                    foreach (var point in lst.SelectMany(myDict => myDict.Value))
                     {
-                        if (xory == 'x')
+                        switch (XorY)
                         {
-                            num = Math.Min(num, int.Parse(lst[i].Value[j].X));
-                        }
-                        else if (xory == 'y')
-                        {
-                            num = Math.Min(num, int.Parse(lst[i].Value[j].Y));
+                            case 'x':
+                                num = Math.Min(num, int.Parse(point.X));
+                                break;
+                            case 'y':
+                                num = Math.Min(num, int.Parse(point.Y));
+                                break;
                         }
                     }
+
+                    break;
                 }
             }
             return num;
@@ -494,9 +482,9 @@ namespace AllegroToVarisciteConversion
         /// </summary>
         /// <param name="line">The line.</param>
         /// <returns></returns>
-        private bool VPCLine(string[] line)
+        private static bool VpcLine(IReadOnlyList<string> line)
         {
-            for (int i = 0; i < line.Length - 1; i++)
+            for (var i = 0; i < line.Count - 1; i++)
             {
                 if (line[i].Equals("BOARD") && line[i + 1].Equals("GEOMETRY"))
                 {
@@ -515,14 +503,7 @@ namespace AllegroToVarisciteConversion
         /// </returns>
         public static bool HasValue(string[] line, string value)
         {
-            for (int i = 0; i < line.Length; i++)
-            {
-                if (line[i].Equals(value))
-                {
-                    return true;
-                }
-            }
-            return false;
+            return line.Any(t => t.Equals(value));
         }
         /// <summary>
         /// Determines whether this instance [can convert to numeric] the specified input.
@@ -531,19 +512,9 @@ namespace AllegroToVarisciteConversion
         /// <returns>
         ///   <c>true</c> if this instance [can convert to numeric] the specified input; otherwise, <c>false</c>.
         /// </returns>
-        private bool CanConvertToNumeric(string input)
+        private static bool CanConvertToNumeric(string input)
         {
-            foreach (char c in input)
-            {
-                if (!char.IsDigit(c))
-                {
-                    if (c != '.' && c != '(' && c != ')')
-                    {
-                        return false;
-                    }
-                }
-            }
-            return true;
+            return input.Where(c => !char.IsDigit(c)).All(c => c == '.' || c == '(' || c == ')');
         }
     }
 }

@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace AllegroToVarisciteConversion
 {
@@ -18,58 +17,56 @@ namespace AllegroToVarisciteConversion
         /// <value>
         /// The CSV path.
         /// </value>
-        private string csv_path {  get; set; }
+        private string CsvPath {  get; }
         /// <summary>
         /// Gets or sets the log path.
         /// </summary>
         /// <value>
         /// The log path.
         /// </value>
-        private string log_path { get; set; }
+        private string LogPath { get; }
         /// <summary>
         /// Gets or sets the table.
         /// </summary>
         /// <value>
         /// The table.
         /// </value>
-        private List<string[]> table {  get; set; }
+        private List<string[]> Table {  get; }
         /// <summary>
         /// Gets or sets the coords.
         /// </summary>
         /// <value>
         /// The coords.
         /// </value>
-        private List<MyDictionary> coords { get; set; }
+        private List<MyDictionary> Coords { get; }
 
         /*----------------- Class constructor ------------------*/
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CsvManager"/> class.
         /// </summary>
-        /// <param name="csv_path">The CSV path.</param>
-        /// <param name="log_path">The log path.</param>
+        /// <param name="csvPath">The CSV path.</param>
+        /// <param name="logPath">The log path.</param>
         /// <param name="table">The table.</param>
         /// <param name="coords">The coords.</param>
-        /// <param name="log">The log.</param>
-        public CsvManager(string csv_path, string log_path, List<string[]> table, List<MyDictionary> coords)
+        public CsvManager(string csvPath, string logPath, List<string[]> table, List<MyDictionary> coords)
         {
-            this.csv_path = csv_path;
-            this.log_path = log_path;
-            this.table = table;
-            this.coords = coords;
+            this.CsvPath = csvPath;
+            this.LogPath = logPath;
+            this.Table = table;
+            this.Coords = coords;
         }
         /// <summary>
         /// Initializes a new instance of the <see cref="CsvManager"/> class.
         /// </summary>
-        /// <param name="csv_path">The CSV path.</param>
-        /// <param name="log_path">The log path.</param>
+        /// <param name="csvPath">The CSV path.</param>
+        /// <param name="logPath">The log path.</param>
         /// <param name="coords">The coords.</param>
-        /// <param name="log">The log.</param>
-        public CsvManager(string csv_path, string log_path, List<MyDictionary> coords)
+        public CsvManager(string csvPath, string logPath, List<MyDictionary> coords)
         {
-            this.csv_path = csv_path;
-            this.log_path = log_path;
-            this.coords = coords;
+            this.CsvPath = csvPath;
+            this.LogPath = logPath;
+            this.Coords = coords;
         }
 
         /*----------------- Main functions ------------------*/
@@ -77,57 +74,50 @@ namespace AllegroToVarisciteConversion
         /// <summary>
         /// Saves the file.
         /// </summary>
-        /// <param name="outputString">The output string.</param>
-        /// <param name="outputLogPath">The output log Path.</param>
         public void SaveFile()
         {
-            StringBuilder csv = new StringBuilder();
-            string line = "";
-            for (int i = 0; i < this.table[0].Length; i++)
+            var csv = new StringBuilder();
+            var line = "";
+            for (var i = 0; i < this.Table[0].Length; i++)
             {
-                line += this.table[0][i].ToString() + ",";
+                line += this.Table[0][i] + ",";
             }
             csv.AppendLine(line + "DXF");
 
-            this.table.Sort((x,y) => CompareByFirstElement(x,y));
+            this.Table.Sort(CompareByFirstElement);
 
-            for (int i = 1; i < this.table.Count; i++)
+            for (var i = 1; i < this.Table.Count; i++)
             {
                 line = "";
-                for (int j = 0; j < this.table[i].Length; j++)
+                for (var j = 0; j < this.Table[i].Length; j++)
                 {
-                    line += this.table[i][j].ToString() + ",";
+                    line += this.Table[i][j] + ",";
                 }
-                line += GetCoords(this.table[i][0]);
+                line += GetCoords(this.Table[i][0]);
                 csv.AppendLine(line);
             }
 
-            File.AppendAllText(csv_path, csv.ToString());
+            File.AppendAllText(CsvPath, csv.ToString());
 
-            LogManager.SaveLogToFile(log_path);
+            LogManager.SaveLogToFile(LogPath);
         }
         /// <summary>
         /// Saves the file using one file.
         /// </summary>
-        /// <param name="outputString">The output string.</param>
-        /// <param name="outputLogPath">The output log path.</param>
         public void SaveFileUsingOneFile()
         {
-            StringBuilder csv = new StringBuilder();
+            var csv = new StringBuilder();
             csv.AppendLine("REFDES,SYM_X,SYM_Y,SYM_ROTATE,SYM_MIRROR,DFX");//Top line
-            string line = "";
 
-            this.coords.Sort((x, y) => CompareKeys(x.Key, y.Key));
+            this.Coords.Sort((x, y) => CompareKeys(x.Key, y.Key));
 
-            for (int i = 0; i < this.coords.Count; i++)
+            foreach (var line in from value in this.Coords let line = $"{value.Key},0,0,0,{value.Mirror}," select line + GetCoords(value.Key))
             {
-                line = $"{this.coords[i].Key},0,0,0,{this.coords[i].Mirror},";
-                line += GetCoords(this.coords[i].Key);
                 csv.AppendLine(line);
             }
 
-            File.AppendAllText(csv_path, csv.ToString());//Save file to pc
-            LogManager.SaveLogToFile(log_path);
+            File.AppendAllText(CsvPath, csv.ToString());//Save file to pc
+            LogManager.SaveLogToFile(LogPath);
         }
 
         /*----------------- Help functions ------------------*/
@@ -139,23 +129,21 @@ namespace AllegroToVarisciteConversion
         /// <returns></returns>
         private string GetCoords(string name)
         {
-            string line = "";
-            for (int i = 0; i < this.coords.Count; i++)
+            var line = "";
+            for (var i = 0; i < this.Coords.Count; i++)
             {
-                if (coords[i].Key.Equals(name))
+                if (!Coords[i].Key.Equals(name)) continue;
+                var x = Coords[i];
+                line += ":";
+                foreach (var point in x.Value)
                 {
-                    MyDictionary x = coords[i];
-                    line += ":";
-                    for (int j = 0; j < x.Value.Count; j++)
+                    if (!point.IsRegularPoint())
                     {
-                        if (!x.Value[j].IsRegularPoint())
-                        {
-                            line += $"[{x.Value[j].X};{x.Value[j].Y};{x.Value[j].Z}]";
-                        }
-                        else
-                        {
-                            line += $"[{x.Value[j].X};{x.Value[j].Y}]";
-                        }
+                        line += $"[{point.X};{point.Y};{point.Z}]";
+                    }
+                    else
+                    {
+                        line += $"[{point.X};{point.Y}]";
                     }
                 }
             }
@@ -167,7 +155,7 @@ namespace AllegroToVarisciteConversion
         /// <param name="x">The x.</param>
         /// <param name="y">The y.</param>
         /// <returns></returns>
-        private int CompareByFirstElement(string[] x, string[] y)
+        private static int CompareByFirstElement(IReadOnlyList<string> x, IReadOnlyList<string> y)
         {
             return NaturalCompare(x[0], y[0]);
         }
@@ -177,7 +165,7 @@ namespace AllegroToVarisciteConversion
         /// <param name="x">The x.</param>
         /// <param name="y">The y.</param>
         /// <returns></returns>
-        private int CompareKeys(string x, string y)
+        private static int CompareKeys(string x, string y)
         {
             return NaturalCompare(x, y);
         }
@@ -187,19 +175,19 @@ namespace AllegroToVarisciteConversion
         /// <param name="x">The x.</param>
         /// <param name="y">The y.</param>
         /// <returns></returns>
-        static int NaturalCompare(string x, string y)
+        private static int NaturalCompare(string x, string y)
         {
-            string[] xParts = Regex.Split(x, @"(\d+)");
-            string[] yParts = Regex.Split(y, @"(\d+)");
+            var xParts = Regex.Split(x, @"(\d+)");
+            var yParts = Regex.Split(y, @"(\d+)");
 
-            for (int i = 0; i < Math.Min(xParts.Length, yParts.Length); i++)
+            for (var i = 0; i < Math.Min(xParts.Length, yParts.Length); i++)
             {
                 if (i % 2 != 0)
                 {
-                    int xValue = int.Parse(xParts[i]);
-                    int yValue = int.Parse(yParts[i]);
+                    var xValue = int.Parse(xParts[i]);
+                    var yValue = int.Parse(yParts[i]);
 
-                    int result = xValue.CompareTo(yValue);
+                    var result = xValue.CompareTo(yValue);
 
                     if (result != 0)
                     {
@@ -208,7 +196,7 @@ namespace AllegroToVarisciteConversion
                 }
                 else
                 {
-                    int result = xParts[i].CompareTo(yParts[i]);
+                    var result = string.Compare(xParts[i], yParts[i], StringComparison.Ordinal);
 
                     if (result != 0)
                     {

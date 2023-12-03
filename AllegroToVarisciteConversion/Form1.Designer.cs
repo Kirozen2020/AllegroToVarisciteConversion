@@ -38,16 +38,16 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.logLevelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.emergencyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.alertToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.criticalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.errorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.warningToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.noticeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.infoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.debugToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pbSketch = new System.Windows.Forms.PictureBox();
             this.listBox1 = new System.Windows.Forms.ListBox();
-            this.emergencyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.alertToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.criticalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.warningToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.noticeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbSketch)).BeginInit();
             this.SuspendLayout();
@@ -84,7 +84,7 @@
             this.placementReportFileToolStripMenuItem,
             this.coordinatesReportFileToolStripMenuItem});
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.openToolStripMenuItem.Text = "Open";
             // 
             // placementReportFileToolStripMenuItem
@@ -92,28 +92,28 @@
             this.placementReportFileToolStripMenuItem.Name = "placementReportFileToolStripMenuItem";
             this.placementReportFileToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
             this.placementReportFileToolStripMenuItem.Text = "Placement Report File";
-            this.placementReportFileToolStripMenuItem.Click += new System.EventHandler(this.placementReportFileToolStripMenuItem_Click);
+            this.placementReportFileToolStripMenuItem.Click += new System.EventHandler(this.PlacementReportFileToolStripMenuItem_Click);
             // 
             // coordinatesReportFileToolStripMenuItem
             // 
             this.coordinatesReportFileToolStripMenuItem.Name = "coordinatesReportFileToolStripMenuItem";
             this.coordinatesReportFileToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
             this.coordinatesReportFileToolStripMenuItem.Text = "Coordinates Report File";
-            this.coordinatesReportFileToolStripMenuItem.Click += new System.EventHandler(this.coordinatesReportFileToolStripMenuItem_Click);
+            this.coordinatesReportFileToolStripMenuItem.Click += new System.EventHandler(this.CoordinatesReportFileToolStripMenuItem_Click);
             // 
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.saveAsToolStripMenuItem.Text = "Save As";
-            this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
+            this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.SaveAsToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.exitToolStripMenuItem.Text = "Exit";
-            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.ExitToolStripMenuItem_Click);
             // 
             // optionToolStripMenuItem
             // 
@@ -135,27 +135,62 @@
             this.infoToolStripMenuItem,
             this.debugToolStripMenuItem});
             this.logLevelToolStripMenuItem.Name = "logLevelToolStripMenuItem";
-            this.logLevelToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.logLevelToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.logLevelToolStripMenuItem.Text = "Log Level";
+            // 
+            // emergencyToolStripMenuItem
+            // 
+            this.emergencyToolStripMenuItem.Name = "emergencyToolStripMenuItem";
+            this.emergencyToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
+            this.emergencyToolStripMenuItem.Text = "Emergency";
+            this.emergencyToolStripMenuItem.Click += new System.EventHandler(this.LogModeClickEvent);
+            // 
+            // alertToolStripMenuItem
+            // 
+            this.alertToolStripMenuItem.Name = "alertToolStripMenuItem";
+            this.alertToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
+            this.alertToolStripMenuItem.Text = "Alert";
+            this.alertToolStripMenuItem.Click += new System.EventHandler(this.LogModeClickEvent);
+            // 
+            // criticalToolStripMenuItem
+            // 
+            this.criticalToolStripMenuItem.Name = "criticalToolStripMenuItem";
+            this.criticalToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
+            this.criticalToolStripMenuItem.Text = "Critical";
+            this.criticalToolStripMenuItem.Click += new System.EventHandler(this.LogModeClickEvent);
             // 
             // errorToolStripMenuItem
             // 
             this.errorToolStripMenuItem.Name = "errorToolStripMenuItem";
-            this.errorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.errorToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.errorToolStripMenuItem.Text = "Error";
             this.errorToolStripMenuItem.Click += new System.EventHandler(this.LogModeClickEvent);
+            // 
+            // warningToolStripMenuItem
+            // 
+            this.warningToolStripMenuItem.Name = "warningToolStripMenuItem";
+            this.warningToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
+            this.warningToolStripMenuItem.Text = "Warning";
+            this.warningToolStripMenuItem.Click += new System.EventHandler(this.LogModeClickEvent);
+            // 
+            // noticeToolStripMenuItem
+            // 
+            this.noticeToolStripMenuItem.Name = "noticeToolStripMenuItem";
+            this.noticeToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
+            this.noticeToolStripMenuItem.Text = "Notice";
+            this.noticeToolStripMenuItem.Click += new System.EventHandler(this.LogModeClickEvent);
             // 
             // infoToolStripMenuItem
             // 
             this.infoToolStripMenuItem.Name = "infoToolStripMenuItem";
-            this.infoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.infoToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.infoToolStripMenuItem.Text = "Informational";
             this.infoToolStripMenuItem.Click += new System.EventHandler(this.LogModeClickEvent);
             // 
             // debugToolStripMenuItem
             // 
             this.debugToolStripMenuItem.Name = "debugToolStripMenuItem";
-            this.debugToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.debugToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.debugToolStripMenuItem.Text = "Debug";
             this.debugToolStripMenuItem.Click += new System.EventHandler(this.LogModeClickEvent);
             // 
@@ -176,42 +211,7 @@
             this.listBox1.Name = "listBox1";
             this.listBox1.Size = new System.Drawing.Size(162, 459);
             this.listBox1.TabIndex = 5;
-            this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
-            // 
-            // emergencyToolStripMenuItem
-            // 
-            this.emergencyToolStripMenuItem.Name = "emergencyToolStripMenuItem";
-            this.emergencyToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.emergencyToolStripMenuItem.Text = "Emergency";
-            this.emergencyToolStripMenuItem.Click += new System.EventHandler(this.LogModeClickEvent);
-            // 
-            // alertToolStripMenuItem
-            // 
-            this.alertToolStripMenuItem.Name = "alertToolStripMenuItem";
-            this.alertToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.alertToolStripMenuItem.Text = "Alert";
-            this.alertToolStripMenuItem.Click += new System.EventHandler(this.LogModeClickEvent);
-            // 
-            // criticalToolStripMenuItem
-            // 
-            this.criticalToolStripMenuItem.Name = "criticalToolStripMenuItem";
-            this.criticalToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.criticalToolStripMenuItem.Text = "Critical";
-            this.criticalToolStripMenuItem.Click += new System.EventHandler(this.LogModeClickEvent);
-            // 
-            // warningToolStripMenuItem
-            // 
-            this.warningToolStripMenuItem.Name = "warningToolStripMenuItem";
-            this.warningToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.warningToolStripMenuItem.Text = "Warning";
-            this.warningToolStripMenuItem.Click += new System.EventHandler(this.LogModeClickEvent);
-            // 
-            // noticeToolStripMenuItem
-            // 
-            this.noticeToolStripMenuItem.Name = "noticeToolStripMenuItem";
-            this.noticeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.noticeToolStripMenuItem.Text = "Notice";
-            this.noticeToolStripMenuItem.Click += new System.EventHandler(this.LogModeClickEvent);
+            this.listBox1.SelectedIndexChanged += new System.EventHandler(this.ListBox1_SelectedIndexChanged);
             // 
             // Form1
             // 

@@ -1,12 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace AllegroToVarisciteConversion
@@ -20,10 +15,18 @@ namespace AllegroToVarisciteConversion
         {
             InitializeComponent();
 
-            this.Text = "AllegroToVarisciteConversion " + Revision.revision;
+            this.Text = @"AllegroToVarisciteConversion " + Revision.revision;
 
             infoToolStripMenuItem.CheckState = CheckState.Checked;
             LogManager.Init(LogManager.LogLevel.Informational,LogManager.LogLevel.Error);
+        }
+        /// <summary>
+        /// Gets or sets the text associated with this control.
+        /// </summary>
+        public sealed override string Text
+        {
+            get => base.Text;
+            set => base.Text = value;
         }
 
         /*----------------- Variables ------------------*/
@@ -34,41 +37,37 @@ namespace AllegroToVarisciteConversion
         /// <value>
         /// The position manager.
         /// </value>
-        private PositionManager positionManager { get; set; }
+        private PositionManager PositionManager { get; set; }
         /// <summary>
         /// Gets or sets the polygon manager.
         /// </summary>
         /// <value>
         /// The polygon manager.
         /// </value>
-        private PolygonManager polygonManager { get; set; }
+        private PolygonManager PolygonManager { get; set; }
         /// <summary>
         /// Gets or sets the CSV manager.
         /// </summary>
         /// <value>
         /// The CSV manager.
         /// </value>
-        private CsvManager csvManager { get; set; }
+        private CsvManager CsvManager { get; set; }
         /// <summary>
         /// The file Path
         /// </summary>
-        public string filePath = null;
+        public string FilePath;
         /// <summary>
         /// The full Path place
         /// </summary>
-        public string placementReportPath;
+        public string PlacementReportPath;
         /// <summary>
         /// The full Path coords
         /// </summary>
-        public string placementCoordinatesPath;
-        /// <summary>
-        /// The scheme drawing Path
-        /// </summary>
-        public string schemeDrawingPath;
+        public string PlacementCoordinatesPath;
         /// <summary>
         /// The last clicked item
         /// </summary>
-        private ToolStripMenuItem lastClickedItem;
+        private ToolStripMenuItem _lastClickedItem;
 
 
         /*----------------- Click events ------------------*/
@@ -78,55 +77,43 @@ namespace AllegroToVarisciteConversion
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void placementReportFileToolStripMenuItem_Click(object sender, EventArgs e)
+        private void PlacementReportFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Text File (*.txt)|*.txt|All Files (*.*)|*.*";
-            openFileDialog.Title = "Open Placement Report File...";
-            if (this.filePath != null)
-            {
-                openFileDialog.InitialDirectory = this.filePath;
-            }
-            else
-            {
-                openFileDialog.InitialDirectory = @"C:\";
-            }
+            var openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = @"Text File (*.txt)|*.txt|All Files (*.*)|*.*";
+            openFileDialog.Title = @"Open Placement Report File...";
+            openFileDialog.InitialDirectory = this.FilePath ?? @"C:\";
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                this.placementReportPath = openFileDialog.FileName;
-                this.filePath = GetLastFilePath(openFileDialog.FileName);
+                this.PlacementReportPath = openFileDialog.FileName;
+                this.FilePath = GetLastFilePath(openFileDialog.FileName);
             }
 
-            if (this.placementReportPath != null)
+            if (this.PlacementReportPath != null)
             {
-                this.positionManager = new PositionManager(this.placementReportPath);
+                this.PositionManager = new PositionManager(this.PlacementReportPath);
             }
 
-            if (this.positionManager.GetCoords() != null)
+            if (this.PositionManager.GetCoords() == null) return;
+            if (this.PositionManager.GetCoords().Count > 0)
             {
-                if (this.positionManager.GetCoords().Count > 0)
+                if (this.PolygonManager?.GetTable() != null)
                 {
-                    if (this.polygonManager != null)
-                    {
-                        if (this.polygonManager.GetTable() != null)
-                        {
-                            MessageBox.Show(GetEmptyRefDeses(), "Empty RefDeses", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        }
-                    }
-                    this.positionManager.MoveAllElements();
-
-                    this.positionManager.DeleteUnnecessaryCoords();
-
-                    this.positionManager.FlipImage();
-
-                    List<List<Point3D>> lst = ConvertToListOfListOfPoints();
-
-                    ImageManager img = new ImageManager(this.positionManager.GetCoords(), lst);
-                    pbSketch.Image = img.image;
+                    MessageBox.Show(GetEmptyRefDes(), @"Empty RefDes's", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
-                FillListBoxWithNames();
+                this.PositionManager.MoveAllElements();
+
+                this.PositionManager.DeleteUnnecessaryCoords();
+
+                this.PositionManager.FlipImage();
+
+                var lst = ConvertToListOfListOfPoints();
+
+                var img = new ImageManager(this.PositionManager.GetCoords(), lst);
+                pbSketch.Image = img.Image;
             }
+            FillListBoxWithNames();
 
         }
         /// <summary>
@@ -134,38 +121,28 @@ namespace AllegroToVarisciteConversion
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void coordinatesReportFileToolStripMenuItem_Click(object sender, EventArgs e)
+        private void CoordinatesReportFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Text File (*.txt)|*.txt|All Files (*.*)|*.*";
-            openFileDialog.Title = "Open Placement Coordinates File...";
-            if (this.filePath != null)
-            {
-                openFileDialog.InitialDirectory = this.filePath;
-            }
-            else
-            {
-
-                openFileDialog.InitialDirectory = @"C:\";
-            }
+            var openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = @"Text File (*.txt)|*.txt|All Files (*.*)|*.*";
+            openFileDialog.Title = @"Open Placement Coordinates File...";
+            openFileDialog.InitialDirectory = this.FilePath ?? @"C:\";
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                this.placementCoordinatesPath = openFileDialog.FileName;
-                this.filePath = GetLastFilePath(openFileDialog.FileName);
+                this.PlacementCoordinatesPath = openFileDialog.FileName;
+                this.FilePath = GetLastFilePath(openFileDialog.FileName);
             }
 
-            if (this.placementCoordinatesPath != null)
+            if (this.PlacementCoordinatesPath != null)
             {
-                this.polygonManager = new PolygonManager(this.placementCoordinatesPath);
+                this.PolygonManager = new PolygonManager(this.PlacementCoordinatesPath);
             }
 
-            if (this.polygonManager.GetTable() != null && this.positionManager.GetCoords() != null)
+            if (this.PolygonManager.GetTable() == null || this.PositionManager.GetCoords() == null) return;
+            if (this.PolygonManager.GetTable().Count > 0 && this.PositionManager.GetCoords().Count > 0)
             {
-                if (this.polygonManager.GetTable().Count > 0 && this.positionManager.GetCoords().Count > 0)
-                {
-                    MessageBox.Show(GetEmptyRefDeses(), "Empty RefDeses", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
+                MessageBox.Show(GetEmptyRefDes(), @"Empty RefDes's", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
 
@@ -176,12 +153,12 @@ namespace AllegroToVarisciteConversion
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            DialogResult ans = MessageBox.Show("Close Program?", "Exit", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            var ans = MessageBox.Show(@"Close Program?", @"Exit", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (ans == DialogResult.Yes)
             {
-                System.Environment.Exit(1);
+                Environment.Exit(1);
             }
         }
         /// <summary>
@@ -189,49 +166,38 @@ namespace AllegroToVarisciteConversion
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SaveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string savePath = null;
-            SaveFileDialog save = new SaveFileDialog();
-            save.Filter = "CSV File (*.csv)|*.csv|All Files (*.*)|*.*";
-            save.Title = "Save output file in...";
+            var save = new SaveFileDialog();
+            save.Filter = @"CSV File (*.csv)|*.csv|All Files (*.*)|*.*";
+            save.Title = @"Save output file in...";
             save.DefaultExt = "csv";
-            if (this.filePath != null)
-            {
-                save.InitialDirectory = this.filePath;
-            }
-            else
-            {
-                save.InitialDirectory = @"C:\";
-            }
+            save.InitialDirectory = this.FilePath ?? @"C:\";
             if (save.ShowDialog() == DialogResult.OK)
             {
                 savePath = save.FileName;
             }
-            if (savePath != null)
-            {
-                if (this.placementCoordinatesPath != null && this.placementReportPath != null)
-                {
-                    this.csvManager = new CsvManager(savePath, ChangeFileExtension(savePath, ".log"), this.polygonManager.GetTable(), this.positionManager.GetCoords());
-                    this.csvManager.SaveFile();
-                    MessageBox.Show("File Saved", "Congratulations", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-                else if (this.placementReportPath != null && this.placementCoordinatesPath == null)
-                {
-                    DialogResult ans = MessageBox.Show("You want to create output file using only Placement Report file?", "Saving process", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
-                    if (ans == DialogResult.OK)
-                    {
-                        this.csvManager = new CsvManager(savePath, ChangeFileExtension(savePath, ".log"), this.positionManager.GetCoords());
-                        this.csvManager.SaveFileUsingOneFile();
-                        MessageBox.Show("File saved", "Congratulations", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                }
-                else if (this.placementCoordinatesPath == null && this.placementReportPath == null)
-                {
-                    MessageBox.Show("You need to chose files first!", "Attention", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
-            }
 
+            if (savePath == null) return;
+            if (this.PlacementCoordinatesPath != null && this.PlacementReportPath != null)
+            {
+                this.CsvManager = new CsvManager(savePath, ChangeFileExtension(savePath, ".log"), this.PolygonManager.GetTable(), this.PositionManager.GetCoords());
+                this.CsvManager.SaveFile();
+                MessageBox.Show(@"File Saved", @"Congratulations", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else if (this.PlacementReportPath != null && this.PlacementCoordinatesPath == null)
+            {
+                var ans = MessageBox.Show(@"You want to create output file using only Placement Report file?", @"Saving process", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
+                if (ans != DialogResult.OK) return;
+                this.CsvManager = new CsvManager(savePath, ChangeFileExtension(savePath, ".log"), this.PositionManager.GetCoords());
+                this.CsvManager.SaveFileUsingOneFile();
+                MessageBox.Show(@"File saved", @"Congratulations", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else if (this.PlacementCoordinatesPath == null && this.PlacementReportPath == null)
+            {
+                MessageBox.Show(@"You need to chose files first!", @"Attention", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
         /// <summary>
         /// Logs the mode click event.
@@ -240,7 +206,7 @@ namespace AllegroToVarisciteConversion
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void LogModeClickEvent(object sender, EventArgs e)
         {
-            ToolStripMenuItem item = (ToolStripMenuItem)sender;
+            var item = (ToolStripMenuItem)sender;
             UncheckAllMenuItems(menuStrip1.Items);
             item.Checked = !item.Checked;
 
@@ -248,12 +214,12 @@ namespace AllegroToVarisciteConversion
             {
                 item.CheckState = CheckState.Checked;
             }
-            if (lastClickedItem != null && lastClickedItem != item)
+            if (_lastClickedItem != null && _lastClickedItem != item)
             {
-                lastClickedItem.Checked = false;
-                lastClickedItem.CheckState = CheckState.Unchecked;
+                _lastClickedItem.Checked = false;
+                _lastClickedItem.CheckState = CheckState.Unchecked;
             }
-            lastClickedItem = item;
+            _lastClickedItem = item;
 
             switch (item.Text)
             {
@@ -299,30 +265,25 @@ namespace AllegroToVarisciteConversion
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        private void ListBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            List<string> allNames = new List<string>();
+            var allNames = new List<string>();
 
-            if (this.positionManager.GetCoords().Count > 1)
+            if (this.PositionManager.GetCoords().Count > 1)
             {
-                for (int i = 0; i < this.positionManager.GetCoords().Count; i++)
+                for (var i = 0; i < this.PositionManager.GetCoords().Count; i++)
                 {
-                    allNames.Add(this.positionManager.GetCoords()[i].Key);
+                    allNames.Add(this.PositionManager.GetCoords()[i].Key);
                 }
             }
 
-            List<string> checkedCheckBoxNames = new List<string>();
+            var checkedCheckBoxNames = (from object selectedItem in listBox1.SelectedItems select selectedItem.ToString()).ToList();
 
-            foreach (var selectedItem in listBox1.SelectedItems)
-            {
-                checkedCheckBoxNames.Add(selectedItem.ToString());
-            }
+            var lst = ConvertToListOfListOfPoints();
+            var redElements = ConvertToListOfListOfPointsRed(checkedCheckBoxNames);
 
-            List<List<Point3D>> lst = ConvertToListOfListOfPoints();
-            List<List<Point3D>> redElements = ConvertToListOfListOfPointsRED(checkedCheckBoxNames);
-
-            ImageManager img = new ImageManager(this.positionManager.GetCoords(), lst, redElements);
-            pbSketch.Image = img.image;
+            var img = new ImageManager(this.PositionManager.GetCoords(), lst, redElements);
+            pbSketch.Image = img.Image;
         }
 
         /*----------------- Help functions ------------------*/
@@ -334,71 +295,66 @@ namespace AllegroToVarisciteConversion
         /// <returns></returns>
         private string GetCoords(string name)
         {
-            string line = "";
-            for (int i = 0; i < this.positionManager.GetCoords().Count; i++)
+            var line = "";
+            for (var i = 0; i < this.PositionManager.GetCoords().Count; i++)
             {
-                if (this.positionManager.GetCoords()[i].Key.Equals(name))
+                if (!this.PositionManager.GetCoords()[i].Key.Equals(name)) continue;
+                var x = this.PositionManager.GetCoords()[i];
+                line += ":";
+                foreach (var point in x.Value)
                 {
-                    MyDictionary x = this.positionManager.GetCoords()[i];
-                    line += ":";
-                    for (int j = 0; j < x.Value.Count; j++)
+                    if (!point.IsRegularPoint())
                     {
-                        if (!x.Value[j].IsRegularPoint())
-                        {
-                            line += $"[{x.Value[j].X};{x.Value[j].Y};{x.Value[j].Z}]";
-                        }
-                        else
-                        {
-                            line += $"[{x.Value[j].X};{x.Value[j].Y}]";
-                        }
+                        line += $"[{point.X};{point.Y};{point.Z}]";
+                    }
+                    else
+                    {
+                        line += $"[{point.X};{point.Y}]";
                     }
                 }
             }
             return line;
         }
         /// <summary>
-        /// Gets the empty reference deses.
+        /// Gets the empty reference Des's.
         /// </summary>
         /// <returns></returns>
-        private string GetEmptyRefDeses()
+        private string GetEmptyRefDes()
         {
-            List<string> names = new List<string>();
-            List<string[]> allnames = this.polygonManager.GetTable();
-            string result = "RefDeses that are not visible on the diagram:\n";
+            var names = new List<string>();
+            var allNames = this.PolygonManager.GetTable();
+            var result = "RefDes's that are not visible on the diagram:\n";
 
-            for (int i = 1; i < allnames.Count; i++)
+            for (var i = 1; i < allNames.Count; i++)
             {
-                if (GetCoords(allnames[i][0]) == "")
+                if (GetCoords(allNames[i][0]) == "")
                 {
-                    names.Add(allnames[i][0]);
+                    names.Add(allNames[i][0]);
                 }
             }
 
             if(names.Count == 0)
             {
-                return "there is no empty RefDeses";
+                return "there is no empty RefDes's";
             }
             else
             {
-                for (int i = 0; i < names.Count; i++)
-                {
-                    result += names[i] + ", ";
-                }
+                result = names.Aggregate(result, (current, name) => current + (name + ", "));
             }
 
             return result.Remove(result.Length - 2);
         }
         /// <summary>
-        /// Converts to list of list of points.
+        /// Converts to list of points.
         /// </summary>
         /// <returns></returns>
         private List<List<Point3D>> ConvertToListOfListOfPoints()
         {
-            List<List<Point3D>> lst = new List<List<Point3D>>();
+           var lst = new List<List<Point3D>>();
 
-            for (int i = 0; i < this.positionManager.GetCoords().Count; i++)
+            for (var i = 0; i < this.PositionManager.GetCoords().Count; i++)
             {
-                lst.Add(this.positionManager.GetCoords()[i].Value);
+                lst.Add(this.PositionManager.GetCoords()[i].Value);
             }
 
             return lst;
@@ -408,7 +364,7 @@ namespace AllegroToVarisciteConversion
         /// </summary>
         private void FillListBoxWithNames()
         {
-            listBox1.DataSource = this.positionManager.GetNames();
+            listBox1.DataSource = this.PositionManager.GetNames();
             listBox1.Refresh();
             listBox1.SelectionMode = SelectionMode.MultiExtended;
         }
@@ -417,13 +373,13 @@ namespace AllegroToVarisciteConversion
         /// </summary>
         /// <param name="fileName">Name of the file.</param>
         /// <returns></returns>
-        private string GetLastFilePath(string fileName)
+        private static string GetLastFilePath(string fileName)
         {
             string result = null;
 
-            string[] split = fileName.Split('\\');
+            var split = fileName.Split('\\');
 
-            for (int i = 0; i < split.Length-1; i++)
+            for (var i = 0; i < split.Length-1; i++)
             {
                 result += split[i] + "\\";
             }
@@ -435,41 +391,39 @@ namespace AllegroToVarisciteConversion
         /// <param name="filePath">The file path.</param>
         /// <param name="newExtension">The new extension.</param>
         /// <returns></returns>
-        private string ChangeFileExtension(string filePath, string newExtension)
+        private static string ChangeFileExtension(string filePath, string newExtension)
         {
-            string directory = Path.GetDirectoryName(filePath);
-            string fileName = Path.GetFileNameWithoutExtension(filePath);
-            return Path.Combine(directory, fileName + newExtension);
+            var directory = Path.GetDirectoryName(filePath);
+            var fileName = Path.GetFileNameWithoutExtension(filePath);
+            return directory != null ? Path.Combine(directory, fileName + newExtension) : null;
         }
         /// <summary>
         /// Unchecks all menu items.
         /// </summary>
         /// <param name="items">The items.</param>
-        private void UncheckAllMenuItems(ToolStripItemCollection items)
+        private static void UncheckAllMenuItems(ToolStripItemCollection items)
         {
             foreach (var item in items)
             {
-                if (item is ToolStripMenuItem menuItem)
-                {
-                    menuItem.Checked = false;
-                    UncheckAllMenuItems(menuItem.DropDownItems);
-                }
+                if (!(item is ToolStripMenuItem menuItem)) continue;
+                menuItem.Checked = false;
+                UncheckAllMenuItems(menuItem.DropDownItems);
             }
         }
         /// <summary>
-        /// Converts to list of list of points red.
+        /// Converts to list of points red.
         /// </summary>
         /// <param name="names">The names.</param>
         /// <returns></returns>
-        private List<List<Point3D>> ConvertToListOfListOfPointsRED(List<string> names)
+        private List<List<Point3D>> ConvertToListOfListOfPointsRed(IReadOnlyList<string> names)
         {
-            List<List<Point3D>> lst = new List<List<Point3D>>();
+            var lst = new List<List<Point3D>>();
 
-            for (int i = 0; i < this.positionManager.GetCoords().Count; i++)
+            for (var i = 0; i < this.PositionManager.GetCoords().Count; i++)
             {
-                if (NameInList(this.positionManager.GetCoords()[i].Key, names))
+                if (NameInList(this.PositionManager.GetCoords()[i].Key, names))
                 {
-                    lst.Add(this.positionManager.GetCoords()[i].Value);
+                    lst.Add(this.PositionManager.GetCoords()[i].Value);
                 }
             }
             return lst;
@@ -480,15 +434,9 @@ namespace AllegroToVarisciteConversion
         /// <param name="key">The key.</param>
         /// <param name="names">The names.</param>
         /// <returns></returns>
-        private bool NameInList(string key, List<string> names)
+        private static bool NameInList(string key, IEnumerable<string> names)
         {
-            for (int i = 0; i < names.Count; i++)
-            {
-                if (names[i].Equals(key))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }    }
+            return names.Any(name => name.Equals(key));
+        }
+    }
 }

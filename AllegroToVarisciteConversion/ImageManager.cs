@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace AllegroToVarisciteConversion
@@ -20,42 +18,42 @@ namespace AllegroToVarisciteConversion
         /// <value>
         /// The bitmap.
         /// </value>
-        public Bitmap motherBoardImage { get; set; }
+        public Bitmap MotherBoardImage { get; set; }
         /// <summary>
         /// Gets or sets the coords.
         /// </summary>
         /// <value>
         /// The coords.
         /// </value>
-        public List<MyDictionary> coords { get; set; }
+        public List<MyDictionary> Coords { get; set; }
         /// <summary>
         /// Gets or sets the names.
         /// </summary>
         /// <value>
         /// The names.
         /// </value>
-        public List<string> names { get; set; }
+        public List<string> Names { get; set; }
         /// <summary>
         /// Gets or sets the image.
         /// </summary>
         /// <value>
         /// The image.
         /// </value>
-        public Image image { get; set; }
+        public Image Image { get; set; }
         /// <summary>
         /// Gets or sets all points.
         /// </summary>
         /// <value>
         /// All points.
         /// </value>
-        public List<List<Point3D>> all_points { get; set; }
+        public List<List<Point3D>> AllPoints { get; set; }
         /// <summary>
         /// Gets or sets the red points.
         /// </summary>
         /// <value>
         /// The red points.
         /// </value>
-        public List<List<Point3D>> red_points { get; set; }
+        public List<List<Point3D>> RedPoints { get; set; }
 
         /*----------------- Class constructor ------------------*/
 
@@ -65,33 +63,32 @@ namespace AllegroToVarisciteConversion
         /// <param name="coords">The coords.</param>
         public ImageManager(List<MyDictionary> coords)
         {
-            this.coords = coords;
+            Coords = coords;
         }
         /// <summary>
         /// Initializes a new instance of the <see cref="ImageManager"/> class.
         /// </summary>
         /// <param name="coords">The coords.</param>
-        /// <param name="all_points">All points.</param>
-        /// <param name="red_points">The red points.</param>
-        public ImageManager(List<MyDictionary> coords, List<List<Point3D>> all_points, List<List<Point3D>> red_points) : this(coords)
+        /// <param name="allPoints">All points.</param>
+        /// <param name="redPoints">The red points.</param>
+        public ImageManager(List<MyDictionary> coords, List<List<Point3D>> allPoints, List<List<Point3D>> redPoints) : this(coords)
         {
-            this.all_points = all_points;
-            this.red_points = red_points;
+            AllPoints = allPoints;
+            RedPoints = redPoints;
 
-            DrawPoints(all_points, red_points);
+            DrawPoints(allPoints, redPoints);
         }
         /// <summary>
         /// Initializes a new instance of the <see cref="ImageManager"/> class.
         /// </summary>
         /// <param name="coords">The coords.</param>
-        /// <param name="log">The log.</param>
-        /// <param name="all_points">All points.</param>
-        public ImageManager(List<MyDictionary> coords, List<List<Point3D>> all_points) : this(coords)
+        /// <param name="allPoints">All points.</param>
+        public ImageManager(List<MyDictionary> coords, List<List<Point3D>> allPoints) : this(coords)
         {
-            this.all_points = all_points;
-            this.red_points = new List<List<Point3D>>();
+            AllPoints = allPoints;
+            RedPoints = new List<List<Point3D>>();
 
-            DrawPoints(all_points, red_points);
+            DrawPoints(allPoints, RedPoints);
         }
 
         /*----------------- Main functions ------------------*/
@@ -99,50 +96,41 @@ namespace AllegroToVarisciteConversion
         /// <summary>
         /// Draws the points.
         /// </summary>
-        /// <param name="pb">The pb.</param>
         /// <param name="pointLists">The point lists.</param>
-        ///
-        private void DrawPoints(List<List<Point3D>> pointLists, List<List<Point3D>> redElements)
+        /// <param name="redElements"></param>
+        private void DrawPoints(IReadOnlyCollection<List<Point3D>> pointLists, IEnumerable<List<Point3D>> redElements)
         {
             LogManager.AddCommentLine(LogManager.LogLevel.Informational, "Start drawing scheme");
 
             if (pointLists == null)
                 return;
 
-            using (Bitmap bmp = new Bitmap(FindMaxOrMinXOrY('x', "max") + 30, FindMaxOrMinXOrY('y', "max") + 30))
+            using (var bmp = new Bitmap(FindMaxOrMinXOrY('x', "max") + 30, FindMaxOrMinXOrY('y', "max") + 30))
             {
 
-                using (Graphics g = Graphics.FromImage(bmp))
+                using (var g = Graphics.FromImage(bmp))
                 {
                     // Clear the PictureBox
                     g.Clear(Color.White);
 
                     // Draw lines for each list of points
-                    using (Pen pen = new Pen(Color.Black, 2))
+                    using (var pen = new Pen(Color.Black, 2))
                     {
-                        foreach (List<Point3D> points in pointLists)
+                        foreach (var points in pointLists.Where(points => points.Count > 1))
                         {
-                            // Draw lines connecting the points
-                            if (points.Count > 1)
-                            {
-                                DrawArcs(g, pen, points);
-                                // Connect the last point with the first point to complete the figure
-                                g.DrawLine(pen, points[points.Count - 1].GetRegularPoint(), points[0].GetRegularPoint());
-                            }
+                            DrawArcs(g, pen, points);
+                            // Connect the last point with the first point to complete the figure
+                            g.DrawLine(pen, points[points.Count - 1].GetRegularPoint(), points[0].GetRegularPoint());
                         }
                     }
 
-                    using (Pen pen = new Pen(Color.Red, 5))
+                    using (var pen = new Pen(Color.Red, 5))
                     {
-                        foreach (List<Point3D> points in redElements)
+                        foreach (var points in redElements.Where(points => points.Count > 1))
                         {
-                            // Draw lines connecting the points
-                            if (points.Count > 1)
-                            {
-                                DrawArcs(g, pen, points);
-                                // Connect the last point with the first point to complete the figure
-                                g.DrawLine(pen, points[points.Count - 1].GetRegularPoint(), points[0].GetRegularPoint());
-                            }
+                            DrawArcs(g, pen, points);
+                            // Connect the last point with the first point to complete the figure
+                            g.DrawLine(pen, points[points.Count - 1].GetRegularPoint(), points[0].GetRegularPoint());
                         }
                     }
                 }
@@ -152,19 +140,19 @@ namespace AllegroToVarisciteConversion
                 {
                     LogManager.AddCommentLine(LogManager.LogLevel.Error,
                         "Error!!! Bitmap format is wrong, cannot convert bitmap to image");
-                    MessageBox.Show("BitMap format error", "Attention!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(@"BitMap format error", @"Attention!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-                this.motherBoardImage = bmp;
-                this.motherBoardImage = AddText(this.motherBoardImage);
-                this.image = Image.FromHbitmap(this.motherBoardImage.GetHbitmap());
+                this.MotherBoardImage = bmp;
+                this.MotherBoardImage = AddText(this.MotherBoardImage);
+                this.Image = Image.FromHbitmap(this.MotherBoardImage.GetHbitmap());
 
-                this.names = new List<string>();
-                foreach (var item in this.coords)
+                this.Names = new List<string>();
+                foreach (var item in this.Coords)
                 {
-                    this.names.Add(item.Key);
+                    this.Names.Add(item.Key);
                 }
 
-                this.names.Sort(CustomStringComparer);
+                this.Names.Sort(CustomStringComparer);
 
             }
         }
@@ -175,33 +163,29 @@ namespace AllegroToVarisciteConversion
         /// <param name="g">The g.</param>
         /// <param name="pen">The pen.</param>
         /// <param name="points">The points.</param>
-        private void DrawArcs(Graphics g, Pen pen, List<Point3D> points)
+        private static void DrawArcs(Graphics g, Pen pen, IReadOnlyList<Point3D> points)
         {
-            for (int i = 0; i < points.Count - 1; i++)
+            for (var i = 0; i < points.Count - 1; i++)
             {
                 if (i + 1 < points.Count - 1)
                 {
 
                     if (!points[i + 1].IsRegularPoint())
                     {
-                        Point start = points[i].GetRegularPoint();
-                        Point center = points[i + 1].GetRegularPoint();
-                        bool isClockwise = false;
-                        if (!points[i + 1].Z.Equals("0"))
-                        {
-                            isClockwise = true;
-                        }
-                        Point end = points[i + 2].GetRegularPoint();
+                        var start = points[i].GetRegularPoint();
+                        var center = points[i + 1].GetRegularPoint();
+                        var isClockwise = !points[i + 1].Z.Equals("0");
+                        var end = points[i + 2].GetRegularPoint();
 
-                        int radius = (int)Math.Sqrt(Math.Pow(center.X - start.X, 2) + Math.Pow(center.Y - start.Y, 2));
-                        int x = center.X - radius;
-                        int y = center.Y - radius;
-                        int wigth = 2 * radius;
-                        int height = 2 * radius;
+                        var radius = (int)Math.Sqrt(Math.Pow(center.X - start.X, 2) + Math.Pow(center.Y - start.Y, 2));
+                        var x = center.X - radius;
+                        var y = center.Y - radius;
+                        var wigth = 2 * radius;
+                        var height = 2 * radius;
 
-                        float startAngle = (float)Math.Atan2(start.Y - center.Y, start.X - center.X) * 180 / (float)Math.PI;
-                        float endAngle = (float)Math.Atan2(end.Y - center.Y, end.X - center.X) * 180 / (float)Math.PI;
-                        float sweepAngle = endAngle - startAngle;
+                        var startAngle = (float)Math.Atan2(start.Y - center.Y, start.X - center.X) * 180 / (float)Math.PI;
+                        var endAngle = (float)Math.Atan2(end.Y - center.Y, end.X - center.X) * 180 / (float)Math.PI;
+                        var sweepAngle = endAngle - startAngle;
 
                         if (Math.Abs(sweepAngle) == 0)
                         {
@@ -209,13 +193,14 @@ namespace AllegroToVarisciteConversion
                         }
                         else
                         {
-                            if (isClockwise && sweepAngle < 0)
+                            switch (isClockwise)
                             {
-                                sweepAngle += 360;
-                            }
-                            else if (!isClockwise && sweepAngle > 0)
-                            {
-                                sweepAngle -= 360;
+                                case true when sweepAngle < 0:
+                                    sweepAngle += 360;
+                                    break;
+                                case false when sweepAngle > 0:
+                                    sweepAngle -= 360;
+                                    break;
                             }
 
                             g.DrawArc(pen, x, y, wigth, height, startAngle, sweepAngle);
@@ -242,42 +227,45 @@ namespace AllegroToVarisciteConversion
         /// <returns></returns>
         private int FindMaxOrMinXOrY(char xory, string maxormin)
         {
-            List<MyDictionary> lst = this.coords;
-            int num = 0;
-            if (maxormin == "max")
+            var lst = this.Coords;
+            var num = 0;
+            switch (maxormin)
             {
-                num = int.MinValue;
-                for (int i = 0; i < lst.Count; i++)
+                case "max":
                 {
-                    for (int j = 0; j < lst[i].Value.Count; j++)
+                    num = int.MinValue;
+                    foreach (var point in lst.SelectMany(myDict => myDict.Value))
                     {
-                        if (xory == 'x')
+                        switch (xory)
                         {
-                            num = Math.Max(num, int.Parse(lst[i].Value[j].X));
-                        }
-                        else if (xory == 'y')
-                        {
-                            num = Math.Max(num, int.Parse(lst[i].Value[j].Y));
+                            case 'x':
+                                num = Math.Max(num, int.Parse(point.X));
+                                break;
+                            case 'y':
+                                num = Math.Max(num, int.Parse(point.Y));
+                                break;
                         }
                     }
+
+                    break;
                 }
-            }
-            else if (maxormin == "min")
-            {
-                num = int.MaxValue;
-                for (int i = 0; i < lst.Count; i++)
+                case "min":
                 {
-                    for (int j = 0; j < lst[i].Value.Count; j++)
+                    num = int.MaxValue;
+                    foreach (var point in lst.SelectMany(myDict => myDict.Value))
                     {
-                        if (xory == 'x')
+                        switch (xory)
                         {
-                            num = Math.Min(num, int.Parse(lst[i].Value[j].X));
-                        }
-                        else if (xory == 'y')
-                        {
-                            num = Math.Min(num, int.Parse(lst[i].Value[j].Y));
+                            case 'x':
+                                num = Math.Min(num, int.Parse(point.X));
+                                break;
+                            case 'y':
+                                num = Math.Min(num, int.Parse(point.Y));
+                                break;
                         }
                     }
+
+                    break;
                 }
             }
             return num;
@@ -287,52 +275,25 @@ namespace AllegroToVarisciteConversion
         /// </summary>
         private Bitmap AddText(Bitmap bitmap)
         {
-            /*
             try
             {
-                List<MyDictionary> lst = this.coords;
-                for (int i = 0; i < lst.Count; i++)
+                var lst = this.Coords;
+                using (var graphics = Graphics.FromImage(bitmap))
+                using (var font = new Font("Arial", 15))
+                using (var brush = new SolidBrush(Color.Black))
                 {
-                    MyDictionary item = lst[i];
-
-                    if (item != null)
+                    foreach (var item in lst)
                     {
-                        int x = SumPoints(item.Value, 'x') / item.Value.Count - 20;
-                        int y = SumPoints(item.Value, 'y') / item.Value.Count - 5;
-
-                        Graphics graphics = Graphics.FromImage(bitmap);
-                        Font font = new Font("Arial", 15);
-                        Brush brush = new SolidBrush(Color.Black);
-
+                        if (item == null || item.Value.Count <= 0) continue;
+                        var x = (SumPoints(item.Value, 'x') / item.Value.Count) - 20;
+                        var y = (SumPoints(item.Value, 'y') / item.Value.Count) - 5;
                         graphics.DrawString(item.Key, font, brush, x, y);
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message + "\nCannot add text to scheme", "Error Text", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }*/
-            try
-            {
-                List<MyDictionary> lst = this.coords;
-                using (Graphics graphics = Graphics.FromImage(bitmap))
-                using (Font font = new Font("Arial", 15))
-                using (Brush brush = new SolidBrush(Color.Black))
-                {
-                    foreach (MyDictionary item in lst)
-                    {
-                        if (item != null && item.Value.Count > 0)
-                        {
-                            int x = (SumPoints(item.Value, 'x') / item.Value.Count) - 20;
-                            int y = (SumPoints(item.Value, 'y') / item.Value.Count) - 5;
-                            graphics.DrawString(item.Key, font, brush, x, y);
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message + "\nCannot add text to scheme", "Error Text", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message + @"\nCannot add text to scheme", @"Error Text", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             return bitmap;
         }
@@ -342,21 +303,22 @@ namespace AllegroToVarisciteConversion
         /// <param name="value">The value.</param>
         /// <param name="v">The v.</param>
         /// <returns></returns>
-        private int SumPoints(List<Point3D> value, char v)
+        private static int SumPoints(IEnumerable<Point3D> value, char v)
         {
-            int sum = 0;
-            if (v == 'x')
+            var sum = 0;
+            switch (v)
             {
-                for (int i = 0; i < value.Count; i++)
+                case 'x':
                 {
-                    sum += int.Parse(value[i].X);
+                    sum += value.Sum(t => int.Parse(t.X));
+
+                    break;
                 }
-            }
-            else if (v == 'y')
-            {
-                for (int i = 0; i < value.Count; i++)
+                case 'y':
                 {
-                    sum += int.Parse(value[i].Y);
+                    sum += value.Sum(t => int.Parse(t.Y));
+
+                    break;
                 }
             }
             return sum;
@@ -368,21 +330,14 @@ namespace AllegroToVarisciteConversion
         /// <returns>
         ///   <c>true</c> if [is bitmap format compatible] [the specified bitmap]; otherwise, <c>false</c>.
         /// </returns>
-        private bool IsBitmapFormatCompatible(Bitmap bitmap)
+        private static bool IsBitmapFormatCompatible(Image bitmap)
         {
             // Get the pixel format of the bitmap
-            PixelFormat pixelFormat = bitmap.PixelFormat;
+            var pixelFormat = bitmap.PixelFormat;
 
             // Check if the pixel format is compatible with PictureBox
-            switch (pixelFormat)
-            {
-                case PixelFormat.Format32bppArgb:
-                case PixelFormat.Format24bppRgb:
-                case PixelFormat.Format8bppIndexed:
-                    return true;
-                default:
-                    return false;
-            }
+            return pixelFormat == PixelFormat.Format32bppArgb || pixelFormat == PixelFormat.Format24bppRgb ||
+                   pixelFormat == PixelFormat.Format8bppIndexed;
         }
         /// <summary>
         /// Customs the string comparer.
@@ -390,7 +345,7 @@ namespace AllegroToVarisciteConversion
         /// <param name="x">The x.</param>
         /// <param name="y">The y.</param>
         /// <returns></returns>
-        static int CustomStringComparer(string x, string y)
+        private static int CustomStringComparer(string x, string y)
         {
             IEnumerable<string> xParts = Regex.Split(x, "([0-9]+)");
             IEnumerable<string> yParts = Regex.Split(y, "([0-9]+)");
@@ -399,14 +354,13 @@ namespace AllegroToVarisciteConversion
             {
                 while (xEnum.MoveNext() && yEnum.MoveNext())
                 {
-                    if (xEnum.Current != yEnum.Current)
+                    if (xEnum.Current == yEnum.Current) continue;
+                    if (int.TryParse(xEnum.Current, out var xNum) && int.TryParse(yEnum.Current, out var yNum))
                     {
-                        if (int.TryParse(xEnum.Current, out int xNum) && int.TryParse(yEnum.Current, out int yNum))
-                        {
-                            return xNum.CompareTo(yNum);
-                        }
-                        return xEnum.Current.CompareTo(yEnum.Current);
+                        return xNum.CompareTo(yNum);
                     }
+
+                    if (xEnum.Current != null) return string.Compare(xEnum.Current, yEnum.Current, StringComparison.Ordinal);
                 }
 
                 return xParts.Count().CompareTo(yParts.Count());
